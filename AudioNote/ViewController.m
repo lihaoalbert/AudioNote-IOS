@@ -11,15 +11,20 @@
 
 // comment by hand
 // code will run normally without them.
-@interface ViewController () <IFlyRecognizerViewDelegate>
+@interface ViewController () <IFlyRecognizerViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic, strong) IFlyRecognizerView *iFlyRecognizerView;
+@property (nonatomic, nonatomic) IFlyRecognizerView *iFlyRecognizerView;
+@property (nonatomic, nonatomic) NSMutableArray *dataList;
+@property (weak, nonatomic) IBOutlet UITableView *latestView;
+
 @end
 
 
 @implementation ViewController
 
 @synthesize iFlyRecognizerView;
+@synthesize latestView;
+@synthesize dataList;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -37,18 +42,25 @@
     
     //asr_audio_path保存录音文件名,如不再需要,设置value为nil表示取消,默认目录是documents
     [self.iFlyRecognizerView setParameter:@"asrview.pcm" forKey:[IFlySpeechConstant ASR_AUDIO_PATH]];
-    
     // 返回结果不要标点
     [self.iFlyRecognizerView setParameter:@"0" forKey:@"asr_ptt"];
-    
     // | result_type   | 返回结果的数据格式，可设置为json，xml，plain，默认为json。
     [self.iFlyRecognizerView setParameter:@"plain" forKey:[IFlySpeechConstant RESULT_TYPE]];
+
+    // table view
+    //self.latestView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
+    self.latestView.delegate = self;
+    self.latestView.dataSource = self;
+    //self.dataList = [[NSMutableArray alloc] initWithCapacity:3];
+    self.dataList = [[NSMutableArray alloc] initWithObjects:@"first",@"two",@"three",nil];
 
 }
 
 - (void)viewDidUnload {
     self.iFlyRecognizerView = nil;
+    self.dataList = nil;
     [self setIFlyRecognizerView:nil];
+    [self setLatestView:nil];
     
     [super viewDidUnload];
 }
@@ -71,8 +83,26 @@
 // (NSArray *)resultArray - voice convert to words result
 // isLast:(BOOL) isLast   - when YES then convert over
 - (void)onResult: (NSArray *)resultArray isLast:(BOOL) isLast {
-    NSLog(@"%@", isLast == YES ? @"over!" : @"convert...");
-    NSLog(@"%@", resultArray);
+    NSLog(@"%@", isLast == YES ? @"convert over!" : @"convert...");
+
+    // add convert words to TableView
+    NSMutableString *result = [[NSMutableString alloc] init];
+    NSDictionary *dic = [resultArray objectAtIndex:0];
+    for (NSString *key in dic) {
+        if([key length] > 0) {
+            NSLog(@"%@", key);
+            [result appendFormat:@"%@",key];
+        }
+    }
+    
+    if([result length] > 0) {
+        NSLog(@"%d", [self.dataList count]);
+        if([self.dataList count] >= 3) {
+            [self.dataList removeObjectAtIndex:0];
+        }
+        [self.dataList addObject:result];
+        [self.latestView reloadData];;
+    }
 }
 
 
@@ -81,6 +111,20 @@
     NSLog(@"%d", [error errorCode]);
     [self.iFlyRecognizerView cancel];
 }
-
 // iflyRecognizer callback functions over
+
+#pragma mark - <UITableViewDelegate, UITableViewDataSource>
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self.dataList count];// limit num -
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *cellID = @"cellID";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
+    }
+    cell.textLabel.text = [self.dataList objectAtIndex:indexPath.row];
+    return cell;
+}
 @end
