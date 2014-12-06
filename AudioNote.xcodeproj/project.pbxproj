@@ -1,0 +1,469 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C44C1EA11A32FA7500BDE49B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C44C1EA01A32FA7500BDE49B /* main.m */; };
+		C44C1EA41A32FA7500BDE49B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C44C1EA31A32FA7500BDE49B /* AppDelegate.m */; };
+		C44C1EA71A32FA7500BDE49B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C44C1EA61A32FA7500BDE49B /* ViewController.m */; };
+		C44C1EAA1A32FA7500BDE49B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C44C1EA81A32FA7500BDE49B /* Main.storyboard */; };
+		C44C1EAC1A32FA7500BDE49B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C44C1EAB1A32FA7500BDE49B /* Images.xcassets */; };
+		C44C1EAF1A32FA7500BDE49B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C44C1EAD1A32FA7500BDE49B /* LaunchScreen.xib */; };
+		C44C1EBB1A32FA7500BDE49B /* AudioNoteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C44C1EBA1A32FA7500BDE49B /* AudioNoteTests.m */; };
+		C44C1EC51A32FAA000BDE49B /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1EC41A32FAA000BDE49B /* AdSupport.framework */; };
+		C44C1EC71A32FAA800BDE49B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1EC61A32FAA800BDE49B /* AVFoundation.framework */; };
+		C44C1EC91A32FAB200BDE49B /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1EC81A32FAB200BDE49B /* AddressBook.framework */; };
+		C44C1ECB1A32FABC00BDE49B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1ECA1A32FABC00BDE49B /* SystemConfiguration.framework */; };
+		C44C1ECD1A32FACB00BDE49B /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1ECC1A32FACB00BDE49B /* libz.dylib */; };
+		C44C1ECF1A32FB3400BDE49B /* iflyMSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1ECE1A32FB3400BDE49B /* iflyMSC.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C44C1EB51A32FA7500BDE49B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C44C1E931A32FA7500BDE49B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C44C1E9A1A32FA7500BDE49B;
+			remoteInfo = AudioNote;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		C44C1E9B1A32FA7500BDE49B /* AudioNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C44C1E9F1A32FA7500BDE49B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C44C1EA01A32FA7500BDE49B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		C44C1EA21A32FA7500BDE49B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		C44C1EA31A32FA7500BDE49B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		C44C1EA51A32FA7500BDE49B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		C44C1EA61A32FA7500BDE49B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		C44C1EA91A32FA7500BDE49B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C44C1EAB1A32FA7500BDE49B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		C44C1EAE1A32FA7500BDE49B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		C44C1EB41A32FA7500BDE49B /* AudioNoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AudioNoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C44C1EB91A32FA7500BDE49B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C44C1EBA1A32FA7500BDE49B /* AudioNoteTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioNoteTests.m; sourceTree = "<group>"; };
+		C44C1EC41A32FAA000BDE49B /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		C44C1EC61A32FAA800BDE49B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		C44C1EC81A32FAB200BDE49B /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		C44C1ECA1A32FABC00BDE49B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C44C1ECC1A32FACB00BDE49B /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		C44C1ECE1A32FB3400BDE49B /* iflyMSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iflyMSC.framework; path = Lib/iflyMSC.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C44C1E981A32FA7500BDE49B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C44C1ECF1A32FB3400BDE49B /* iflyMSC.framework in Frameworks */,
+				C44C1ECD1A32FACB00BDE49B /* libz.dylib in Frameworks */,
+				C44C1ECB1A32FABC00BDE49B /* SystemConfiguration.framework in Frameworks */,
+				C44C1EC91A32FAB200BDE49B /* AddressBook.framework in Frameworks */,
+				C44C1EC71A32FAA800BDE49B /* AVFoundation.framework in Frameworks */,
+				C44C1EC51A32FAA000BDE49B /* AdSupport.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C44C1EB11A32FA7500BDE49B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C44C1E921A32FA7500BDE49B = {
+			isa = PBXGroup;
+			children = (
+				C44C1ED01A32FB3C00BDE49B /* Frameworks */,
+				C44C1E9D1A32FA7500BDE49B /* AudioNote */,
+				C44C1EB71A32FA7500BDE49B /* AudioNoteTests */,
+				C44C1E9C1A32FA7500BDE49B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C44C1E9C1A32FA7500BDE49B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C44C1E9B1A32FA7500BDE49B /* AudioNote.app */,
+				C44C1EB41A32FA7500BDE49B /* AudioNoteTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C44C1E9D1A32FA7500BDE49B /* AudioNote */ = {
+			isa = PBXGroup;
+			children = (
+				C44C1EA21A32FA7500BDE49B /* AppDelegate.h */,
+				C44C1EA31A32FA7500BDE49B /* AppDelegate.m */,
+				C44C1EA51A32FA7500BDE49B /* ViewController.h */,
+				C44C1EA61A32FA7500BDE49B /* ViewController.m */,
+				C44C1EA81A32FA7500BDE49B /* Main.storyboard */,
+				C44C1EAB1A32FA7500BDE49B /* Images.xcassets */,
+				C44C1EAD1A32FA7500BDE49B /* LaunchScreen.xib */,
+				C44C1E9E1A32FA7500BDE49B /* Supporting Files */,
+			);
+			path = AudioNote;
+			sourceTree = "<group>";
+		};
+		C44C1E9E1A32FA7500BDE49B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C44C1E9F1A32FA7500BDE49B /* Info.plist */,
+				C44C1EA01A32FA7500BDE49B /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C44C1EB71A32FA7500BDE49B /* AudioNoteTests */ = {
+			isa = PBXGroup;
+			children = (
+				C44C1EBA1A32FA7500BDE49B /* AudioNoteTests.m */,
+				C44C1EB81A32FA7500BDE49B /* Supporting Files */,
+			);
+			path = AudioNoteTests;
+			sourceTree = "<group>";
+		};
+		C44C1EB81A32FA7500BDE49B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C44C1EB91A32FA7500BDE49B /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C44C1ED01A32FB3C00BDE49B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C44C1ECE1A32FB3400BDE49B /* iflyMSC.framework */,
+				C44C1ECC1A32FACB00BDE49B /* libz.dylib */,
+				C44C1ECA1A32FABC00BDE49B /* SystemConfiguration.framework */,
+				C44C1EC81A32FAB200BDE49B /* AddressBook.framework */,
+				C44C1EC61A32FAA800BDE49B /* AVFoundation.framework */,
+				C44C1EC41A32FAA000BDE49B /* AdSupport.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C44C1E9A1A32FA7500BDE49B /* AudioNote */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C44C1EBE1A32FA7500BDE49B /* Build configuration list for PBXNativeTarget "AudioNote" */;
+			buildPhases = (
+				C44C1E971A32FA7500BDE49B /* Sources */,
+				C44C1E981A32FA7500BDE49B /* Frameworks */,
+				C44C1E991A32FA7500BDE49B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AudioNote;
+			productName = AudioNote;
+			productReference = C44C1E9B1A32FA7500BDE49B /* AudioNote.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C44C1EB31A32FA7500BDE49B /* AudioNoteTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C44C1EC11A32FA7500BDE49B /* Build configuration list for PBXNativeTarget "AudioNoteTests" */;
+			buildPhases = (
+				C44C1EB01A32FA7500BDE49B /* Sources */,
+				C44C1EB11A32FA7500BDE49B /* Frameworks */,
+				C44C1EB21A32FA7500BDE49B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C44C1EB61A32FA7500BDE49B /* PBXTargetDependency */,
+			);
+			name = AudioNoteTests;
+			productName = AudioNoteTests;
+			productReference = C44C1EB41A32FA7500BDE49B /* AudioNoteTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C44C1E931A32FA7500BDE49B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = Intfocus;
+				TargetAttributes = {
+					C44C1E9A1A32FA7500BDE49B = {
+						CreatedOnToolsVersion = 6.1;
+					};
+					C44C1EB31A32FA7500BDE49B = {
+						CreatedOnToolsVersion = 6.1;
+						TestTargetID = C44C1E9A1A32FA7500BDE49B;
+					};
+				};
+			};
+			buildConfigurationList = C44C1E961A32FA7500BDE49B /* Build configuration list for PBXProject "AudioNote" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C44C1E921A32FA7500BDE49B;
+			productRefGroup = C44C1E9C1A32FA7500BDE49B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C44C1E9A1A32FA7500BDE49B /* AudioNote */,
+				C44C1EB31A32FA7500BDE49B /* AudioNoteTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C44C1E991A32FA7500BDE49B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C44C1EAA1A32FA7500BDE49B /* Main.storyboard in Resources */,
+				C44C1EAF1A32FA7500BDE49B /* LaunchScreen.xib in Resources */,
+				C44C1EAC1A32FA7500BDE49B /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C44C1EB21A32FA7500BDE49B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C44C1E971A32FA7500BDE49B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C44C1EA71A32FA7500BDE49B /* ViewController.m in Sources */,
+				C44C1EA41A32FA7500BDE49B /* AppDelegate.m in Sources */,
+				C44C1EA11A32FA7500BDE49B /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C44C1EB01A32FA7500BDE49B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C44C1EBB1A32FA7500BDE49B /* AudioNoteTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C44C1EB61A32FA7500BDE49B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C44C1E9A1A32FA7500BDE49B /* AudioNote */;
+			targetProxy = C44C1EB51A32FA7500BDE49B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		C44C1EA81A32FA7500BDE49B /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C44C1EA91A32FA7500BDE49B /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		C44C1EAD1A32FA7500BDE49B /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C44C1EAE1A32FA7500BDE49B /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C44C1EBC1A32FA7500BDE49B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C44C1EBD1A32FA7500BDE49B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C44C1EBF1A32FA7500BDE49B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Lib",
+				);
+				INFOPLIST_FILE = AudioNote/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C44C1EC01A32FA7500BDE49B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Lib",
+				);
+				INFOPLIST_FILE = AudioNote/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		C44C1EC21A32FA7500BDE49B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = AudioNoteTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AudioNote.app/AudioNote";
+			};
+			name = Debug;
+		};
+		C44C1EC31A32FA7500BDE49B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = AudioNoteTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AudioNote.app/AudioNote";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C44C1E961A32FA7500BDE49B /* Build configuration list for PBXProject "AudioNote" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C44C1EBC1A32FA7500BDE49B /* Debug */,
+				C44C1EBD1A32FA7500BDE49B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C44C1EBE1A32FA7500BDE49B /* Build configuration list for PBXNativeTarget "AudioNote" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C44C1EBF1A32FA7500BDE49B /* Debug */,
+				C44C1EC01A32FA7500BDE49B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		C44C1EC11A32FA7500BDE49B /* Build configuration list for PBXNativeTarget "AudioNoteTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C44C1EC21A32FA7500BDE49B /* Debug */,
+				C44C1EC31A32FA7500BDE49B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C44C1E931A32FA7500BDE49B /* Project object */;
+}
