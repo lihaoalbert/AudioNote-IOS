@@ -8,14 +8,20 @@
 
 #import "ViewController.h"
 
-
 // comment by hand
 // code will run normally without them.
 @interface ViewController () <IFlyRecognizerViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
+// iFly recognizer ui.
 @property (nonatomic, nonatomic) IFlyRecognizerView *iFlyRecognizerView;
-@property (nonatomic, nonatomic) NSMutableArray *dataList;
+// iFly recognizer convert audio to text.
+@property (nonatomic, nonatomic) NSMutableString *iFlyRecognizerResult;
+// show iFlyRecognizerResult changing dynamically.
+@property (weak, nonatomic) IBOutlet UILabel *iFlyRecognizerShow;
+
+// latest record list ui
 @property (weak, nonatomic) IBOutlet UITableView *latestView;
+@property (nonatomic, nonatomic) NSMutableArray *latestDataList;
 
 @end
 
@@ -23,8 +29,10 @@
 @implementation ViewController
 
 @synthesize iFlyRecognizerView;
+@synthesize iFlyRecognizerResult;
+@synthesize iFlyRecognizerShow;
 @synthesize latestView;
-@synthesize dataList;
+@synthesize latestDataList;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -47,20 +55,28 @@
     // | result_type   | 返回结果的数据格式，可设置为json，xml，plain，默认为json。
     [self.iFlyRecognizerView setParameter:@"plain" forKey:[IFlySpeechConstant RESULT_TYPE]];
 
-    // table view
-    //self.latestView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
+    // latest 3 rows data list view
     self.latestView.delegate = self;
     self.latestView.dataSource = self;
-    //self.dataList = [[NSMutableArray alloc] initWithCapacity:3];
-    self.dataList = [[NSMutableArray alloc] initWithObjects:@"first",@"two",@"three",nil];
+    [self.latestView setEditing:YES animated:YES];
+    self.latestDataList = [[NSMutableArray alloc] initWithObjects:@"first",@"two",@"three",nil];
+    
+    // init recognizer result
+    self.iFlyRecognizerResult = [[NSMutableString alloc] init];
 
 }
 
 - (void)viewDidUnload {
     self.iFlyRecognizerView = nil;
-    self.dataList = nil;
+    self.iFlyRecognizerResult = nil;
+    self.iFlyRecognizerShow = nil;
+    self.latestView = nil;
+    self.latestDataList = nil;
     [self setIFlyRecognizerView:nil];
+    [self setIFlyRecognizerResult:nil];
+    [self setIFlyRecognizerShow:nil];
     [self setLatestView:nil];
+    [self setLatestDataList:nil];
     
     [super viewDidUnload];
 }
@@ -72,6 +88,9 @@
 
 - (IBAction)startUpVoice:(id)sender {
     [self.iFlyRecognizerView start];
+    
+    // clear text when start recognizer tart
+    self.iFlyRecognizerShow.text = @"";
 }
 
 #pragma mark - <IFlyRecognizerViewDelegate>
@@ -83,26 +102,33 @@
 // (NSArray *)resultArray - voice convert to words result
 // isLast:(BOOL) isLast   - when YES then convert over
 - (void)onResult: (NSArray *)resultArray isLast:(BOOL) isLast {
-    NSLog(@"%@", isLast == YES ? @"convert over!" : @"convert...");
-
-    // add convert words to TableView
-    NSMutableString *result = [[NSMutableString alloc] init];
     NSDictionary *dic = [resultArray objectAtIndex:0];
     for (NSString *key in dic) {
-        if([key length] > 0) {
-            NSLog(@"%@", key);
-            [result appendFormat:@"%@",key];
+        if([key length] > 0) // skip empty string
+            [self.iFlyRecognizerResult appendFormat:@"%@",key];
+    }
+    // show recognizer result changing dynamically.
+    self.iFlyRecognizerShow.text = self.iFlyRecognizerResult;
+    
+    // operation only when finished convert
+    if (isLast == YES) {
+        if([self.iFlyRecognizerResult length] > 0) {
+            // reload latest 3 rows data
+            if([self.latestDataList count] >= 3)
+                [self.latestDataList removeObjectAtIndex:0];
+            
+            // add convert words to TableView
+            [self.latestDataList addObject: self.iFlyRecognizerResult.copy];
+            [self.latestView reloadData];;
         }
+        
+        // set recognizer result empty
+        [self.iFlyRecognizerResult setString:@""];
+        NSLog(@"convert finished!");
+    } else {
+        NSLog(@"convert...");
     }
     
-    if([result length] > 0) {
-        NSLog(@"%d", [self.dataList count]);
-        if([self.dataList count] >= 3) {
-            [self.dataList removeObjectAtIndex:0];
-        }
-        [self.dataList addObject:result];
-        [self.latestView reloadData];;
-    }
 }
 
 
@@ -115,7 +141,7 @@
 
 #pragma mark - <UITableViewDelegate, UITableViewDataSource>
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.dataList count];// limit num -
+    return [self.latestDataList count];// limit num -
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -124,7 +150,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
-    cell.textLabel.text = [self.dataList objectAtIndex:indexPath.row];
+    cell.textLabel.text = [self.latestDataList objectAtIndex:indexPath.row];
     return cell;
 }
 @end
