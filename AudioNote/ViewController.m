@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "Phantom.h"
 
 // comment by hand
 // code will run normally without them.
@@ -15,13 +16,14 @@
 // iFly recognizer ui.
 @property (nonatomic, nonatomic) IFlyRecognizerView *iFlyRecognizerView;
 // iFly recognizer convert audio to text.
-@property (nonatomic, nonatomic) NSMutableString *iFlyRecognizerResult;
+@property (nonatomic, nonatomic) NSMutableString    *iFlyRecognizerResult;
+@property (nonatomic, nonatomic) NSDate             *iFlyRecognizerStartDate;
 // show iFlyRecognizerResult changing dynamically.
-@property (weak, nonatomic) IBOutlet UILabel *iFlyRecognizerShow;
+@property (weak, nonatomic) IBOutlet UILabel        *iFlyRecognizerShow;
 
 // latest record list ui
-@property (weak, nonatomic) IBOutlet UITableView *latestView;
-@property (nonatomic, nonatomic) NSMutableArray *latestDataList;
+@property (weak, nonatomic) IBOutlet UITableView    *latestView;
+@property (nonatomic, nonatomic) NSMutableArray     *latestDataList;
 
 @end
 
@@ -30,6 +32,7 @@
 
 @synthesize iFlyRecognizerView;
 @synthesize iFlyRecognizerResult;
+@synthesize iFlyRecognizerStartDate;
 @synthesize iFlyRecognizerShow;
 @synthesize latestView;
 @synthesize latestDataList;
@@ -63,6 +66,11 @@
     
     // init recognizer result
     self.iFlyRecognizerResult = [[NSMutableString alloc] init];
+    
+    int myid;
+    
+    myid = insertDB("学习画画30分钟","2014-12-10 10:16:00",0);
+    printf("myID=%d\n",myid);
 
 }
 
@@ -91,6 +99,7 @@
     
     // clear text when start recognizer tart
     self.iFlyRecognizerShow.text = @"";
+    self.iFlyRecognizerStartDate = [NSDate date];
 }
 
 #pragma mark - <IFlyRecognizerViewDelegate>
@@ -117,8 +126,16 @@
             if([self.latestDataList count] >= 3)
                 [self.latestDataList removeObjectAtIndex:0];
             
+            // caculate duration
+            NSTimeInterval duration = [self.iFlyRecognizerStartDate timeIntervalSinceNow];
+            NSLog(@"**************************");
+            NSLog(@"content %@", self.iFlyRecognizerResult);
+            NSLog(@"duration %lf", duration);
+            NSLog(@"**************************");
+            
             // add convert words to TableView
             [self.latestDataList addObject: self.iFlyRecognizerResult.copy];
+            
             [self.latestView reloadData];;
         }
         

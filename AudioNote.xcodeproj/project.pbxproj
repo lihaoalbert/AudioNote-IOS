@@ -20,6 +20,7 @@
 		C44C1ECB1A32FABC00BDE49B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1ECA1A32FABC00BDE49B /* SystemConfiguration.framework */; };
 		C44C1ECD1A32FACB00BDE49B /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1ECC1A32FACB00BDE49B /* libz.dylib */; };
 		C44C1ECF1A32FB3400BDE49B /* iflyMSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1ECE1A32FB3400BDE49B /* iflyMSC.framework */; };
+		C4B813681A482F80001218E1 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C4B813671A482F80001218E1 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,10 @@
 		C44C1ECA1A32FABC00BDE49B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C44C1ECC1A32FACB00BDE49B /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		C44C1ECE1A32FB3400BDE49B /* iflyMSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iflyMSC.framework; path = Lib/iflyMSC.framework; sourceTree = "<group>"; };
+		C4B813641A482E78001218E1 /* Phantom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Phantom.h; sourceTree = "<group>"; };
+		C4B813651A482F5C001218E1 /* dictList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = dictList.h; path = ../../../../Downloads/dictList.h; sourceTree = "<group>"; };
+		C4B813661A482F5C001218E1 /* dictType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = dictType.h; path = ../../../../Downloads/dictType.h; sourceTree = "<group>"; };
+		C4B813671A482F80001218E1 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4B813681A482F80001218E1 /* libsqlite3.dylib in Frameworks */,
 				C44C1ECF1A32FB3400BDE49B /* iflyMSC.framework in Frameworks */,
 				C44C1ECD1A32FACB00BDE49B /* libz.dylib in Frameworks */,
 				C44C1ECB1A32FABC00BDE49B /* SystemConfiguration.framework in Frameworks */,
@@ -100,6 +106,8 @@
 		C44C1E9D1A32FA7500BDE49B /* AudioNote */ = {
 			isa = PBXGroup;
 			children = (
+				C4B813651A482F5C001218E1 /* dictList.h */,
+				C4B813661A482F5C001218E1 /* dictType.h */,
 				C44C1EA21A32FA7500BDE49B /* AppDelegate.h */,
 				C44C1EA31A32FA7500BDE49B /* AppDelegate.m */,
 				C44C1EA51A32FA7500BDE49B /* ViewController.h */,
@@ -108,6 +116,7 @@
 				C44C1EAB1A32FA7500BDE49B /* Images.xcassets */,
 				C44C1EAD1A32FA7500BDE49B /* LaunchScreen.xib */,
 				C44C1E9E1A32FA7500BDE49B /* Supporting Files */,
+				C4B813641A482E78001218E1 /* Phantom.h */,
 			);
 			path = AudioNote;
 			sourceTree = "<group>";
@@ -141,6 +150,7 @@
 		C44C1ED01A32FB3C00BDE49B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C4B813671A482F80001218E1 /* libsqlite3.dylib */,
 				C44C1ECE1A32FB3400BDE49B /* iflyMSC.framework */,
 				C44C1ECC1A32FACB00BDE49B /* libz.dylib */,
 				C44C1ECA1A32FABC00BDE49B /* SystemConfiguration.framework */,
@@ -454,6 +464,7 @@
 				C44C1EC01A32FA7500BDE49B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C44C1EC11A32FA7500BDE49B /* Build configuration list for PBXNativeTarget "AudioNoteTests" */ = {
 			isa = XCConfigurationList;
@@ -462,6 +473,7 @@
 				C44C1EC31A32FA7500BDE49B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
