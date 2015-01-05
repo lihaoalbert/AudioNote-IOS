@@ -527,6 +527,7 @@ int process(char szParam[MAX_INPUT_LEN])
     return SUCCESS;
 } // end of process()
 
+
 int insertDB(char *szInput,char *szBegin,int duration) {
     char szTemp[MAX_INPUT_LEN],szSQL[MAX_INPUT_LEN*2];
     char szTime[MAX_INPUT_LEN];
@@ -548,7 +549,7 @@ int insertDB(char *szInput,char *szBegin,int duration) {
     ////////////////////////////////
     time(&t);
     tmLocal = localtime(&tmLocal);
-    snprintf(szTime,MAX_INPUT_LEN-1,"%04d/%02d/%02d %02d:%02d:%02d",
+    snprintf(szTime,MAX_INPUT_LEN-1,"%04d-%02d-%02d %02d:%02d:%02d",
              tmLocal->tm_year+1900,
              tmLocal->tm_mon+1,
              tmLocal->tm_mday,
@@ -620,5 +621,7 @@ int insertDB(char *szInput,char *szBegin,int duration) {
     sqlite3_close(database);
     return -__LINE__;
 } // end of insertDB()
+
+
 
 #endif

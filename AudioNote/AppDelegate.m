@@ -7,6 +7,9 @@
 //
 
 #import "AppDelegate.h"
+#import "ViewControllerFirst.h"
+#import "ViewControllerSecond.h"
+#import "ViewControllerThird.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +20,16 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+//    self.window.rootViewController = nil;
+   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] ;
+    ViewControllerFirst *firstView = [[ViewControllerFirst alloc] initWithNibName:@"ViewControllerFirst" bundle:nil];
+    //rootView.tabBarItem.title = @"first 1";
+    firstView.title = @"小6语记";
+    self.navController = [[UINavigationController alloc] init];
+    [self.navController pushViewController:firstView animated:YES];
+    [self.window addSubview:self.navController.view];
+    [self.window makeKeyAndVisible];
+  
     return YES;
 }
 

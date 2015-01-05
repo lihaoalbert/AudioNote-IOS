@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  ViewControllerFirst.h
 //  AudioNote
 //
 //  Created by lijunjie on 14-12-6.
@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
 #import <AVFoundation/AVFoundation.h>
 
 // ifly frameworks
@@ -15,8 +14,9 @@
 #import "iflyMSC/IFlyRecognizerViewDelegate.h"
 #import "iflyMSC/IFlySpeechUtility.h"
 #import "iflyMSC/IFlySpeechConstant.h"
+#import "iflyMSC/IFlySetting.h"
 
-@interface ViewController : UIViewController
+@interface ViewControllerFirst : UIViewController
 
 - (IBAction)startUpVoice:(id)sender;
 
