@@ -1,21 +1,17 @@
 //
-//  Database_Utils.h
+//  Database_Utils.m
 //  AudioNote
 //
-//  Created by lijunjie on 15-1-5.
+//  Created by lijunjie on 15-1-6.
 //  Copyright (c) 2015年 Intfocus. All rights reserved.
 //
 
-#ifndef AudioNote_Database_Utils_h
-#define AudioNote_Database_Utils_h
+#import "DatabaseUtils.h"
 
-#import <sqlite3.h>
-#define kDatabaseName @"voice_record.sqlite3"
-#define myLog NSLog
+@implementation DatabaseUtils
 
 
-
-NSInteger insertDBWithSQL(NSString *insertSQL) {
+-(NSInteger) insertDBWithSQL: (NSString *) insertSQL {
     NSLog(@"Enter:\n%@", insertSQL);
     
     sqlite3 *database;
@@ -42,7 +38,7 @@ NSInteger insertDBWithSQL(NSString *insertSQL) {
         return -__LINE__;
     }
     
-
+    
     result = sqlite3_exec(database, [insertSQL UTF8String], NULL, NULL, &errorMsg);
     if (result != SQLITE_OK) {
         sqlite3_close(database);
@@ -58,13 +54,13 @@ NSInteger insertDBWithSQL(NSString *insertSQL) {
         return lastRowId;
     else
         myLog(@"lastRowId#%li < 0.", lastRowId);
-
+    
     return -__LINE__;
 } // end of insertDBWithSQL()
 
 
 
-NSMutableArray* selectDBwithDate(){//char *beginDate, char *endDate) {
+-(NSMutableArray*) selectDBwithDate{//char *beginDate, char *endDate) {
     sqlite3 *database;
     NSString *databaseFilePath;
     sqlite3_stmt *statement;
@@ -127,27 +123,5 @@ NSMutableArray* selectDBwithDate(){//char *beginDate, char *endDate) {
 
 // View Function
 
-// init self.initDataList
-// call it when voice record # onResult
-NSMutableArray* initDataListWithDB() {
-    NSMutableArray *latestDataList = [NSMutableArray arrayWithCapacity:0];//[[NSMutableArray alloc] initWithObjects:@"first",@"two",@"three",nil];
-    
-    
-    NSMutableArray *dataArray = selectDBwithDate();
-    NSLog(@"Record Row Count: %lu", dataArray.count);
-    for (NSDictionary  *dict in dataArray) {
-        NSString *listItem = dict[@"description"];
-        listItem = [listItem stringByAppendingString:@"["];
-        listItem = [listItem stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nMoney"]]];
-        listItem = [listItem stringByAppendingString:@"元 ]["];
-        listItem = [listItem stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nTime"]]];
-        listItem = [listItem stringByAppendingString:@"分钟]"];
-        [latestDataList addObject:listItem];
-        for(NSString *key in dict) {
-            NSLog(@"%10@: %@", key, dict[key]);
-        }
-    }
-    return latestDataList;
-}
+@end
 
-#endif

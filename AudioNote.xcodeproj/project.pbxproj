@@ -30,6 +30,8 @@
 		4A78E6B81A51527E006FF062 /* third_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A78E6A41A51527E006FF062 /* third_selected@2x.png */; };
 		4A78E6BC1A51555D006FF062 /* ViewControllerSecond.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A78E6BA1A51555D006FF062 /* ViewControllerSecond.m */; };
 		4A78E6BD1A51555D006FF062 /* ViewControllerSecond.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A78E6BB1A51555D006FF062 /* ViewControllerSecond.xib */; };
+		C417E5F11A5BC0200085CBBF /* DatabaseUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C417E5F01A5BC0200085CBBF /* DatabaseUtils.m */; };
+		C417E5F41A5BC5720085CBBF /* ViewCommonUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C417E5F31A5BC5720085CBBF /* ViewCommonUtils.m */; };
 		C44C1EA11A32FA7500BDE49B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C44C1EA01A32FA7500BDE49B /* main.m */; };
 		C44C1EA41A32FA7500BDE49B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C44C1EA31A32FA7500BDE49B /* AppDelegate.m */; };
 		C44C1EA71A32FA7500BDE49B /* ViewControllerFirst.m in Sources */ = {isa = PBXBuildFile; fileRef = C44C1EA61A32FA7500BDE49B /* ViewControllerFirst.m */; };
@@ -85,6 +87,9 @@
 		4A78E6B91A51555D006FF062 /* ViewControllerSecond.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewControllerSecond.h; sourceTree = "<group>"; };
 		4A78E6BA1A51555D006FF062 /* ViewControllerSecond.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewControllerSecond.m; sourceTree = "<group>"; };
 		4A78E6BB1A51555D006FF062 /* ViewControllerSecond.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewControllerSecond.xib; sourceTree = "<group>"; };
+		C417E5F01A5BC0200085CBBF /* DatabaseUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseUtils.m; sourceTree = "<group>"; };
+		C417E5F21A5BC1C90085CBBF /* ViewCommonUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewCommonUtils.h; sourceTree = "<group>"; };
+		C417E5F31A5BC5720085CBBF /* ViewCommonUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewCommonUtils.m; sourceTree = "<group>"; };
 		C44C1E9B1A32FA7500BDE49B /* AudioNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C44C1E9F1A32FA7500BDE49B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C44C1EA01A32FA7500BDE49B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -106,7 +111,7 @@
 		C4AA4C3B1A5A86FB00E6A1E7 /* ViewControllerThird.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewControllerThird.xib; sourceTree = "<group>"; };
 		C4AA4C3D1A5A870800E6A1E7 /* ViewControllerThird.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewControllerThird.m; sourceTree = "<group>"; };
 		C4AA4C3F1A5A870F00E6A1E7 /* ViewControllerThird.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewControllerThird.h; sourceTree = "<group>"; };
-		C4AA4C401A5A9A4800E6A1E7 /* Database_Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Database_Utils.h; sourceTree = "<group>"; };
+		C4AA4C401A5A9A4800E6A1E7 /* DatabaseUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseUtils.h; sourceTree = "<group>"; };
 		C4B813671A482F80001218E1 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -187,7 +192,10 @@
 				4A78E65A1A51487D006FF062 /* dictList.h */,
 				4A78E65B1A51487D006FF062 /* dictType.h */,
 				4A78E6551A51424A006FF062 /* Phantom.h */,
-				C4AA4C401A5A9A4800E6A1E7 /* Database_Utils.h */,
+				C4AA4C401A5A9A4800E6A1E7 /* DatabaseUtils.h */,
+				C417E5F01A5BC0200085CBBF /* DatabaseUtils.m */,
+				C417E5F21A5BC1C90085CBBF /* ViewCommonUtils.h */,
+				C417E5F31A5BC5720085CBBF /* ViewCommonUtils.m */,
 				C44C1EA21A32FA7500BDE49B /* AppDelegate.h */,
 				C44C1EA31A32FA7500BDE49B /* AppDelegate.m */,
 				C44C1EA51A32FA7500BDE49B /* ViewControllerFirst.h */,
@@ -371,9 +379,11 @@
 			files = (
 				4A78E6BC1A51555D006FF062 /* ViewControllerSecond.m in Sources */,
 				C4AA4C3E1A5A870800E6A1E7 /* ViewControllerThird.m in Sources */,
+				C417E5F11A5BC0200085CBBF /* DatabaseUtils.m in Sources */,
 				C44C1EA71A32FA7500BDE49B /* ViewControllerFirst.m in Sources */,
 				C44C1EA41A32FA7500BDE49B /* AppDelegate.m in Sources */,
 				C44C1EA11A32FA7500BDE49B /* main.m in Sources */,
+				C417E5F41A5BC5720085CBBF /* ViewCommonUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

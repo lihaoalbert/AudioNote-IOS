@@ -11,7 +11,8 @@
 #import "ViewControllerThird.h"
 
 #import "Phantom.h"
-#import "Database_Utils.h"
+#import "DatabaseUtils.h"
+#import "ViewCommonUtils.h"
 
 // comment by hand
 // code will run normally without them.
@@ -28,6 +29,8 @@
 // latest record list ui
 @property (weak, nonatomic) IBOutlet UITableView    *latestView;
 @property (nonatomic, nonatomic) NSMutableArray     *latestDataList;
+@property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
+@property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
 
 
 @end
@@ -47,6 +50,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    // init Utils
+    self.databaseUtils   = [[DatabaseUtils alloc] init];
+    self.viewCommonUtils = [[ViewCommonUtils alloc] init];
     
     // config iflyRecognizerView
     NSString *initString = [[NSString alloc] initWithFormat:@"appid=%@", @"5437b538"];
@@ -80,12 +86,10 @@
     
     
     // latest 3 rows data list view
-    self.latestView.delegate = self;
+    self.latestView.delegate   = self;
     self.latestView.dataSource = self;
     [self.latestView setEditing:YES animated:YES];
-    // this block code will be recall every voice record.
-    // feel good when put into function
-    self.latestDataList = initDataListWithDB();
+    self.latestDataList = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
     
     
     // UIBar
@@ -126,12 +130,14 @@
     self.latestView = nil;
     self.latestDataList = nil;
     self.gDateFormatter = nil;
+    self.databaseUtils  = nil;
     [self setIFlyRecognizerView:nil];
     [self setIFlyRecognizerResult:nil];
     [self setIFlyRecognizerShow:nil];
     [self setLatestView:nil];
     [self setLatestDataList:nil];
     [self setGDateFormatter:nil];
+    [self setDatabaseUtils:nil];
     
     [super viewDidUnload];
 }
@@ -237,13 +243,13 @@
             NSLog(@"Insert SQL:\n%@", insertSQL);
 
             
-            NSInteger lastRowId = insertDBWithSQL(insertSQL);
+            NSInteger lastRowId = [self.databaseUtils insertDBWithSQL: insertSQL];
             NSLog(@"Insert Into SQL#%li - successfully.", lastRowId);
 
 
             
             
-            self.latestDataList = initDataListWithDB();
+            self.latestDataList = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
             [self.latestView reloadData];
         }
         
@@ -282,7 +288,4 @@
     cell.textLabel.text = [self.latestDataList objectAtIndex:indexPath.row];
     return cell;
 }
-
-
-
 @end

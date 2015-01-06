@@ -10,9 +10,14 @@
 #import "ViewControllerFirst.h"
 #import "ViewControllerThird.h"
 
+#import "DatabaseUtils.h"
+#import "ViewCommonUtils.h"
+
 @interface ViewControllerSecond () <UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView    *listView;
 @property (nonatomic, nonatomic) NSMutableArray     *listData;
+@property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
+@property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
 @end
 
 @implementation ViewControllerSecond
@@ -21,16 +26,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    // init Utils
+    self.databaseUtils   = [[DatabaseUtils alloc] init];
+    self.viewCommonUtils = [[ViewCommonUtils alloc] init];
     
     // TableView
-    self.listView.delegate = self;
+    self.listView.delegate   = self;
     self.listView.dataSource = self;
     [self.listView setEditing:YES animated:YES];
-    // this block code will be recall every voice record.
-    // feel good when put into function
-    
-    self.listData = [NSMutableArray arrayWithCapacity:0];
-    //self.listData = initDataListWithDB();
+    self.listData = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
     
     
     // Gesture
@@ -80,5 +84,6 @@
     cell.textLabel.text = [self.listData objectAtIndex:indexPath.row];
     return cell;
 }
+
 
 @end
