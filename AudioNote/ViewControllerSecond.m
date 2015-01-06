@@ -28,7 +28,9 @@
     [self.listView setEditing:YES animated:YES];
     // this block code will be recall every voice record.
     // feel good when put into function
+    
     self.listData = [NSMutableArray arrayWithCapacity:0];
+    //self.listData = initDataListWithDB();
     
     
     // Gesture

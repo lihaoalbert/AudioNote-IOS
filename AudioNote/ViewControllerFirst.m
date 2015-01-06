@@ -9,6 +9,7 @@
 #import "ViewControllerFirst.h"
 #import "ViewControllerSecond.h"
 #import "ViewControllerThird.h"
+
 #import "Phantom.h"
 #import "Database_Utils.h"
 
@@ -167,21 +168,23 @@
 #pragma mark - <IFlyRecognizerViewDelegate>
 
 // iflyRecognizer callback functions begin
-
-// 识别结果返回代理
 // params
 // (NSArray *)resultArray - voice convert to words result
 // isLast:(BOOL) isLast   - when YES then convert over
 - (void)onResult: (NSArray *)resultArray isLast:(BOOL) isLast {
     NSDictionary *dic = [resultArray objectAtIndex:0];
+    
+    // 1.a append recognize text into iFlyRecognizerResult
     for (NSString *key in dic) {
         if([key length] > 0) // skip empty string
             [self.iFlyRecognizerResult appendFormat:@"%@",key];
     }
-    // show recognizer result changing dynamically.
+    
+    // 1.b show recognize text changing dynamically.
     self.iFlyRecognizerShow.text = self.iFlyRecognizerResult;
     
-    // operation only when finished convert
+    // monitor whether recognize continue
+    // 2.b operation only when finished convert
     if (isLast == YES) {
         if([self.iFlyRecognizerResult length] > 0) {
             // reload latest 3 rows data
@@ -190,34 +193,66 @@
             
             // caculate duration
             NSTimeInterval duration = [self.iFlyRecognizerStartDate timeIntervalSinceNow];
-            NSInteger duration_int  = round(duration < 0 ? -duration : duration);
-            NSString *startDateStr  = [self.gDateFormatter stringFromDate:self.iFlyRecognizerStartDate];
-            NSLog(@"**************************");
-            NSLog(@"content:  %@", self.iFlyRecognizerResult);
-            NSLog(@"created:  %@", startDateStr);
-            NSLog(@"duration: %li", duration_int);
-            NSLog(@"**************************");
-            
-            
-            int myid;
+            NSInteger t_duration    = round(duration < 0 ? -duration : duration);
+            NSString *t_createTime  = [self.gDateFormatter stringFromDate:self.iFlyRecognizerStartDate];
+            /*
             const char *szInput =[self.iFlyRecognizerResult UTF8String];
             const char *szBegin =[startDateStr UTF8String];
             int szDuration = (int)duration_int;
-            myid = insertDB(szInput, szBegin, szDuration);
-            printf("After Create, ID=%d\n",myid);
+             */
+            
+            NSLog(@"**************************");
+            NSLog(@"content:  %@", self.iFlyRecognizerResult);
+            NSLog(@"created:  %@", t_createTime);
+            NSLog(@"duration: %li", t_duration);
+            NSLog(@"**************************");
+            
+            
+            ////////////////////////////////
+            // Process input
+            // All the result will be saved in g_szRemain, g_szType,g_nMoney,g_nTime
+            ////////////////////////////////
+            
+            // default value then not deal with failed
+            NSString *t_nTime    = @"0";
+            NSString *t_nMoney   = @"0";
+            NSString *t_szType   = @"";
+            NSString *t_szRemain = @"";
+            
+            char szTemp[MAX_INPUT_LEN];
+            strcpy(szTemp,(char *)[self.iFlyRecognizerResult.copy UTF8String]);
+            szTemp[MAX_INPUT_LEN-1] = '\0';
+            if (process(szTemp) == SUCCESS) {
+                ////////////////////////////////
+                // Insert to DB (process successfully)
+                ////////////////////////////////
+                t_nTime    = [NSString stringWithFormat:@"%d", g_nTime];
+                t_nMoney   = [NSString stringWithFormat:@"%d", g_nMoney];
+                t_szType   = [NSString stringWithUTF8String: g_szType];
+                t_szRemain = [NSString stringWithUTF8String: g_szRemain];
+
+            }
+            NSString *insertSQL = [NSString stringWithFormat: @"Insert into voice_record(input,description,category,nMoney,nTime,begin,duration,create_time,modify_time) VALUES('%@','%@','%@',%@,%@,'%@',%li,'%@','%@');", self.iFlyRecognizerResult.copy, t_szRemain, t_szType, t_nMoney, t_nTime, t_createTime, t_duration,  t_createTime, t_createTime];
+            
+            NSLog(@"Insert SQL:\n%@", insertSQL);
+
+            
+            NSInteger lastRowId = insertDBWithSQL(insertSQL);
+            NSLog(@"Insert Into SQL#%li - successfully.", lastRowId);
+
+
             
             
             self.latestDataList = initDataListWithDB();
-            // add convert words to TableView
-            //[self.latestDataList addObject: self.iFlyRecognizerResult.copy];
-            
-            [self.latestView reloadData];;
+            [self.latestView reloadData];
         }
         
         // set recognizer result empty
         [self.iFlyRecognizerResult setString:@""];
         NSLog(@"convert finished!");
-    } else {
+    }
+    // 2.a do nothing when continue
+    else {
         NSLog(@"convert...");
     }
     

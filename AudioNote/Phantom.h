@@ -9,7 +9,6 @@
 #ifndef AudioNote_Phantom_h
 #define AudioNote_Phantom_h
 
-#import <sqlite3.h>
 #import <stdio.h>
 #import <stdlib.h>
 #import <string.h>
@@ -20,12 +19,9 @@
 #define MAX_INPUT_LEN       1000
 #define SUCCESS             0
 #define ERROR               -1
-#define kDatabaseName @"voice_record.sqlite3"
 //#define debug_printf            printf
 #define debug_printf
 
-int getMinute(char *pCh);
-int process(char szParam[MAX_INPUT_LEN]);
 
 int g_nDateOffset = 0;
 int g_nTime = 0;
@@ -526,102 +522,6 @@ int process(char szParam[MAX_INPUT_LEN])
     g_szType[MAX_INPUT_LEN-1] = '\0';
     return SUCCESS;
 } // end of process()
-
-
-int insertDB(char *szInput,char *szBegin,int duration) {
-    char szTemp[MAX_INPUT_LEN],szSQL[MAX_INPUT_LEN*2];
-    char szTime[MAX_INPUT_LEN];
-    sqlite3 *database;
-    NSString *databaseFilePath;
-    time_t t;
-    struct tm *tmLocal;
-    sqlite3_stmt *statement;
-    
-    ////////////////////////////////
-    // Input checking
-    ////////////////////////////////
-    if (szInput == NULL || szBegin == NULL) {
-        return -__LINE__;
-    }
-    
-    ////////////////////////////////
-    // Get current local time yyyy/mm/dd HH:MM:SS
-    ////////////////////////////////
-    time(&t);
-    tmLocal = localtime(&tmLocal);
-    snprintf(szTime,MAX_INPUT_LEN-1,"%04d-%02d-%02d %02d:%02d:%02d",
-             tmLocal->tm_year+1900,
-             tmLocal->tm_mon+1,
-             tmLocal->tm_mday,
-             tmLocal->tm_hour,
-             tmLocal->tm_min,
-             tmLocal->tm_sec);
-    
-    ////////////////////////////////
-    // Create DB and Index if not exists
-    ////////////////////////////////
-    NSArray *paths= NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    databaseFilePath=[documentsDirectory stringByAppendingPathComponent:kDatabaseName];
-    int result = sqlite3_open([databaseFilePath UTF8String], &database);
-    if (result != SQLITE_OK)
-        return -__LINE__;
-    
-    NSString *createSQL = @"CREATE TABLE IF NOT EXISTS voice_record (id integer PRIMARY KEY AUTOINCREMENT,input varchar(1000) NOT NULL,description varchar(1000) NOT NULL,category varchar(100) NOT NULL,nMoney integer NOT NULL DEFAULT '0',nTime integer NOT NULL DEFAULT '0',begin datetime NOT NULL,duration integer NOT NULL DEFAULT '0',create_time datetime NOT NULL,modify_time datetime NOT NULL); CREATE INDEX IF NOT EXISTS idx_category ON voice_record(category); CREATE INDEX IF NOT EXISTS idx_create_time ON voice_record(create_time);";
-    char *errorMsg;
-    if (sqlite3_exec(database, [createSQL UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
-        sqlite3_close(database);
-        return -__LINE__;
-    }
-    
-    ////////////////////////////////
-    // Process input
-    // All the result will be saved in g_szRemain, g_szType,g_nMoney,g_nTime
-    ////////////////////////////////
-    strncpy(szTemp,szInput,MAX_INPUT_LEN-1);
-    szTemp[MAX_INPUT_LEN-1] = '\0';
-    if (process(szTemp) == SUCCESS) {
-        ////////////////////////////////
-        // Insert to DB (process successfully)
-        ////////////////////////////////
-        snprintf(szSQL,MAX_INPUT_LEN*2-1,"Insert into voice_record (input,description,category,nMoney,nTime,begin,duration,create_time,modify_time) VALUES('%s','%s','%s',%d,%d,'%s',%d,'%s','%s');",
-                 szTemp,g_szRemain,g_szType,g_nMoney,g_nTime,szTime,0,szTime,szTime);
-        szSQL[MAX_INPUT_LEN*2-1] = '\0';
-    }
-    else {
-        ////////////////////////////////
-        // Insert to DB (process failed)
-        ////////////////////////////////
-        snprintf(szSQL,MAX_INPUT_LEN*2-1,"Insert into voice_record (input,description,category,nMoney,nTime,begin,duration,create_time,modify_time) VALUES('%s','','',0,0,'%s',%d,'%s','%s');",
-                 szTemp,szTime,0,szTime,szTime);
-        szSQL[MAX_INPUT_LEN*2-1] = '\0';
-    }
-    result = sqlite3_exec(database, szSQL, NULL, NULL, &errorMsg);
-    if (result != SQLITE_OK) {
-        sqlite3_close(database);
-        return -__LINE__;
-    }
-    
-    ////////////////////////////////
-    // Get the ID just inserted
-    ////////////////////////////////
-    snprintf(szSQL,MAX_INPUT_LEN*2-1,"Select max(id) from voice_record where input='%s' AND create_time='%s'",szTemp,szTime);
-    szSQL[MAX_INPUT_LEN*2-1] = '\0';
-    if (sqlite3_prepare_v2(database, szSQL, -1, &statement, nil) == SQLITE_OK) {
-        if (sqlite3_step(statement) == SQLITE_ROW) {
-            int myid = sqlite3_column_int(statement, 0);
-            sqlite3_finalize(statement);
-            sqlite3_close(database);
-            return myid;
-        }
-        sqlite3_finalize(statement);
-    }
-    
-    // select failed or nothing get when query id
-    sqlite3_close(database);
-    return -__LINE__;
-} // end of insertDB()
-
 
 
 #endif

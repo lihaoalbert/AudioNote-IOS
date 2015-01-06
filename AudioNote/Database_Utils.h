@@ -11,6 +11,58 @@
 
 #import <sqlite3.h>
 #define kDatabaseName @"voice_record.sqlite3"
+#define myLog NSLog
+
+
+
+NSInteger insertDBWithSQL(NSString *insertSQL) {
+    NSLog(@"Enter:\n%@", insertSQL);
+    
+    sqlite3 *database;
+    NSString *databaseFilePath;
+    
+    
+    ////////////////////////////////
+    // Create DB and Index if not exists
+    ////////////////////////////////
+    NSArray *paths= NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    databaseFilePath=[documentsDirectory stringByAppendingPathComponent:kDatabaseName];
+    int result = sqlite3_open([databaseFilePath UTF8String], &database);
+    if (result != SQLITE_OK) {
+        myLog(@"@open database failed.");
+        return -__LINE__;
+    }
+    
+    NSString *createSQL = @"CREATE TABLE IF NOT EXISTS voice_record (id integer PRIMARY KEY AUTOINCREMENT,input varchar(1000) NOT NULL,description varchar(1000) NOT NULL,category varchar(100) NOT NULL,nMoney integer NOT NULL DEFAULT '0',nTime integer NOT NULL DEFAULT '0',begin datetime NOT NULL,duration integer NOT NULL DEFAULT '0',create_time datetime NOT NULL,modify_time datetime NOT NULL); CREATE INDEX IF NOT EXISTS idx_category ON voice_record(category); CREATE INDEX IF NOT EXISTS idx_create_time ON voice_record(create_time);";
+    char *errorMsg;
+    if (sqlite3_exec(database, [createSQL UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
+        sqlite3_close(database);
+        myLog(@"check database exist failed.");
+        return -__LINE__;
+    }
+    
+
+    result = sqlite3_exec(database, [insertSQL UTF8String], NULL, NULL, &errorMsg);
+    if (result != SQLITE_OK) {
+        sqlite3_close(database);
+        myLog(@"execute sql failed.");
+        return -__LINE__;
+    }
+    
+    ////////////////////////////////
+    // Get the ID just inserted
+    ////////////////////////////////
+    NSInteger lastRowId = sqlite3_last_insert_rowid(database);
+    if (lastRowId > 0)
+        return lastRowId;
+    else
+        myLog(@"lastRowId#%li < 0.", lastRowId);
+
+    return -__LINE__;
+} // end of insertDBWithSQL()
+
+
 
 NSMutableArray* selectDBwithDate(){//char *beginDate, char *endDate) {
     sqlite3 *database;
