@@ -10,6 +10,7 @@
 
 @implementation DatabaseUtils
 
+#define myNSLog
 
 -(NSInteger) insertDBWithSQL: (NSString *) insertSQL {
     NSLog(@"Enter:\n%@", insertSQL);
@@ -26,7 +27,7 @@
     databaseFilePath=[documentsDirectory stringByAppendingPathComponent:kDatabaseName];
     int result = sqlite3_open([databaseFilePath UTF8String], &database);
     if (result != SQLITE_OK) {
-        myLog(@"@open database failed.");
+        myNSLog(@"@open database failed.");
         return -__LINE__;
     }
     
@@ -34,7 +35,7 @@
     char *errorMsg;
     if (sqlite3_exec(database, [createSQL UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
         sqlite3_close(database);
-        myLog(@"check database exist failed.");
+        myNSLog(@"check database exist failed.");
         return -__LINE__;
     }
     
@@ -42,7 +43,7 @@
     result = sqlite3_exec(database, [insertSQL UTF8String], NULL, NULL, &errorMsg);
     if (result != SQLITE_OK) {
         sqlite3_close(database);
-        myLog(@"execute sql failed.");
+        myNSLog(@"execute sql failed.");
         return -__LINE__;
     }
     
@@ -53,7 +54,7 @@
     if (lastRowId > 0)
         return lastRowId;
     else
-        myLog(@"lastRowId#%li < 0.", lastRowId);
+        myNSLog(@"lastRowId#%li < 0.", lastRowId);
     
     return -__LINE__;
 } // end of insertDBWithSQL()
@@ -72,11 +73,11 @@
     NSArray *paths= NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     databaseFilePath=[documentsDirectory stringByAppendingPathComponent:kDatabaseName];
-    NSLog(@"database path: %@",databaseFilePath);
+    myNSLog(@"database path: %@",databaseFilePath);
     int result = sqlite3_open([databaseFilePath UTF8String], &database);
     if (result != SQLITE_OK) {
-        NSLog(@"Sqlite3 DataBase Open Failed.");
-        NSLog(@"Abort Line Number: %i", __LINE__);
+        myNSLog(@"Sqlite3 DataBase Open Failed.");
+        myNSLog(@"Abort Line Number: %i", __LINE__);
         return mutableArray;
     }
     
@@ -99,7 +100,7 @@
             _duration    = sqlite3_column_int(statement, 7);
             _create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 8)encoding:NSUTF8StringEncoding];
             _modify_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 9)encoding:NSUTF8StringEncoding];
-            NSLog(@"_id = %i\n_input = %@ \n_description = %@ \n_category = %@\n_nMoney = %i\n _nTime = %i\n _begin       = %@\n_duration = %i\n_create_time = %@\n_modify_time = %@\n===================\n", _id, _input, _description, _category, _nMoney, _nTime, _begin, _duration, _create_time, _modify_time);
+            myNSLog(@"_id = %i\n_input = %@ \n_description = %@ \n_category = %@\n_nMoney = %i\n _nTime = %i\n _begin       = %@\n_duration = %i\n_create_time = %@\n_modify_time = %@\n===================\n", _id, _input, _description, _category, _nMoney, _nTime, _begin, _duration, _create_time, _modify_time);
             
             
             NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];

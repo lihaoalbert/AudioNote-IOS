@@ -18,7 +18,7 @@
 
 @interface ViewControllerFirst : UIViewController
 
-- (IBAction)startUpVoice:(id)sender;
+//- (IBAction)startUpVoice:(id)sender;
 
 @end
 

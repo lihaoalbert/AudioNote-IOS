@@ -14,6 +14,8 @@
 #import "DatabaseUtils.h"
 #import "ViewCommonUtils.h"
 
+//#define myNSLog NSLog
+#define myNSLog
 // comment by hand
 // code will run normally without them.
 @interface ViewControllerFirst () <IFlyRecognizerViewDelegate, UITableViewDelegate, UITableViewDataSource>
@@ -31,6 +33,8 @@
 @property (nonatomic, nonatomic) NSMutableArray     *latestDataList;
 @property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
 @property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
+// begin voice record
+@property (weak, nonatomic) IBOutlet UIButton       *voiceBtn;
 
 
 @end
@@ -72,8 +76,6 @@
     // logger
     [IFlySetting setLogFile:LVL_NONE]; //LVL_ALL
     [IFlySetting showLogcat:NO];
-    
-    
     NSLog(@"IFly Version: %@", [IFlySetting getVersion]);
     
     
@@ -106,22 +108,43 @@
     UISwipeGestureRecognizer *gestureLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToThirdView)];
     gestureLeft.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:gestureLeft];
+    
+    /*
+    UILongPressGestureRecognizer *gesturelongPress = [[UIPressGesture alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    gesturelongPress.allowableMovement=NO;
+    gesturelongPress.minimumPressDuration = 0.1;
+    [self.voiceBtn addGestureRecognizer:gesturelongPress];
+   */
 }
 
 // Swipe Gesture Functions
--(void)swipeToSecondView
-{
+-(void)swipeToSecondView {
     ViewControllerSecond *secondView = [[ViewControllerSecond alloc] init];
+    //[self.navigationController removeFromParentViewController];
+
+    NSLog(@"%@", self.navigationController.childViewControllers);
+    
     [self.navigationController pushViewController:secondView animated:YES];
     secondView.title = @"明细列表";
 }
 
--(void)swipeToThirdView
-{
+-(void)swipeToThirdView {
     ViewControllerThird *thirdView = [[ViewControllerThird alloc] init];
+    //[self.navigationController removeFromParentViewController];
+    NSLog(@"%@", self.navigationController.childViewControllers);
     [self.navigationController pushViewController:thirdView animated:YES];
     thirdView.title = @"数据报表";
 }
+
+// Start Voice Record
+-(void)handleLongPress {
+    [self.iFlyRecognizerView start];
+    
+    // clear text when start recognizer tart
+    self.iFlyRecognizerShow.text = @"";
+    self.iFlyRecognizerStartDate = [NSDate date];
+}
+
 
 - (void)viewDidUnload {
     self.iFlyRecognizerView = nil;
@@ -149,6 +172,7 @@
 
 
 
+/*
 - (IBAction)startUpVoice:(id)sender {
     [self.iFlyRecognizerView start];
     
@@ -156,6 +180,7 @@
     self.iFlyRecognizerShow.text = @"";
     self.iFlyRecognizerStartDate = [NSDate date];
 }
+ */
 
 #pragma mark - UIBarButtonItem#Action
 
@@ -207,11 +232,11 @@
             int szDuration = (int)duration_int;
              */
             
-            NSLog(@"**************************");
-            NSLog(@"content:  %@", self.iFlyRecognizerResult);
-            NSLog(@"created:  %@", t_createTime);
-            NSLog(@"duration: %li", t_duration);
-            NSLog(@"**************************");
+            myNSLog(@"**************************");
+            myNSLog(@"content:  %@", self.iFlyRecognizerResult);
+            myNSLog(@"created:  %@", t_createTime);
+            myNSLog(@"duration: %li", t_duration);
+            myNSLog(@"**************************");
             
             
             ////////////////////////////////

@@ -10,7 +10,7 @@
 #import "ViewCommonUtils.h"
 
 @implementation ViewCommonUtils
-
+#define myNSLog 
 
 // voice record list with format
 -(NSMutableArray*) getDataListWithDB: (DatabaseUtils*) databaseUtils {
@@ -28,10 +28,34 @@
         listItem = [listItem stringByAppendingString:@"分钟]"];
         [latestDataList addObject:listItem];
         for(NSString *key in dict) {
-            NSLog(@"%10@: %@", key, dict[key]);
+            myNSLog(@"%10@: %@", key, dict[key]);
         }
     }
     return latestDataList;
 }
+
+- (void)switchViewController: (UIViewController*) viewControllers
+                        From: (UIViewController*) fromViewController
+                          to: (UIViewController*) toViewController {
+    
+    /*
+    UIViewController* vc;
+    for (vc in viewControllers) {
+        if ([vc isKindOfClass:[fromViewController class]]) {
+            [fromViewController class]* dpvc = ([fromViewController class]*)vc;
+            [dpvc bannerHide];
+            break;
+        }
+    }
+    
+    for (vc in viewControllers) {
+        if ([vc isKindOfClass:[toViewController class]]) {
+            [self popToRootViewControllerAnimated:NO];
+            [self pushViewController:vc animated:YES];
+            break;
+        }
+    }*/
+}
+
 
 @end
