@@ -44,6 +44,10 @@
 		C44C1ECB1A32FABC00BDE49B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1ECA1A32FABC00BDE49B /* SystemConfiguration.framework */; };
 		C44C1ECD1A32FACB00BDE49B /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1ECC1A32FACB00BDE49B /* libz.dylib */; };
 		C44C1ECF1A32FB3400BDE49B /* iflyMSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1ECE1A32FB3400BDE49B /* iflyMSC.framework */; };
+		C451AC501A5CD25D001FFF41 /* qq.png in Resources */ = {isa = PBXBuildFile; fileRef = C451AC4E1A5CD25D001FFF41 /* qq.png */; };
+		C451AC511A5CD25D001FFF41 /* youdao.png in Resources */ = {isa = PBXBuildFile; fileRef = C451AC4F1A5CD25D001FFF41 /* youdao.png */; };
+		C451AC5A1A5CE115001FFF41 /* MyTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C451AC591A5CE115001FFF41 /* MyTableViewCell.xib */; };
+		C451AC5D1A5CF0EA001FFF41 /* MyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C451AC5C1A5CF0EA001FFF41 /* MyTableViewCell.m */; };
 		C4AA4C3C1A5A86FB00E6A1E7 /* ViewControllerThird.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4AA4C3B1A5A86FB00E6A1E7 /* ViewControllerThird.xib */; };
 		C4AA4C3E1A5A870800E6A1E7 /* ViewControllerThird.m in Sources */ = {isa = PBXBuildFile; fileRef = C4AA4C3D1A5A870800E6A1E7 /* ViewControllerThird.m */; };
 		C4B813681A482F80001218E1 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C4B813671A482F80001218E1 /* libsqlite3.dylib */; };
@@ -108,6 +112,11 @@
 		C44C1ECA1A32FABC00BDE49B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C44C1ECC1A32FACB00BDE49B /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		C44C1ECE1A32FB3400BDE49B /* iflyMSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iflyMSC.framework; path = Lib/iflyMSC.framework; sourceTree = "<group>"; };
+		C451AC4E1A5CD25D001FFF41 /* qq.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qq.png; sourceTree = "<group>"; };
+		C451AC4F1A5CD25D001FFF41 /* youdao.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = youdao.png; sourceTree = "<group>"; };
+		C451AC591A5CE115001FFF41 /* MyTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyTableViewCell.xib; sourceTree = "<group>"; };
+		C451AC5B1A5CE327001FFF41 /* MyTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyTableViewCell.h; sourceTree = "<group>"; };
+		C451AC5C1A5CF0EA001FFF41 /* MyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTableViewCell.m; sourceTree = "<group>"; };
 		C4AA4C3B1A5A86FB00E6A1E7 /* ViewControllerThird.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewControllerThird.xib; sourceTree = "<group>"; };
 		C4AA4C3D1A5A870800E6A1E7 /* ViewControllerThird.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewControllerThird.m; sourceTree = "<group>"; };
 		C4AA4C3F1A5A870F00E6A1E7 /* ViewControllerThird.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewControllerThird.h; sourceTree = "<group>"; };
@@ -189,24 +198,13 @@
 		C44C1E9D1A32FA7500BDE49B /* AudioNote */ = {
 			isa = PBXGroup;
 			children = (
-				4A78E65A1A51487D006FF062 /* dictList.h */,
-				4A78E65B1A51487D006FF062 /* dictType.h */,
-				4A78E6551A51424A006FF062 /* Phantom.h */,
-				C4AA4C401A5A9A4800E6A1E7 /* DatabaseUtils.h */,
-				C417E5F01A5BC0200085CBBF /* DatabaseUtils.m */,
-				C417E5F21A5BC1C90085CBBF /* ViewCommonUtils.h */,
-				C417E5F31A5BC5720085CBBF /* ViewCommonUtils.m */,
+				C451AC561A5CD957001FFF41 /* MVC */,
+				C451AC551A5CD93A001FFF41 /* ViewCommonUtils */,
+				C451AC541A5CD92D001FFF41 /* DatabaseUtils */,
+				C451AC531A5CD922001FFF41 /* Images */,
+				C451AC521A5CD90A001FFF41 /* ProcessPattern */,
 				C44C1EA21A32FA7500BDE49B /* AppDelegate.h */,
 				C44C1EA31A32FA7500BDE49B /* AppDelegate.m */,
-				C44C1EA51A32FA7500BDE49B /* ViewControllerFirst.h */,
-				C44C1EA61A32FA7500BDE49B /* ViewControllerFirst.m */,
-				4A78E68E1A5149F3006FF062 /* ViewControllerFirst.xib */,
-				4A78E6B91A51555D006FF062 /* ViewControllerSecond.h */,
-				4A78E6BA1A51555D006FF062 /* ViewControllerSecond.m */,
-				4A78E6BB1A51555D006FF062 /* ViewControllerSecond.xib */,
-				C4AA4C3F1A5A870F00E6A1E7 /* ViewControllerThird.h */,
-				C4AA4C3D1A5A870800E6A1E7 /* ViewControllerThird.m */,
-				C4AA4C3B1A5A86FB00E6A1E7 /* ViewControllerThird.xib */,
 				C44C1EAB1A32FA7500BDE49B /* Images.xcassets */,
 				C44C1EAD1A32FA7500BDE49B /* LaunchScreen.xib */,
 				C44C1E9E1A32FA7500BDE49B /* Supporting Files */,
@@ -253,6 +251,62 @@
 				C44C1EC41A32FAA000BDE49B /* AdSupport.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C451AC521A5CD90A001FFF41 /* ProcessPattern */ = {
+			isa = PBXGroup;
+			children = (
+				4A78E65A1A51487D006FF062 /* dictList.h */,
+				4A78E65B1A51487D006FF062 /* dictType.h */,
+				4A78E6551A51424A006FF062 /* Phantom.h */,
+			);
+			name = ProcessPattern;
+			sourceTree = "<group>";
+		};
+		C451AC531A5CD922001FFF41 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				C451AC4E1A5CD25D001FFF41 /* qq.png */,
+				C451AC4F1A5CD25D001FFF41 /* youdao.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		C451AC541A5CD92D001FFF41 /* DatabaseUtils */ = {
+			isa = PBXGroup;
+			children = (
+				C4AA4C401A5A9A4800E6A1E7 /* DatabaseUtils.h */,
+				C417E5F01A5BC0200085CBBF /* DatabaseUtils.m */,
+			);
+			name = DatabaseUtils;
+			sourceTree = "<group>";
+		};
+		C451AC551A5CD93A001FFF41 /* ViewCommonUtils */ = {
+			isa = PBXGroup;
+			children = (
+				C417E5F21A5BC1C90085CBBF /* ViewCommonUtils.h */,
+				C417E5F31A5BC5720085CBBF /* ViewCommonUtils.m */,
+				C451AC5B1A5CE327001FFF41 /* MyTableViewCell.h */,
+				C451AC5C1A5CF0EA001FFF41 /* MyTableViewCell.m */,
+				C451AC591A5CE115001FFF41 /* MyTableViewCell.xib */,
+			);
+			name = ViewCommonUtils;
+			sourceTree = "<group>";
+		};
+		C451AC561A5CD957001FFF41 /* MVC */ = {
+			isa = PBXGroup;
+			children = (
+				C44C1EA51A32FA7500BDE49B /* ViewControllerFirst.h */,
+				C44C1EA61A32FA7500BDE49B /* ViewControllerFirst.m */,
+				4A78E68E1A5149F3006FF062 /* ViewControllerFirst.xib */,
+				4A78E6B91A51555D006FF062 /* ViewControllerSecond.h */,
+				4A78E6BA1A51555D006FF062 /* ViewControllerSecond.m */,
+				4A78E6BB1A51555D006FF062 /* ViewControllerSecond.xib */,
+				C4AA4C3F1A5A870F00E6A1E7 /* ViewControllerThird.h */,
+				C4AA4C3D1A5A870800E6A1E7 /* ViewControllerThird.m */,
+				C4AA4C3B1A5A86FB00E6A1E7 /* ViewControllerThird.xib */,
+			);
+			name = MVC;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -341,13 +395,16 @@
 				4A78E6B41A51527E006FF062 /* tabbar_selected_background@2x.png in Resources */,
 				4A78E6BD1A51555D006FF062 /* ViewControllerSecond.xib in Resources */,
 				4A78E6B31A51527E006FF062 /* tabbar_selected_background.png in Resources */,
+				C451AC5A1A5CE115001FFF41 /* MyTableViewCell.xib in Resources */,
 				4A78E6B11A51527E006FF062 /* tabbar_normal_background.png in Resources */,
 				C4AA4C3C1A5A86FB00E6A1E7 /* ViewControllerThird.xib in Resources */,
 				4A78E6B71A51527E006FF062 /* third_selected.png in Resources */,
 				C44C1EAF1A32FA7500BDE49B /* LaunchScreen.xib in Resources */,
 				4A78E68F1A5149F3006FF062 /* ViewControllerFirst.xib in Resources */,
+				C451AC511A5CD25D001FFF41 /* youdao.png in Resources */,
 				4A78E6B61A51527E006FF062 /* third_normal@2x.png in Resources */,
 				4A78E6AB1A51527E006FF062 /* navigationbar_background_tall.png in Resources */,
+				C451AC501A5CD25D001FFF41 /* qq.png in Resources */,
 				4A78E6AC1A51527E006FF062 /* navigationbar_background_tall@2x.png in Resources */,
 				4A78E6A61A51527E006FF062 /* first_normal@2x.png in Resources */,
 				4A78E6A91A51527E006FF062 /* navigationbar_background.png in Resources */,
@@ -382,6 +439,7 @@
 				C417E5F11A5BC0200085CBBF /* DatabaseUtils.m in Sources */,
 				C44C1EA71A32FA7500BDE49B /* ViewControllerFirst.m in Sources */,
 				C44C1EA41A32FA7500BDE49B /* AppDelegate.m in Sources */,
+				C451AC5D1A5CF0EA001FFF41 /* MyTableViewCell.m in Sources */,
 				C44C1EA11A32FA7500BDE49B /* main.m in Sources */,
 				C417E5F41A5BC5720085CBBF /* ViewCommonUtils.m in Sources */,
 			);

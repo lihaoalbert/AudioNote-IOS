@@ -29,6 +29,14 @@
     gestureLeft.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:gestureLeft];
     
+    
+    /*
+    // reset UIBarButtonItem
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
+                                   initWithTitle:@""
+                                   style:nil target:nil action:nil];
+    [self.navigationItem setBackBarButtonItem:backButton];
+     */
 }
 
 // Swipe Gesture Functions

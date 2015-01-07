@@ -9,6 +9,7 @@
 #import "ViewControllerSecond.h"
 #import "ViewControllerFirst.h"
 #import "ViewControllerThird.h"
+#import "MyTableViewCell.h"
 
 #import "DatabaseUtils.h"
 #import "ViewCommonUtils.h"
@@ -22,6 +23,11 @@
 
 @implementation ViewControllerSecond
 
+@synthesize listView;
+@synthesize listData;
+@synthesize databaseUtils;
+@synthesize viewCommonUtils;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -33,8 +39,9 @@
     // TableView
     self.listView.delegate   = self;
     self.listView.dataSource = self;
-    [self.listView setEditing:YES animated:YES];
-    self.listData = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
+    //[self.listView setEditing:YES animated:YES];
+    //self.listData = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
+    self.listData = [self.databaseUtils selectDBwithDate];
     
     
     // Gesture
@@ -46,6 +53,20 @@
     gestureLeft.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:gestureLeft];
     
+    // reset UIBarButtonItem
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
+                                   initWithTitle:@""
+                                   style:UIBarButtonItemStylePlain target:nil action:nil];
+    [self.navigationItem setBackBarButtonItem:backButton];
+    
+}
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    self.listData = nil;
+    self.listView = nil;
+    self.databaseUtils = nil;
+    self.viewCommonUtils = nil;
 }
 
 // Swipe Gesture Functions
@@ -77,13 +98,38 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellID = @"cellID";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    MyTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
+        //cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellID];
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"MyTableViewCell" owner:self options:nil] lastObject];
     }
-    cell.textLabel.text = [self.listData objectAtIndex:indexPath.row];
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"MyTableViewCell" owner:self options:nil] lastObject];
+    
+    NSMutableDictionary *dict = [self.listData objectAtIndex:indexPath.row];
+    NSString *num  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
+    NSString *unit = @"元";
+    if ([num isEqualToString: @"0"]) {
+        num  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];
+        unit = @"分钟";
+    }
+
+    /*
+    cell.textLabel.text  = num;
+    cell.imageView.image = [UIImage imageNamed:@"qq"];
+    cell.imageView.highlightedImage = [UIImage imageNamed:@"youdao"];
+    cell.detailTextLabel.text       = [dict objectForKey: @"description"];
+     */
+    cell.cellNum.text = num;
+    cell.cellTag.text = @"tag";
+    cell.cellDesc.text = [dict objectForKey: @"description"];
     return cell;
+
 }
 
-
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSMutableDictionary *dict = [self.listData objectAtIndex:[indexPath row]];
+    NSString *alterMsg  = [dict objectForKey: @"description"];
+    UIAlertView * alter = [[UIAlertView alloc] initWithTitle:@"选中的行信息" message:alterMsg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    [alter show];
+}
 @end

@@ -14,11 +14,11 @@
 		<string>github.com:jay16/AudioNote-IOS.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>AudioNote.xcodeproj</string>
+	<string>IOS/AudioNote_xib/AudioNote.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>6E026A56DA956DFCD6C1BC815E074E6A814597D7</key>
-		<string>../..</string>
+		<string>../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:jay16/AudioNote-IOS.git</string>
@@ -34,7 +34,7 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>6E026A56DA956DFCD6C1BC815E074E6A814597D7</string>
 			<key>IDESourceControlWCCName</key>
-			<string>AudioNote</string>
+			<string>Code</string>
 		</dict>
 	</array>
 </dict>
