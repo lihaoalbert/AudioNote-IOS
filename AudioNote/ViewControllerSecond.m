@@ -113,14 +113,9 @@
         unit = @"分钟";
     }
 
-    /*
-    cell.textLabel.text  = num;
-    cell.imageView.image = [UIImage imageNamed:@"qq"];
-    cell.imageView.highlightedImage = [UIImage imageNamed:@"youdao"];
-    cell.detailTextLabel.text       = [dict objectForKey: @"description"];
-     */
-    cell.cellNum.text = num;
-    cell.cellTag.text = @"tag";
+    cell.cellNum.text  = num;
+    cell.cellUnit.text = unit;
+    cell.cellTag.text  = [dict objectForKey: @"category"];
     cell.cellDesc.text = [dict objectForKey: @"description"];
     return cell;
 

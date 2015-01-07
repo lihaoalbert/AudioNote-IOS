@@ -15,9 +15,10 @@
 
 @interface MyTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *cellNum;
-@property (weak, nonatomic) IBOutlet UILabel *cellTag;
-@property (weak, nonatomic) IBOutlet UILabel *cellDesc;
+@property (weak, nonatomic) IBOutlet UILabel *cellNum;  // 值: 金额/时间
+@property (weak, nonatomic) IBOutlet UILabel *cellTag;  // 分类
+@property (weak, nonatomic) IBOutlet UILabel *cellDesc; // 保留字
+@property (weak, nonatomic) IBOutlet UILabel *cellUnit; // 金额/时间
 
 @end
 

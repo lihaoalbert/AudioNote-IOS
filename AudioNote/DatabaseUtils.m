@@ -103,10 +103,10 @@
             
             
             NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
-            // set key: value
             [mutableDictionary setObject:[NSNumber numberWithInteger:_id]  forKey:@"id"];
             [mutableDictionary setObject:_input forKey:@"input"];
             [mutableDictionary setObject:_description forKey:@"description"];
+            [mutableDictionary setObject:_category forKey:@"category"];
             [mutableDictionary setObject:[NSNumber numberWithInteger:_nMoney]  forKey:@"nMoney"];
             [mutableDictionary setObject:[NSNumber numberWithInteger:_nTime]  forKey:@"nTime"];
             [mutableDictionary setObject:_begin forKey:@"begin"];
