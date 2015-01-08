@@ -10,6 +10,6 @@ then
     exit 3
 else
     git add -A .
-    git commit -m ${git_comment}
+    git commit -m "${git_comment}"
     git push origin master
 fi

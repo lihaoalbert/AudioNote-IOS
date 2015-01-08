@@ -6,22 +6,30 @@
 //  Copyright (c) 2014年 Intfocus. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import "ViewControllerFirst.h"
 #import "ViewControllerSecond.h"
 #import "ViewControllerThird.h"
 
+#import "PopupView.h"
 #import "Phantom.h"
 #import "DatabaseUtils.h"
 #import "ViewCommonUtils.h"
+#import "ISRDataHelper.h"
 
 //#define myNSLog NSLog
-#define myNSLog
-// comment by hand
-// code will run normally without them.
-@interface ViewControllerFirst () <IFlyRecognizerViewDelegate, UITableViewDelegate, UITableViewDataSource>
+#define myNSLog NSLog
 
-// iFly recognizer ui.
-@property (nonatomic, nonatomic) IFlyRecognizerView *iFlyRecognizerView;
+@interface ViewControllerFirst () <IFlySpeechRecognizerDelegate,UIActionSheetDelegate, UITableViewDelegate, UITableViewDataSource>
+
+//识别对象
+@property (nonatomic, strong) IFlySpeechRecognizer * iFlySpeechRecognizer;
+//数据上传对象
+@property (nonatomic, strong) IFlyDataUploader     * uploader;
+
+@property (nonatomic, strong) PopupView            * popUpView;   // show volumn when voice
+@property (nonatomic)         BOOL                 isCanceled;    // voice status
+
 // iFly recognizer convert audio to text.
 @property (nonatomic, nonatomic) NSMutableString    *iFlyRecognizerResult;
 @property (nonatomic, nonatomic) NSDate             *iFlyRecognizerStartDate;
@@ -41,8 +49,7 @@
 
 
 @implementation ViewControllerFirst
-
-@synthesize iFlyRecognizerView;
+@synthesize iFlySpeechRecognizer;
 @synthesize iFlyRecognizerResult;
 @synthesize iFlyRecognizerStartDate;
 @synthesize iFlyRecognizerShow;
@@ -57,23 +64,17 @@
     // init Utils
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
+    self.isCanceled      = YES;
     
     // config iflyRecognizerView
     NSString *initString = [[NSString alloc] initWithFormat:@"appid=%@", @"5437b538"];
     [IFlySpeechUtility createUtility:initString];
-    self.iFlyRecognizerView = [[IFlyRecognizerView alloc] initWithCenter:self.view.center]; // self.view.center
-    self.iFlyRecognizerView.delegate = self;
-    [self.iFlyRecognizerView setParameter:@"iat" forKey:[IFlySpeechConstant IFLY_DOMAIN]];
     
-    //ASR_AUDIO_PATH: save record file name, set nil if not need, default file direcotry: /documents
-    [self.iFlyRecognizerView setParameter:@"asrview.pcm" forKey:[IFlySpeechConstant ASR_AUDIO_PATH]];
-    // result not include punctuate
-    [self.iFlyRecognizerView setParameter:@"0" forKey:@"asr_ptt"];
-    // result_type: json，xml，plain，default: json。
-    [self.iFlyRecognizerView setParameter:@"plain" forKey:[IFlySpeechConstant RESULT_TYPE]];
-    // Language
-    //[iflySpeechRecognizer setParameter:@"language" value:@"en_us"];
-    // logger
+
+    self.uploader = [[IFlyDataUploader alloc] init];
+    //创建识别
+    self.iFlySpeechRecognizer = [self.viewCommonUtils CreateRecognizer:self Domain:@"iat"];
+
     [IFlySetting setLogFile:LVL_NONE]; //LVL_ALL
     [IFlySetting showLogcat:NO];
     NSLog(@"IFly Version: %@", [IFlySetting getVersion]);
@@ -94,6 +95,7 @@
     self.latestDataList = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
     
     
+    
     // UIBar
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(selectLeftAction:)];
     self.navigationItem.leftBarButtonItem = leftButton;
@@ -109,12 +111,17 @@
     gestureLeft.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:gestureLeft];
     
+    
+    [self.voiceBtn addTarget:self action:@selector(startVoiceRecord) forControlEvents:UIControlEventTouchDown];
+    [self.voiceBtn addTarget:self action:@selector(stopVoiceRecord) forControlEvents:UIControlEventTouchUpInside];
+     
     /*
-    UILongPressGestureRecognizer *gesturelongPress = [[UIPressGesture alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    UILongPressGestureRecognizer *gesturelongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(startVoiceRecord:)];
     gesturelongPress.allowableMovement=NO;
     gesturelongPress.minimumPressDuration = 0.1;
     [self.voiceBtn addGestureRecognizer:gesturelongPress];
-   */
+     */
+    
 }
 
 // Swipe Gesture Functions
@@ -136,31 +143,43 @@
     thirdView.title = @"数据报表";
 }
 
+
 // Start Voice Record
--(void)handleLongPress {
-    [self.iFlyRecognizerView start];
+-(void)startVoiceRecord {
+    //设置为录音模式
+    [self.iFlySpeechRecognizer setParameter:IFLY_AUDIO_SOURCE_MIC forKey:@"audio_source"];
+    bool ret = [self.iFlySpeechRecognizer startListening];
+    if (ret) {
+        // clear text when start recognizer tart
+        self.iFlyRecognizerShow.text = @"";
+        self.iFlyRecognizerStartDate = [NSDate date];
+        self.isCanceled = NO;
+    } else {
+        [self.popUpView setText: @"启动识别服务失败，请稍后重试"];//可能是上次请求未结束，暂不支持多路并发
+        [self.view addSubview:self.popUpView];
+    }
+
     
-    // clear text when start recognizer tart
-    self.iFlyRecognizerShow.text = @"";
-    self.iFlyRecognizerStartDate = [NSDate date];
+}
+
+// Stop Voice Record
+-(void)stopVoiceRecord {
+    [self.iFlySpeechRecognizer stopListening];
+    self.isCanceled = YES;
+    [self.popUpView removeFromSuperview];
 }
 
 
 - (void)viewDidUnload {
-    self.iFlyRecognizerView = nil;
+    //取消识别
+    [self.iFlySpeechRecognizer cancel];
+    [self.iFlySpeechRecognizer setDelegate: nil];
     self.iFlyRecognizerResult = nil;
     self.iFlyRecognizerShow = nil;
     self.latestView = nil;
     self.latestDataList = nil;
     self.gDateFormatter = nil;
     self.databaseUtils  = nil;
-    [self setIFlyRecognizerView:nil];
-    [self setIFlyRecognizerResult:nil];
-    [self setIFlyRecognizerShow:nil];
-    [self setLatestView:nil];
-    [self setLatestDataList:nil];
-    [self setGDateFormatter:nil];
-    [self setDatabaseUtils:nil];
     
     [super viewDidUnload];
 }
@@ -171,45 +190,95 @@
 }
 
 
-
-/*
-- (IBAction)startUpVoice:(id)sender {
-    [self.iFlyRecognizerView start];
-    
-    // clear text when start recognizer tart
-    self.iFlyRecognizerShow.text = @"";
-    self.iFlyRecognizerStartDate = [NSDate date];
-}
- */
-
 #pragma mark - UIBarButtonItem#Action
 
--(void)selectLeftAction:(id)sender
-{
+-(void)selectLeftAction:(id)sender {
     UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"提示" message:@"你点击了导航栏左按钮" delegate:self  cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
     [alter show];
 }
 
--(void)selectRightAction:(id)sender
-{
+-(void)selectRightAction:(id)sender {
     UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"提示" message:@"你点击了导航栏右按钮" delegate:self  cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
     [alter show];
 }
 
-#pragma mark - <IFlyRecognizerViewDelegate>
 
-// iflyRecognizer callback functions begin
-// params
-// (NSArray *)resultArray - voice convert to words result
-// isLast:(BOOL) isLast   - when YES then convert over
-- (void)onResult: (NSArray *)resultArray isLast:(BOOL) isLast {
-    NSDictionary *dic = [resultArray objectAtIndex:0];
-    
-    // 1.a append recognize text into iFlyRecognizerResult
-    for (NSString *key in dic) {
-        if([key length] > 0) // skip empty string
-            [self.iFlyRecognizerResult appendFormat:@"%@",key];
+#pragma mark - IFlySpeechRecognizerDelegate
+
+/**
+ * @fn      onVolumeChanged
+ * @brief   音量变化回调
+ *
+ * @param   volume      -[in] 录音的音量，音量范围1~100
+ * @see
+ */
+- (void) onVolumeChanged: (int)volume {
+    if (self.isCanceled) {
+        [self.popUpView removeFromSuperview];
+        return;
     }
+    NSString * vol = [NSString stringWithFormat:@"音量：%d",volume];
+    
+    [self.popUpView setText: vol];
+    [self.view addSubview:self.popUpView];
+}
+
+/**
+ * @fn      onBeginOfSpeech
+ * @brief   开始识别回调
+ *
+ * @see
+ */
+- (void) onBeginOfSpeech {
+    NSLog(@"onBeginOfSpeech");
+    
+}
+
+/**
+ * @fn      onEndOfSpeech
+ * @brief   停止录音回调
+ *
+ * @see
+ */
+- (void) onEndOfSpeech {
+    NSLog(@"onEndOfSpeech");
+}
+
+
+/**
+ * @fn      onError
+ * @brief   识别结束回调
+ *
+ * @param   errorCode   -[out] 错误类，具体用法见IFlySpeechError
+ */
+- (void) onError:(IFlySpeechError *) error {
+    NSString *text ;
+    
+    NSLog(@"%@",text);
+}
+
+/**
+ * @fn      onResults
+ * @brief   识别结果回调
+ *
+ * @param   result      -[out] 识别结果，NSArray的第一个元素为NSDictionary，NSDictionary的key为识别结果，value为置信度
+ * @see
+ */
+- (void) onResults:(NSArray *) results isLast:(BOOL)isLast {
+    
+    NSMutableString *resultString = [[NSMutableString alloc] init];
+    
+    NSDictionary *dic = results[0];
+    
+    for (NSString *key in dic) {
+        [resultString appendFormat:@"%@",key];
+    }
+    
+    NSString *resultStr = [[ISRDataHelper shareInstance] getResultFromJson:resultString];
+    NSLog(@"听写结果：%@",resultStr);
+    
+    [self.iFlyRecognizerResult appendFormat:@"%@",resultStr];
+
     
     // 1.b show recognize text changing dynamically.
     self.iFlyRecognizerShow.text = self.iFlyRecognizerResult;
@@ -227,16 +296,16 @@
             NSInteger t_duration    = round(duration < 0 ? -duration : duration);
             NSString *t_createTime  = [self.gDateFormatter stringFromDate:self.iFlyRecognizerStartDate];
             /*
-            const char *szInput =[self.iFlyRecognizerResult UTF8String];
-            const char *szBegin =[startDateStr UTF8String];
-            int szDuration = (int)duration_int;
+             const char *szInput =[self.iFlyRecognizerResult UTF8String];
+             const char *szBegin =[startDateStr UTF8String];
+             int szDuration = (int)duration_int;
              */
             
-            myNSLog(@"**************************");
-            myNSLog(@"content:  %@", self.iFlyRecognizerResult);
-            myNSLog(@"created:  %@", t_createTime);
-            myNSLog(@"duration: %li", t_duration);
-            myNSLog(@"**************************");
+            NSLog(@"**************************");
+            NSLog(@"content:  %@", self.iFlyRecognizerResult);
+            NSLog(@"created:  %@", t_createTime);
+            NSLog(@"duration: %li", t_duration);
+            NSLog(@"**************************");
             
             
             ////////////////////////////////
@@ -261,17 +330,17 @@
                 t_nMoney   = [NSString stringWithFormat:@"%d", g_nMoney];
                 t_szType   = [NSString stringWithUTF8String: g_szType];
                 t_szRemain = [NSString stringWithUTF8String: g_szRemain];
-
+                
             }
             NSString *insertSQL = [NSString stringWithFormat: @"Insert into voice_record(input,description,category,nMoney,nTime,begin,duration,create_time,modify_time) VALUES('%@','%@','%@',%@,%@,'%@',%li,'%@','%@');", self.iFlyRecognizerResult.copy, t_szRemain, t_szType, t_nMoney, t_nTime, t_createTime, t_duration,  t_createTime, t_createTime];
             
             NSLog(@"Insert SQL:\n%@", insertSQL);
-
+            
             
             NSInteger lastRowId = [self.databaseUtils insertDBWithSQL: insertSQL];
             NSLog(@"Insert Into SQL#%li - successfully.", lastRowId);
-
-
+            
+            
             
             
             self.latestDataList = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
@@ -286,14 +355,6 @@
     else {
         NSLog(@"convert...");
     }
-    
-}
-
-
-// iflyRecognizer Error Callback
-- (void)onError: (IFlySpeechError *) error {
-    NSLog(@"%d", [error errorCode]);
-    [self.iFlyRecognizerView cancel];
 }
 
 // iflyRecognizer callback functions over
