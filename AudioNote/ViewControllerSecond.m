@@ -103,7 +103,6 @@
         //cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellID];
         cell = [[[NSBundle mainBundle] loadNibNamed:@"MyTableViewCell" owner:self options:nil] lastObject];
     }
-        cell = [[[NSBundle mainBundle] loadNibNamed:@"MyTableViewCell" owner:self options:nil] lastObject];
     
     NSMutableDictionary *dict = [self.listData objectAtIndex:indexPath.row];
     NSString *num  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];

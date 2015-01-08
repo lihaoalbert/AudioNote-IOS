@@ -14,42 +14,51 @@
 #else
 # define ALIGN_CENTER UITextAlignmentCenter
 #endif
-@implementation PopupView
-{
+@implementation PopupView {
     
 }
 @synthesize ParentView = _parentView;
-- (id)initWithFrame:(CGRect)frame
-{
+
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent: 0.75f];
         self.layer.cornerRadius = 5.0f;
-        _textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 100, 10)];
-        _textLabel.numberOfLines = 0;
-        _textLabel.font = [UIFont systemFontOfSize:17];
-        _textLabel.textColor = [UIColor whiteColor];
-        _textLabel.textAlignment = ALIGN_CENTER;
-        _textLabel.backgroundColor = [UIColor clearColor];
-        _textLabel.textAlignment = ALIGN_CENTER;
-        [self addSubview:_textLabel];
+        lVolice = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, _parentView.frame.size.width, 10)];
+        lVolice.numberOfLines = 0;
+        lVolice.font = [UIFont systemFontOfSize:17];
+        lVolice.textColor = [UIColor whiteColor];
+        lVolice.backgroundColor = [UIColor clearColor];
+        lVolice.textAlignment = ALIGN_CENTER;
+        [self addSubview:lVolice];
+        lText = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, _parentView.frame.size.width, 200)];
+        lText.numberOfLines = 0;
+        lText.font = [UIFont systemFontOfSize:15];
+        lText.textColor = [UIColor whiteColor];
+        lText.backgroundColor = [UIColor clearColor];
+        lText.textAlignment = ALIGN_CENTER;
+        [self addSubview:lText];
         _queueCount = 0;
     }
     return self;
 }
 
-- (void) setText:(NSString *) text
-{
-    _textLabel.frame = CGRectMake(0, 10, 100, 10);
+- (void) setVolume:(NSString *) volume Text:(NSString *) text {
     _queueCount ++;
     self.alpha = 1.0f;
-    _textLabel.text = text;
-    [_textLabel sizeToFit];
-    CGRect frame = CGRectMake(5, 0, _textLabel.frame.size.width, _textLabel.frame.size.height);
-    _textLabel.frame = frame;
-    _textLabel.frame = CGRectMake(_textLabel.frame.origin.x, _textLabel.frame.origin.y+10, _textLabel.frame.size.width, _textLabel.frame.size.height);
-    frame =  CGRectMake((_parentView.frame.size.width - frame.size.width)/2, self.frame.origin.y, _textLabel.frame.size.width+10, _textLabel.frame.size.height+20);
-    self.frame = frame;
+    lVolice.frame = CGRectMake(0, 10, _parentView.frame.size.width, 10);
+    lVolice.text = volume;
+    [lVolice sizeToFit];
+ 
+    lText.frame = CGRectMake(0, 30, _parentView.frame.size.width, 200);
+    lText.text = text;
+    [lText sizeToFit];
+
+    //NSLog(@"lText - width: %f, height: %f", lText.frame.size.width, lText.frame.size.height);
+    //NSLog(@"x:%f, y:%f, width:%f, height:%f",(_parentView.frame.size.width - lText.frame.size.width)/2, self.frame.origin.y, lVolice.frame.size.width+10, lVolice.frame.size.height+lText.frame.size.height+20);
+    
+    CGRect  fMain =  CGRectMake(_parentView.frame.size.width/4, _parentView.frame.size.height/2, _parentView.frame.size.width/2, _parentView.frame.size.height/4);
+    self.frame = fMain;
     [UIView animateWithDuration:3.0
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseIn

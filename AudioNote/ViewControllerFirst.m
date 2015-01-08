@@ -66,35 +66,32 @@
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
     self.isCanceled      = YES;
     
-    // config iflyRecognizerView
+
+    
+    // config iflyRecognizer
     NSString *initString = [[NSString alloc] initWithFormat:@"appid=%@", @"5437b538"];
     [IFlySpeechUtility createUtility:initString];
     
 
-    self.uploader = [[IFlyDataUploader alloc] init];
     //创建识别
     self.iFlySpeechRecognizer = [self.viewCommonUtils CreateRecognizer:self Domain:@"iat"];
-
+    self.uploader = [[IFlyDataUploader alloc] init];
+    
     [IFlySetting setLogFile:LVL_NONE]; //LVL_ALL
     [IFlySetting showLogcat:NO];
     NSLog(@"IFly Version: %@", [IFlySetting getVersion]);
     
     
-    // init recognizer result
+    // recognizer result
     self.iFlyRecognizerResult = [[NSMutableString alloc] init];
-    
     // global date foramt
     self.gDateFormatter = [[NSDateFormatter alloc] init];
     [self.gDateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    
-    
     // latest 3 rows data list view
     self.latestView.delegate   = self;
     self.latestView.dataSource = self;
     [self.latestView setEditing:YES animated:YES];
     self.latestDataList = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
-    
-    
     
     // UIBar
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(selectLeftAction:)];
@@ -114,17 +111,18 @@
     
     [self.voiceBtn addTarget:self action:@selector(startVoiceRecord) forControlEvents:UIControlEventTouchDown];
     [self.voiceBtn addTarget:self action:@selector(stopVoiceRecord) forControlEvents:UIControlEventTouchUpInside];
-     
-    /*
-    UILongPressGestureRecognizer *gesturelongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(startVoiceRecord:)];
-    gesturelongPress.allowableMovement=NO;
-    gesturelongPress.minimumPressDuration = 0.1;
-    [self.voiceBtn addGestureRecognizer:gesturelongPress];
-     */
     
+    
+
+    self.popUpView = [[PopupView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/4, self.view.frame.size.height/2, self.view.frame.size.width/2, self.view.frame.size.height/2)];
+    self.popUpView.ParentView = self.view;
+    [self.popUpView setVolume: @"音量:0" Text: @"请说话"];
+    [self.view addSubview:self.popUpView];
 }
 
-// Swipe Gesture Functions
+
+#pragma mark - Swipe Gesture Functions
+
 -(void)swipeToSecondView {
     ViewControllerSecond *secondView = [[ViewControllerSecond alloc] init];
     //[self.navigationController removeFromParentViewController];
@@ -143,31 +141,6 @@
     thirdView.title = @"数据报表";
 }
 
-
-// Start Voice Record
--(void)startVoiceRecord {
-    //设置为录音模式
-    [self.iFlySpeechRecognizer setParameter:IFLY_AUDIO_SOURCE_MIC forKey:@"audio_source"];
-    bool ret = [self.iFlySpeechRecognizer startListening];
-    if (ret) {
-        // clear text when start recognizer tart
-        self.iFlyRecognizerShow.text = @"";
-        self.iFlyRecognizerStartDate = [NSDate date];
-        self.isCanceled = NO;
-    } else {
-        [self.popUpView setText: @"启动识别服务失败，请稍后重试"];//可能是上次请求未结束，暂不支持多路并发
-        [self.view addSubview:self.popUpView];
-    }
-
-    
-}
-
-// Stop Voice Record
--(void)stopVoiceRecord {
-    [self.iFlySpeechRecognizer stopListening];
-    self.isCanceled = YES;
-    [self.popUpView removeFromSuperview];
-}
 
 
 - (void)viewDidUnload {
@@ -202,6 +175,34 @@
     [alter show];
 }
 
+#pragma mark - Switch Voice Record
+
+
+-(void)startVoiceRecord {
+    self.isCanceled = NO;
+    //设置为录音模式
+    [self.iFlySpeechRecognizer setParameter:IFLY_AUDIO_SOURCE_MIC forKey:@"audio_source"];
+    bool ret = [self.iFlySpeechRecognizer startListening];
+    if (ret) {
+        // clear text when start recognizer tart
+        self.iFlyRecognizerShow.text = @"";
+        self.iFlyRecognizerStartDate = [NSDate date];
+    } else {
+        [self.popUpView setVolume:@"失败" Text: @"启动识别服务失败，请稍后重试"];//可能是上次请求未结束，暂不支持多路并发
+    }
+    
+    [self.popUpView setVolume:@"音量:0" Text: @"请说话"];
+    [self.view addSubview:self.popUpView];
+    
+}
+
+// Stop Voice Record
+-(void)stopVoiceRecord {
+    [self.iFlySpeechRecognizer stopListening];
+    self.isCanceled = YES;
+    [self.popUpView removeFromSuperview];
+}
+
 
 #pragma mark - IFlySpeechRecognizerDelegate
 
@@ -218,8 +219,9 @@
         return;
     }
     NSString * vol = [NSString stringWithFormat:@"音量：%d",volume];
-    
-    [self.popUpView setText: vol];
+    NSLog(@"isCanceled: %i, Volumne:%@", self.isCanceled, vol);
+    NSLog(@"iFlyRecognizerResult: %@", self.iFlyRecognizerResult.copy);
+    [self.popUpView setVolume:vol Text: self.iFlyRecognizerResult.copy];
     [self.view addSubview:self.popUpView];
 }
 
@@ -266,15 +268,14 @@
  */
 - (void) onResults:(NSArray *) results isLast:(BOOL)isLast {
     
-    NSMutableString *resultString = [[NSMutableString alloc] init];
-    
-    NSDictionary *dic = results[0];
+    NSMutableString *mutableString = [[NSMutableString alloc] init];
+    NSDictionary    *dic = results[0];
     
     for (NSString *key in dic) {
-        [resultString appendFormat:@"%@",key];
+        [mutableString appendFormat:@"%@",key];
     }
     
-    NSString *resultStr = [[ISRDataHelper shareInstance] getResultFromJson:resultString];
+    NSString *resultStr = [[ISRDataHelper shareInstance] getResultFromJson:mutableString];
     NSLog(@"听写结果：%@",resultStr);
     
     [self.iFlyRecognizerResult appendFormat:@"%@",resultStr];
