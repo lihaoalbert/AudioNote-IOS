@@ -61,12 +61,14 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    // setup database
+    [DatabaseUtils setUP];
     // init Utils
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
     self.isCanceled      = YES;
+    [self.databaseUtils executeSQL: @"delete from voice_record"];
     
-
     
     // config iflyRecognizer
     NSString *initString = [[NSString alloc] initWithFormat:@"appid=%@", @"5437b538"];
@@ -338,7 +340,7 @@
             NSLog(@"Insert SQL:\n%@", insertSQL);
             
             
-            NSInteger lastRowId = [self.databaseUtils insertDBWithSQL: insertSQL];
+            NSInteger lastRowId = [self.databaseUtils executeSQL: insertSQL];
             NSLog(@"Insert Into SQL#%li - successfully.", lastRowId);
             
             

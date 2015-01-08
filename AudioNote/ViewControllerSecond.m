@@ -70,14 +70,14 @@
 }
 
 // Swipe Gesture Functions
--(void)swipeToFirstView
+- (void)swipeToFirstView
 {
     ViewControllerFirst *firstView = [[ViewControllerFirst alloc] init];
     [self.navigationController pushViewController:firstView animated:YES];
     firstView.title = @"小6语记";
 }
 
--(void)swipeToThirdView
+- (void)swipeToThirdView
 {
     ViewControllerThird *thirdView = [[ViewControllerThird alloc] init];
     [self.navigationController pushViewController:thirdView animated:YES];
@@ -120,7 +120,7 @@
 
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSMutableDictionary *dict = [self.listData objectAtIndex:[indexPath row]];
     NSString *alterMsg  = [dict objectForKey: @"description"];
     UIAlertView * alter = [[UIAlertView alloc] initWithTitle:@"选中的行信息" message:alterMsg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];

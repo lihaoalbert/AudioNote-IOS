@@ -17,8 +17,12 @@
 
 @interface DatabaseUtils : NSObject
 
--(NSInteger) insertDBWithSQL: (NSString*) insertSQL;
--(NSMutableArray*) selectDBwithDate;
+@property NSString *databaseFilePath;
+
++ (void) setUP;
+- (NSInteger) executeSQL: (NSString *) sql;
+- (NSMutableArray*) selectDBwithDate;
+- (NSMutableArray*) reportWithType: (NSString *) type;
 
 @end
 

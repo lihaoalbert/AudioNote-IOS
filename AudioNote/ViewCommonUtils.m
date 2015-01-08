@@ -13,7 +13,7 @@
 #define myNSLog 
 
 // voice record list with format
--(NSMutableArray*) getDataListWithDB: (DatabaseUtils*) databaseUtils {
+- (NSMutableArray*) getDataListWithDB: (DatabaseUtils*) databaseUtils {
     NSMutableArray *latestDataList = [NSMutableArray arrayWithCapacity:0];//[[NSMutableArray alloc] initWithObjects:@"first",@"two",@"three",nil];
     
     
