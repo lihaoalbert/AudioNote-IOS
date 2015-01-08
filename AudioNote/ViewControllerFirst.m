@@ -67,7 +67,7 @@
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
     self.isCanceled      = YES;
-    [self.databaseUtils executeSQL: @"delete from voice_record"];
+    //[self.databaseUtils executeSQL: @"delete from voice_record"];
     
     
     // config iflyRecognizer
@@ -298,11 +298,6 @@
             NSTimeInterval duration = [self.iFlyRecognizerStartDate timeIntervalSinceNow];
             NSInteger t_duration    = round(duration < 0 ? -duration : duration);
             NSString *t_createTime  = [self.gDateFormatter stringFromDate:self.iFlyRecognizerStartDate];
-            /*
-             const char *szInput =[self.iFlyRecognizerResult UTF8String];
-             const char *szBegin =[startDateStr UTF8String];
-             int szDuration = (int)duration_int;
-             */
             
             NSLog(@"**************************");
             NSLog(@"content:  %@", self.iFlyRecognizerResult);

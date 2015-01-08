@@ -79,12 +79,7 @@
     sqlite3_stmt *statement;
     NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
     
-    ////////////////////////////////
-    // Open Database
-    ////////////////////////////////
-    NSLog(@"database path: %@",self.databaseFilePath);
-    int result = sqlite3_open([self.databaseFilePath UTF8String], &database);
-    if (result != SQLITE_OK) {
+    if (sqlite3_open([self.databaseFilePath UTF8String], &database) != SQLITE_OK) {
         NSLog(@"Sqlite3 DataBase Open Failed.");
         NSLog(@"Abort Line Number: %i", __LINE__);
         return mutableArray;
@@ -134,36 +129,31 @@
 
 -(NSMutableArray*) reportWithType: (NSString *) type {
     sqlite3 *database;
-    NSString *databaseFilePath;
     sqlite3_stmt *statement;
     NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
     
-    ////////////////////////////////
-    // Open Database
-    ////////////////////////////////
-    NSArray *paths= NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    databaseFilePath=[documentsDirectory stringByAppendingPathComponent:kDatabaseName];
-    int result = sqlite3_open([databaseFilePath UTF8String], &database);
-    if (result != SQLITE_OK) {
+    if (sqlite3_open([self.databaseFilePath UTF8String], &database) != SQLITE_OK) {
+        NSLog(@"Sqlite3 DataBase Open Failed.");
+        NSLog(@"Abort Line Number: %i", __LINE__);
         return mutableArray;
     }
     
     ////////////////////////////////
     // Select Data into NSData
     ////////////////////////////////
-    NSString *query = @"select category sum(nMoney) as nMoney, sum(nTime) as nTime from voice_record group by category;";
-    float _nMoney, _nTime;
+    NSString *query = @"select category, sum(nMoney) as nMoney, sum(nTime) as nTime from voice_record group by category;";
+    int _nMoney, _nTime;
     NSString *_category;
     if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
         while (sqlite3_step(statement) == SQLITE_ROW) {
-            _nMoney      = (float)sqlite3_column_double(statement, 4);
-            _nTime       = sqlite3_column_int(statement, 5);
-            _category    = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 3)encoding:NSUTF8StringEncoding];
+            _category = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 0)encoding:NSUTF8StringEncoding];
+            _nMoney   = sqlite3_column_int(statement, 1);
+            _nTime    = sqlite3_column_int(statement, 2);
+            NSLog(@"_category = %@\n_nMoney = %i\n _nTime = %i\n===================\n", _category, _nMoney, _nTime);
             NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
             [mutableDictionary setObject:_category forKey:@"category"];
-            [mutableDictionary setObject:[NSNumber numberWithFloat:_nMoney]  forKey:@"nMoney"];
-            [mutableDictionary setObject:[NSNumber numberWithFloat:_nTime]  forKey:@"nTime"];
+            [mutableDictionary setObject:[NSNumber numberWithInteger:_nMoney]  forKey:@"nMoney"];
+            [mutableDictionary setObject:[NSNumber numberWithInteger:_nTime]  forKey:@"nTime"];
             [mutableArray addObject: mutableDictionary];
         }
         sqlite3_finalize(statement);
