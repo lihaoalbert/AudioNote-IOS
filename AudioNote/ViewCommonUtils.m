@@ -13,11 +13,11 @@
 #define myNSLog 
 
 // voice record list with format
-- (NSMutableArray*) getDataListWithDB: (DatabaseUtils*) databaseUtils {
+- (NSMutableArray*) getDataListWith: (DatabaseUtils*) databaseUtils Limit: (NSInteger) limit Offset: (NSInteger) offset {
     NSMutableArray *latestDataList = [NSMutableArray arrayWithCapacity:0];//[[NSMutableArray alloc] initWithObjects:@"first",@"two",@"three",nil];
     
     
-    NSMutableArray *dataArray = [databaseUtils selectDBwithDate];
+    NSMutableArray *dataArray = [databaseUtils selectDBwithLimit: limit Offset: offset];
     NSLog(@"Record Row Count: %lu", dataArray.count);
     for (NSDictionary  *dict in dataArray) {
         NSString *listItem = dict[@"description"];
@@ -26,10 +26,11 @@
         listItem = [listItem stringByAppendingString:@"元 ]["];
         listItem = [listItem stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nTime"]]];
         listItem = [listItem stringByAppendingString:@"分钟]"];
+        listItem = [listItem stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nTime"]]];
         [latestDataList addObject:listItem];
-        for(NSString *key in dict) {
-            myNSLog(@"%10@: %@", key, dict[key]);
-        }
+        //for(NSString *key in dict) {
+        //    NSLog(@"%10@: %@", key, dict[key]);
+        //}
     }
     return latestDataList;
 }

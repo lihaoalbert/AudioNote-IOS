@@ -41,8 +41,7 @@
     self.listView.dataSource = self;
     //[self.listView setEditing:YES animated:YES];
     //self.listData = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
-    self.listData = [self.databaseUtils selectDBwithDate];
-    
+    self.listData = [self.databaseUtils selectDBwithLimit:  20 Offset: 0];
     
     // Gesture
     UISwipeGestureRecognizer *gestureRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToThirdView)];

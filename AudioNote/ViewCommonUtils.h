@@ -26,7 +26,7 @@
 
 @interface ViewCommonUtils : NSObject
 
--(NSMutableArray*) getDataListWithDB: (DatabaseUtils*) databaseUtils;
+- (NSMutableArray*) getDataListWith: (DatabaseUtils*) databaseUtils Limit: (NSInteger) limit Offset: (NSInteger) offset;
 - (void)switchViewController: (UIViewController*) viewControllers
                         From: (UIViewController*) fromViewController
                           to: (UIViewController*) toViewController;

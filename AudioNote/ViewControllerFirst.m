@@ -39,6 +39,7 @@
 // latest record list ui
 @property (weak, nonatomic) IBOutlet UITableView    *latestView;
 @property (nonatomic, nonatomic) NSMutableArray     *latestDataList;
+@property (nonatomic, nonatomic) NSInteger          listDataLimit;
 @property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
 @property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
 // begin voice record
@@ -56,6 +57,7 @@
 @synthesize latestView;
 @synthesize latestDataList;
 @synthesize gDateFormatter;
+@synthesize listDataLimit;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -93,7 +95,8 @@
     self.latestView.delegate   = self;
     self.latestView.dataSource = self;
     //[self.latestView setEditing:YES animated:YES];
-    self.latestDataList = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
+    self.listDataLimit = 5;
+    self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
     
     // UIBar
     //UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(selectLeftAction:)];
@@ -122,8 +125,9 @@
     [self.view addSubview:self.popUpView];
     
     /*
+    
     // init data
-    for(NSInteger i = 1; i < 30; i ++) {
+    for(NSInteger i = 1; i < 8; i ++) {
         NSInteger t_duration    = (NSInteger)random()%10;
         NSString *t_createTime  = [NSString stringWithFormat: @"2015-01-%li 12:12:12", (long)i];
         if(i < 10)
@@ -140,7 +144,7 @@
         NSInteger lastRowId = [self.databaseUtils executeSQL: insertSQL];
         NSLog(@"Insert Into SQL#%li - successfully.", lastRowId);
     }
-     */
+    */
 }
 
 
@@ -361,8 +365,7 @@
             
             
             
-            
-            self.latestDataList = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
+            self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
             [self.latestView reloadData];
         }
         
