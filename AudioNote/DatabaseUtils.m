@@ -73,7 +73,6 @@
 } // end of executeSQL()
 
 
-
 -(NSMutableArray*) selectDBwithDate{//char *beginDate, char *endDate) {
     sqlite3 *database;
     sqlite3_stmt *statement;
@@ -127,6 +126,58 @@
 }  // end of selectDBwithDate()
 
 
+
+- (NSMutableArray *) getReportData: (NSString *) type {
+    sqlite3 *database;
+    sqlite3_stmt *statement;
+    NSString *data = [[NSString alloc] init];
+    NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
+    
+    if (sqlite3_open([self.databaseFilePath UTF8String], &database) != SQLITE_OK) {
+        NSLog(@"Sqlite3 DataBase Open Failed.");
+        NSLog(@"Abort Line Number: %i", __LINE__);
+        return mutableArray;
+    }
+    
+    NSString *where = [[NSString alloc] init];
+    ////////////////////////////////
+    // Select Data into NSData
+    ////////////////////////////////
+    if ([type isEqual: @"today"]) {
+        where = @"1 = 1";
+    } else if ([type isEqual: @"this_week"]) {
+        where = @" rowTime between datetime(date(datetime('now',strftime('-%w day','now'))),'+1 second') and datetime(date(datetime('now',(6 - strftime('%w day','now'))||'day','1 day')),'-1 second')";
+    } else if ([type isEqual: @"this_month"]) {
+        where = @" rowTime between datetime('now','start of month','+1 second') and datetime('now','start of month','+1 month','-1 second')";
+        
+    } else if ([type isEqual: @"this_year"]) {
+        where = [where stringByAppendingString:@" strftime(‘%y’,create_time) ="];
+        where = [where stringByAppendingFormat:@" '%@'", @"2015"];
+    } else {
+        where = @" 2 = 2";
+    }
+    NSLog(@"%@", where);
+    
+    NSString *query = @"select sum(nMoney) as nMoney, sum(nTime) as nTime from voice_record where ";
+    query = [query stringByAppendingString:where];
+    int _nMoney, _nTime;
+    if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
+        while (sqlite3_step(statement) == SQLITE_ROW) {
+            _nMoney   = sqlite3_column_int(statement, 0);
+            _nTime    = sqlite3_column_int(statement, 1);
+            NSLog(@"_type = %@\n_nMoney = %i\n _nTime = %i\n===================\n", type, _nMoney, _nTime);
+
+            data = [data stringByAppendingFormat:@"%i 元 / ", _nMoney];
+            data = [data stringByAppendingFormat:@"%i 分钟", _nTime];
+            [mutableArray addObject: data];
+        }
+        sqlite3_finalize(statement);
+    }
+    sqlite3_close(database);
+    return mutableArray;
+
+}
+
 -(NSMutableArray*) reportWithType: (NSString *) type {
     sqlite3 *database;
     sqlite3_stmt *statement;
@@ -150,11 +201,16 @@
             _nMoney   = sqlite3_column_int(statement, 1);
             _nTime    = sqlite3_column_int(statement, 2);
             NSLog(@"_category = %@\n_nMoney = %i\n _nTime = %i\n===================\n", _category, _nMoney, _nTime);
+            /*
             NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
             [mutableDictionary setObject:_category forKey:@"category"];
             [mutableDictionary setObject:[NSNumber numberWithInteger:_nMoney]  forKey:@"nMoney"];
             [mutableDictionary setObject:[NSNumber numberWithInteger:_nTime]  forKey:@"nTime"];
-            [mutableArray addObject: mutableDictionary];
+             */
+            NSString *str = _category;
+            str = [str stringByAppendingFormat:@"%i", _nMoney];
+            str = [str stringByAppendingFormat:@"%i", _nTime];
+            [mutableArray addObject: str];
         }
         sqlite3_finalize(statement);
     }

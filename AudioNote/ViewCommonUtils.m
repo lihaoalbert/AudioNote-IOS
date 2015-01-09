@@ -37,21 +37,22 @@
 - (void)switchViewController: (UIViewController*) viewControllers
                         From: (UIViewController*) fromViewController
                           to: (UIViewController*) toViewController {
-    
     /*
+    Class FromViewControllerClass = [fromViewController class];
+    Class ToViewControllerClass   = [toViewController class];
     UIViewController* vc;
     for (vc in viewControllers) {
-        if ([vc isKindOfClass:[fromViewController class]]) {
-            [fromViewController class]* dpvc = ([fromViewController class]*)vc;
+        if ([vc isKindOfClass:FromViewControllerClass]) {
+            FromViewControllerClass *dpvc = (FromViewControllerClass *)vc;
             [dpvc bannerHide];
             break;
         }
     }
     
     for (vc in viewControllers) {
-        if ([vc isKindOfClass:[toViewController class]]) {
-            [self popToRootViewControllerAnimated:NO];
-            [self pushViewController:vc animated:YES];
+        if ([vc isKindOfClass: ToViewControllerClass]) {
+            [fromViewController popToRootViewControllerAnimated:NO];
+            [fromViewController pushViewController:vc animated:YES];
             break;
         }
     }*/

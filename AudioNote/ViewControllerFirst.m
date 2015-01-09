@@ -92,14 +92,14 @@
     // latest 3 rows data list view
     self.latestView.delegate   = self;
     self.latestView.dataSource = self;
-    [self.latestView setEditing:YES animated:YES];
+    //[self.latestView setEditing:YES animated:YES];
     self.latestDataList = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
     
     // UIBar
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(selectLeftAction:)];
-    self.navigationItem.leftBarButtonItem = leftButton;
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd  target:self action:@selector(selectRightAction:)];
-    self.navigationItem.rightBarButtonItem = rightButton;
+    //UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(selectLeftAction:)];
+    //self.navigationItem.leftBarButtonItem = leftButton;
+    //UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd  target:self action:@selector(selectRightAction:)];
+    //self.navigationItem.rightBarButtonItem = rightButton;
     
     // Gesture
     UISwipeGestureRecognizer *gestureRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToSecondView)];
@@ -372,4 +372,6 @@
     cell.textLabel.text = [self.latestDataList objectAtIndex:indexPath.row];
     return cell;
 }
+
+
 @end

@@ -23,6 +23,7 @@
 - (NSInteger) executeSQL: (NSString *) sql;
 - (NSMutableArray*) selectDBwithDate;
 - (NSMutableArray*) reportWithType: (NSString *) type;
+- (NSString *) getReportData: (NSString *) type;
 
 @end
 
