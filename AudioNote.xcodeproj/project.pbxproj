@@ -32,6 +32,7 @@
 		4A78E6BD1A51555D006FF062 /* ViewControllerSecond.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A78E6BB1A51555D006FF062 /* ViewControllerSecond.xib */; };
 		C417E5F11A5BC0200085CBBF /* DatabaseUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C417E5F01A5BC0200085CBBF /* DatabaseUtils.m */; };
 		C417E5F41A5BC5720085CBBF /* ViewCommonUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C417E5F31A5BC5720085CBBF /* ViewCommonUtils.m */; };
+		C4205C6C1A5FD94B001A3DB2 /* PopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = C4205C6B1A5FD94B001A3DB2 /* PopupView.m */; };
 		C4413F191A5E389E004BA5C3 /* ISRDataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C4413F181A5E389E004BA5C3 /* ISRDataHelper.m */; };
 		C4413F2C1A5E3959004BA5C3 /* SBJson4Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = C4413F1F1A5E3959004BA5C3 /* SBJson4Parser.m */; };
 		C4413F2D1A5E3959004BA5C3 /* SBJson4StreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C4413F211A5E3959004BA5C3 /* SBJson4StreamParser.m */; };
@@ -40,7 +41,6 @@
 		C4413F301A5E3959004BA5C3 /* SBJson4StreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C4413F271A5E3959004BA5C3 /* SBJson4StreamWriter.m */; };
 		C4413F311A5E3959004BA5C3 /* SBJson4StreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = C4413F291A5E3959004BA5C3 /* SBJson4StreamWriterState.m */; };
 		C4413F321A5E3959004BA5C3 /* SBJson4Writer.m in Sources */ = {isa = PBXBuildFile; fileRef = C4413F2B1A5E3959004BA5C3 /* SBJson4Writer.m */; };
-		C4413F381A5E3A5C004BA5C3 /* PopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = C4413F361A5E3A5C004BA5C3 /* PopupView.m */; };
 		C4413F3D1A5E4DB0004BA5C3 /* IFlyPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = C4413F3C1A5E4DB0004BA5C3 /* IFlyPopupView.m */; };
 		C4413F3F1A5E4DF5004BA5C3 /* IFlyPopupView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4413F3E1A5E4DF5004BA5C3 /* IFlyPopupView.xib */; };
 		C44C1EA11A32FA7500BDE49B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C44C1EA01A32FA7500BDE49B /* main.m */; };
@@ -105,6 +105,8 @@
 		C417E5F01A5BC0200085CBBF /* DatabaseUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseUtils.m; sourceTree = "<group>"; };
 		C417E5F21A5BC1C90085CBBF /* ViewCommonUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewCommonUtils.h; sourceTree = "<group>"; };
 		C417E5F31A5BC5720085CBBF /* ViewCommonUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewCommonUtils.m; sourceTree = "<group>"; };
+		C4205C6A1A5FD94B001A3DB2 /* PopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupView.h; sourceTree = "<group>"; };
+		C4205C6B1A5FD94B001A3DB2 /* PopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupView.m; sourceTree = "<group>"; };
 		C4413F171A5E389E004BA5C3 /* ISRDataHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISRDataHelper.h; sourceTree = "<group>"; };
 		C4413F181A5E389E004BA5C3 /* ISRDataHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISRDataHelper.m; sourceTree = "<group>"; };
 		C4413F1D1A5E3959004BA5C3 /* SBJson4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJson4.h; path = SBJson/SBJson4.h; sourceTree = "<group>"; };
@@ -122,8 +124,6 @@
 		C4413F291A5E3959004BA5C3 /* SBJson4StreamWriterState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJson4StreamWriterState.m; path = SBJson/SBJson4StreamWriterState.m; sourceTree = "<group>"; };
 		C4413F2A1A5E3959004BA5C3 /* SBJson4Writer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJson4Writer.h; path = SBJson/SBJson4Writer.h; sourceTree = "<group>"; };
 		C4413F2B1A5E3959004BA5C3 /* SBJson4Writer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJson4Writer.m; path = SBJson/SBJson4Writer.m; sourceTree = "<group>"; };
-		C4413F351A5E3A5C004BA5C3 /* PopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupView.h; sourceTree = "<group>"; };
-		C4413F361A5E3A5C004BA5C3 /* PopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupView.m; sourceTree = "<group>"; };
 		C4413F3B1A5E4DA6004BA5C3 /* IFlyPopupView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IFlyPopupView.h; sourceTree = "<group>"; };
 		C4413F3C1A5E4DB0004BA5C3 /* IFlyPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFlyPopupView.m; sourceTree = "<group>"; };
 		C4413F3E1A5E4DF5004BA5C3 /* IFlyPopupView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IFlyPopupView.xib; sourceTree = "<group>"; };
@@ -340,8 +340,8 @@
 		C451AC551A5CD93A001FFF41 /* ViewCommonUtils */ = {
 			isa = PBXGroup;
 			children = (
-				C4413F351A5E3A5C004BA5C3 /* PopupView.h */,
-				C4413F361A5E3A5C004BA5C3 /* PopupView.m */,
+				C4205C6A1A5FD94B001A3DB2 /* PopupView.h */,
+				C4205C6B1A5FD94B001A3DB2 /* PopupView.m */,
 				C4413F171A5E389E004BA5C3 /* ISRDataHelper.h */,
 				C4413F181A5E389E004BA5C3 /* ISRDataHelper.m */,
 				C417E5F21A5BC1C90085CBBF /* ViewCommonUtils.h */,
@@ -512,8 +512,8 @@
 				C4413F191A5E389E004BA5C3 /* ISRDataHelper.m in Sources */,
 				C44C1EA11A32FA7500BDE49B /* main.m in Sources */,
 				C4413F2C1A5E3959004BA5C3 /* SBJson4Parser.m in Sources */,
-				C4413F381A5E3A5C004BA5C3 /* PopupView.m in Sources */,
 				C4413F2F1A5E3959004BA5C3 /* SBJson4StreamTokeniser.m in Sources */,
+				C4205C6C1A5FD94B001A3DB2 /* PopupView.m in Sources */,
 				C417E5F41A5BC5720085CBBF /* ViewCommonUtils.m in Sources */,
 				C4413F3D1A5E4DB0004BA5C3 /* IFlyPopupView.m in Sources */,
 			);

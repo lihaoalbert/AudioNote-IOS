@@ -10,11 +10,10 @@
 
 @interface PopupView : UIView
 {
-    UILabel         *lVolice;
-    UILabel         *lText;
+    UILabel         *_textLabel;
     int             _queueCount;
 }
 @property (strong) UIView*  ParentView;
-- (void) setVolume:(NSString *) volume Text:(NSString *) text;
+- (void) setText:(NSString *) text;
 
 @end

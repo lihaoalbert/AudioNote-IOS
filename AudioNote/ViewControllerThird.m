@@ -31,19 +31,19 @@
     //[self.listView setEditing:YES animated:YES];
     self.databaseUtils = [[DatabaseUtils alloc] init];
     self.listData = [self.databaseUtils reportWithType:@"all"];
-    self.listDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                     [NSArray arrayWithObjects:@"薪酬查询", nil],  @"今日",
-                     [NSArray arrayWithObjects:@"消息管理", nil],  @"本周",
-                     [NSArray arrayWithObjects:@"消息管理", nil],  @"本月",
-                     [NSArray arrayWithObjects:@"消息管理", nil],  @"本年",
-                     nil];
     
     NSArray *tagDatas  = (NSArray *)[self.databaseUtils reportWithType: @"Year"];
     NSArray *todayData = (NSArray *)[self.databaseUtils getReportData: @"today"];
-    NSLog(@"%@", todayData);
+    NSArray *thisWeekData = (NSArray *)[self.databaseUtils getReportData: @"this_week"];
+    NSArray *thisMonthData = (NSArray *)[self.databaseUtils getReportData: @"this_month"];
+    NSArray *thisYearData = (NSArray *)[self.databaseUtils getReportData: @"this_year"];
     
-    [self.listDict setObject:[NSArray arrayWithArray:tagDatas] forKey:@"标签列表"];
+    self.listDict = [NSMutableDictionary dictionaryWithCapacity:0];
     [self.listDict setObject:[NSArray arrayWithArray:todayData] forKey:@"今日数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:thisWeekData] forKey:@"本周数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:thisMonthData] forKey:@"本月数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:thisYearData] forKey:@"本年数据"];
+    //[self.listDict setObject:[NSArray arrayWithArray:tagDatas] forKey:@"标签列表"];
     
     // Gesture
     UISwipeGestureRecognizer *gestureRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToFirstView)];

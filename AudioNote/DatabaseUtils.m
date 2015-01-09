@@ -140,19 +140,35 @@
     }
     
     NSString *where = [[NSString alloc] init];
+    NSDate *today   = [NSDate date];
     ////////////////////////////////
     // Select Data into NSData
     ////////////////////////////////
     if ([type isEqual: @"today"]) {
-        where = @"1 = 1";
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+        NSString *todayStr = [dateFormatter stringFromDate:today];
+        
+        where = [where stringByAppendingString:@" strftime('%Y-%m-%d',create_time) = "];
+        where = [where stringByAppendingFormat:@" '%@'",todayStr];
     } else if ([type isEqual: @"this_week"]) {
-        where = @" rowTime between datetime(date(datetime('now',strftime('-%w day','now'))),'+1 second') and datetime(date(datetime('now',(6 - strftime('%w day','now'))||'day','1 day')),'-1 second')";
+        
+        NSCalendar *calendar = [[NSCalendar alloc] init];
+        NSDateComponents *comps =[calendar components:NSCalendarUnitWeekdayOrdinal fromDate:today];
+        NSInteger week = [comps weekOfYear]; // 今年的第几周
+
+        where = [where stringByAppendingString:@" cast(strftime('%W',create_time) as int) = "];
+        where = [where stringByAppendingFormat:@" %li",(long)week];
     } else if ([type isEqual: @"this_month"]) {
-        where = @" rowTime between datetime('now','start of month','+1 second') and datetime('now','start of month','+1 month','-1 second')";
+        where = @" create_time between datetime('now','start of month','+1 second') and datetime('now','start of month','+1 month','-1 second')";
         
     } else if ([type isEqual: @"this_year"]) {
-        where = [where stringByAppendingString:@" strftime(‘%y’,create_time) ="];
-        where = [where stringByAppendingFormat:@" '%@'", @"2015"];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy"];
+        NSString *yearStr = [dateFormatter stringFromDate:today];
+        
+        where = [where stringByAppendingString:@" strftime('%Y',create_time) = "];
+        where = [where stringByAppendingFormat:@" '%@'",yearStr];
     } else {
         where = @" 2 = 2";
     }

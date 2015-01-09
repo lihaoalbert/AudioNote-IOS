@@ -118,8 +118,29 @@
 
     self.popUpView = [[PopupView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/4, self.view.frame.size.height/2, self.view.frame.size.width/2, self.view.frame.size.height/2)];
     self.popUpView.ParentView = self.view;
-    [self.popUpView setVolume: @"音量:0" Text: @"请说话"];
+    [self.popUpView setText: @"音量:0"];
     [self.view addSubview:self.popUpView];
+    
+    /*
+    // init data
+    for(NSInteger i = 1; i < 30; i ++) {
+        NSInteger t_duration    = (NSInteger)random()%10;
+        NSString *t_createTime  = [NSString stringWithFormat: @"2015-01-%li 12:12:12", (long)i];
+        if(i < 10)
+            t_createTime  = [NSString stringWithFormat: @"2015-01-0%li 12:12:12", (long)i];
+
+        NSString *t_nTime    = @"40";
+        NSString *t_nMoney   = @"0";
+        NSString *t_szType   = @"生活";
+        NSString *t_szRemain = @"学习英语";
+        
+        NSString *insertSQL = [NSString stringWithFormat: @"Insert into voice_record(input,description,category,nMoney,nTime,begin,duration,create_time,modify_time) VALUES('%@','%@','%@',%@,%@,'%@',%li,'%@','%@');", @"学习英语四十分钟", t_szRemain, t_szType, t_nMoney, t_nTime, t_createTime, t_duration,  t_createTime, t_createTime];
+        
+        NSLog(@"Insert SQL:\n%@", insertSQL);
+        NSInteger lastRowId = [self.databaseUtils executeSQL: insertSQL];
+        NSLog(@"Insert Into SQL#%li - successfully.", lastRowId);
+    }
+     */
 }
 
 
@@ -190,10 +211,10 @@
         self.iFlyRecognizerShow.text = @"";
         self.iFlyRecognizerStartDate = [NSDate date];
     } else {
-        [self.popUpView setVolume:@"失败" Text: @"启动识别服务失败，请稍后重试"];//可能是上次请求未结束，暂不支持多路并发
+        [self.popUpView setText: @"启动识别服务失败，请稍后重试"];//可能是上次请求未结束，暂不支持多路并发
     }
     
-    [self.popUpView setVolume:@"音量:0" Text: @"请说话"];
+    [self.popUpView setText: @"请说话"];
     [self.view addSubview:self.popUpView];
     
 }
@@ -223,7 +244,7 @@
     NSString * vol = [NSString stringWithFormat:@"音量：%d",volume];
     NSLog(@"isCanceled: %i, Volumne:%@", self.isCanceled, vol);
     NSLog(@"iFlyRecognizerResult: %@", self.iFlyRecognizerResult.copy);
-    [self.popUpView setVolume:vol Text: self.iFlyRecognizerResult.copy];
+    [self.popUpView setText:vol];
     [self.view addSubview:self.popUpView];
 }
 
