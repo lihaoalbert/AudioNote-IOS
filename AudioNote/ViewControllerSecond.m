@@ -52,11 +52,16 @@
     gestureLeft.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:gestureLeft];
     
+    /*
     // reset UIBarButtonItem
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
                                    initWithTitle:@""
                                    style:UIBarButtonItemStylePlain target:nil action:nil];
     [self.navigationItem setBackBarButtonItem:backButton];
+    */
+    self.navigationItem.backBarButtonItem = nil;
+    self.navigationItem.leftBarButtonItem = nil;
+    self.navigationItem.leftBarButtonItems = [[NSArray alloc] init];
     
 }
 - (void)viewDidUnload
@@ -104,16 +109,23 @@
     }
     
     NSMutableDictionary *dict = [self.listData objectAtIndex:indexPath.row];
+    NSString *tag  =
+    [NSString stringWithFormat:@"%@", [dict objectForKey:@"category"]];
     NSString *num  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
     NSString *unit = @"元";
     if ([num isEqualToString: @"0"]) {
         num  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];
         unit = @"分钟";
+        //tag = [tag stringByAppendingString:@"时间"];
+    } else {
+        num  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
+        unit = @"元";
+        //tag = [tag stringByAppendingString:@"金额"];
     }
 
     cell.cellNum.text  = num;
     cell.cellUnit.text = unit;
-    cell.cellTag.text  = [dict objectForKey: @"category"];
+    cell.cellTag.text  = tag;
     cell.cellDesc.text = [dict objectForKey: @"description"];
     return cell;
 

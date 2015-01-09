@@ -14,37 +14,42 @@
 
 // voice record list with format
 - (NSMutableArray*) getDataListWith: (DatabaseUtils*) databaseUtils Limit: (NSInteger) limit Offset: (NSInteger) offset {
-    NSMutableArray *latestDataList = [NSMutableArray arrayWithCapacity:0];//[[NSMutableArray alloc] initWithObjects:@"first",@"two",@"three",nil];
+    NSMutableArray *latestDataList = [NSMutableArray arrayWithCapacity:0];
     
     
     NSMutableArray *dataArray = [databaseUtils selectDBwithLimit: limit Offset: offset];
     NSLog(@"Record Row Count: %lu", dataArray.count);
     for (NSDictionary  *dict in dataArray) {
-        NSString *listItem = dict[@"description"];
-        listItem = [listItem stringByAppendingString:@"["];
-        listItem = [listItem stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nMoney"]]];
-        listItem = [listItem stringByAppendingString:@"元 ]["];
-        listItem = [listItem stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nTime"]]];
-        listItem = [listItem stringByAppendingString:@"分钟]"];
-        listItem = [listItem stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nTime"]]];
-        [latestDataList addObject:listItem];
-        //for(NSString *key in dict) {
-        //    NSLog(@"%10@: %@", key, dict[key]);
-        //}
+        NSString *detail = @"";
+        NSString *nTime  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];
+        if ([nTime isEqualToString:@"0"]) {
+            detail = [detail stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nMoney"]]];
+            detail = [detail stringByAppendingString:@" 元 - "];
+        } else {
+            detail = [detail stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nTime"]]];
+            detail = [detail stringByAppendingString:@" 分钟 - "];
+        }
+        detail = [detail stringByAppendingString:dict[@"description"]];
+        NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
+        
+        [mutableDictionary setObject:detail forKey:@"detail"];
+        [mutableDictionary setObject:[dict objectForKey:@"category"] forKey: @"category"];
+        [latestDataList addObject:mutableDictionary];
     }
     return latestDataList;
 }
 
-- (void)switchViewController: (UIViewController*) viewControllers
+- (void)switchViewController: (NSArray*) viewControllers
                         From: (UIViewController*) fromViewController
                           to: (UIViewController*) toViewController {
+    
     /*
-    Class FromViewControllerClass = [fromViewController class];
-    Class ToViewControllerClass   = [toViewController class];
+    UIViewController* FromViewControllerClass = [fromViewController class];
+    UIViewController* ToViewControllerClass   = [toViewController class];
     UIViewController* vc;
     for (vc in viewControllers) {
-        if ([vc isKindOfClass:FromViewControllerClass]) {
-            FromViewControllerClass *dpvc = (FromViewControllerClass *)vc;
+        if ([vc isKindOfClass:[fromViewController class]]) {
+            [fromViewController class] *dpvc = ([fromViewController class] *)vc;
             [dpvc bannerHide];
             break;
         }

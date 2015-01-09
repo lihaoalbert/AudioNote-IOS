@@ -103,7 +103,7 @@
             _duration    = sqlite3_column_int(statement, 7);
             _create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 8)encoding:NSUTF8StringEncoding];
             _modify_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 9)encoding:NSUTF8StringEncoding];
-            NSLog(@"_id = %i\n_input = %@ \n_description = %@ \n_category = %@\n_nMoney = %i\n _nTime = %i\n _begin       = %@\n_duration = %i\n_create_time = %@\n_modify_time = %@\n===================\n", _id, _input, _description, _category, _nMoney, _nTime, _begin, _duration, _create_time, _modify_time);
+            //NSLog(@"_id = %i\n_input = %@ \n_description = %@ \n_category = %@\n_nMoney = %i\n _nTime = %i\n _begin       = %@\n_duration = %i\n_create_time = %@\n_modify_time = %@\n===================\n", _id, _input, _description, _category, _nMoney, _nTime, _begin, _duration, _create_time, _modify_time);
             
             
             NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
@@ -157,7 +157,7 @@
             _duration    = sqlite3_column_int(statement, 7);
             _create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 8)encoding:NSUTF8StringEncoding];
             _modify_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 9)encoding:NSUTF8StringEncoding];
-            NSLog(@"_id = %i\n_input = %@ \n_description = %@ \n_category = %@\n_nMoney = %i\n _nTime = %i\n _begin       = %@\n_duration = %i\n_create_time = %@\n_modify_time = %@\n===================\n", _id, _input, _description, _category, _nMoney, _nTime, _begin, _duration, _create_time, _modify_time);
+            //NSLog(@"_id = %i\n_input = %@ \n_description = %@ \n_category = %@\n_nMoney = %i\n _nTime = %i\n _begin       = %@\n_duration = %i\n_create_time = %@\n_modify_time = %@\n===================\n", _id, _input, _description, _category, _nMoney, _nTime, _begin, _duration, _create_time, _modify_time);
             
             
             NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
@@ -236,7 +236,7 @@
         while (sqlite3_step(statement) == SQLITE_ROW) {
             _nMoney   = sqlite3_column_int(statement, 0);
             _nTime    = sqlite3_column_int(statement, 1);
-            NSLog(@"_type = %@\n_nMoney = %i\n _nTime = %i\n===================\n", type, _nMoney, _nTime);
+            //NSLog(@"_type = %@\n_nMoney = %i\n _nTime = %i\n===================\n", type, _nMoney, _nTime);
 
             data = [data stringByAppendingFormat:@"%i 元 / ", _nMoney];
             data = [data stringByAppendingFormat:@"%i 分钟", _nTime];
@@ -271,7 +271,7 @@
             _category = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 0)encoding:NSUTF8StringEncoding];
             _nMoney   = sqlite3_column_int(statement, 1);
             _nTime    = sqlite3_column_int(statement, 2);
-            NSLog(@"_category = %@\n_nMoney = %i\n _nTime = %i\n===================\n", _category, _nMoney, _nTime);
+            //NSLog(@"_category = %@\n_nMoney = %i\n _nTime = %i\n===================\n", _category, _nMoney, _nTime);
             /*
             NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
             [mutableDictionary setObject:_category forKey:@"category"];

@@ -19,6 +19,10 @@
 @end
 
 @implementation ViewControllerThird
+@synthesize listData;
+@synthesize listDict;
+@synthesize listView;
+@synthesize databaseUtils;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -32,17 +36,17 @@
     self.databaseUtils = [[DatabaseUtils alloc] init];
     self.listData = [self.databaseUtils reportWithType:@"all"];
     
-    NSArray *tagDatas  = (NSArray *)[self.databaseUtils reportWithType: @"Year"];
-    NSArray *todayData = (NSArray *)[self.databaseUtils getReportData: @"today"];
-    NSArray *thisWeekData = (NSArray *)[self.databaseUtils getReportData: @"this_week"];
+    //NSArray *tagDatas      = (NSArray *)[self.databaseUtils reportWithType: @"Year"];
+    NSArray *todayData     = (NSArray *)[self.databaseUtils getReportData: @"today"];
+    NSArray *thisWeekData  = (NSArray *)[self.databaseUtils getReportData: @"this_week"];
     NSArray *thisMonthData = (NSArray *)[self.databaseUtils getReportData: @"this_month"];
-    NSArray *thisYearData = (NSArray *)[self.databaseUtils getReportData: @"this_year"];
+    NSArray *thisYearData  = (NSArray *)[self.databaseUtils getReportData: @"this_year"];
     
     self.listDict = [NSMutableDictionary dictionaryWithCapacity:0];
-    [self.listDict setObject:[NSArray arrayWithArray:todayData] forKey:@"今日数据"];
-    [self.listDict setObject:[NSArray arrayWithArray:thisWeekData] forKey:@"本周数据"];
-    [self.listDict setObject:[NSArray arrayWithArray:thisMonthData] forKey:@"本月数据"];
-    [self.listDict setObject:[NSArray arrayWithArray:thisYearData] forKey:@"本年数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:todayData] forKey:@"a. 今日数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:thisWeekData] forKey:@"b. 本周数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:thisMonthData] forKey:@"c. 本月数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:thisYearData] forKey:@"d. 本年数据"];
     //[self.listDict setObject:[NSArray arrayWithArray:tagDatas] forKey:@"标签列表"];
     
     // Gesture
@@ -64,17 +68,28 @@
      */
 }
 
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    self.listData = nil;
+    self.listView = nil;
+    self.databaseUtils = nil;
+}
+
 // Swipe Gesture Functions
 -(void)swipeToFirstView {
     ViewControllerFirst *firstView = [[ViewControllerFirst alloc] init];
     [self.navigationController pushViewController:firstView animated:YES];
     firstView.title = @"小6语记";
+    //[self.navigationController popToViewController:firstView animated:YES];
 }
 
 -(void)swipeToSecondView {
     ViewControllerSecond *secondView = [[ViewControllerSecond alloc] init];
     [self.navigationController pushViewController:secondView animated:YES];
     secondView.title = @"明细列表";
+    //[self.navigationController popViewControllerAnimated:YES];
 }
 
 

@@ -151,19 +151,17 @@
 #pragma mark - Swipe Gesture Functions
 
 -(void)swipeToSecondView {
-    ViewControllerSecond *secondView = [[ViewControllerSecond alloc] init];
-    //[self.navigationController removeFromParentViewController];
-
     NSLog(@"%@", self.navigationController.childViewControllers);
-    
+    ViewControllerSecond *secondView = [[ViewControllerSecond alloc] init];
     [self.navigationController pushViewController:secondView animated:YES];
     secondView.title = @"明细列表";
+    secondView.navigationItem.leftBarButtonItem = nil;
+    secondView.navigationItem.backBarButtonItem = nil;
 }
 
 -(void)swipeToThirdView {
-    ViewControllerThird *thirdView = [[ViewControllerThird alloc] init];
-    //[self.navigationController removeFromParentViewController];
     NSLog(@"%@", self.navigationController.childViewControllers);
+    ViewControllerThird *thirdView = [[ViewControllerThird alloc] init];
     [self.navigationController pushViewController:thirdView animated:YES];
     thirdView.title = @"数据报表";
 }
@@ -314,11 +312,10 @@
     // monitor whether recognize continue
     // 2.b operation only when finished convert
     if (isLast == YES) {
-        if([self.iFlyRecognizerResult length] > 0) {
-            // reload latest 3 rows data
-            if([self.latestDataList count] >= 3)
-                [self.latestDataList removeObjectAtIndex:0];
-            
+        if([self.iFlyRecognizerResult length] == 0) {
+            [self.popUpView setText:@"内容为空\n未创建记录."];
+            [self.view addSubview:self.popUpView];
+        } else {
             // caculate duration
             NSTimeInterval duration = [self.iFlyRecognizerStartDate timeIntervalSinceNow];
             NSInteger t_duration    = round(duration < 0 ? -duration : duration);
@@ -391,9 +388,11 @@
     static NSString *cellID = @"cellID";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
     }
-    cell.textLabel.text = [self.latestDataList objectAtIndex:indexPath.row];
+    NSMutableDictionary *dict = [self.latestDataList objectAtIndex:indexPath.row];
+    cell.textLabel.text       = dict[@"detail"];
+    cell.detailTextLabel.text = dict[@"category"];
     return cell;
 }
 
