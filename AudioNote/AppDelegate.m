@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "ViewControllerContainer.h"
 #import "ViewControllerFirst.h"
 #import "ViewControllerSecond.h"
 #import "ViewControllerThird.h"
@@ -21,6 +22,21 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    ViewControllerContainer *containerController = [[ViewControllerContainer alloc] init];
+    self.window.rootViewController         = containerController;
+    self.window.backgroundColor            = [UIColor whiteColor];
+    ViewControllerFirst *firstController   = [[ViewControllerFirst alloc] init];
+    firstController.title                  = @"小6语记";
+    ViewControllerSecond *secondController = [[ViewControllerSecond alloc] init];
+    secondController.title                 = @"数据列表";
+    ViewControllerThird *thirdController   = [[ViewControllerThird alloc] init];
+    thirdController.title                  = @"数据报表";
+    containerController.viewControllers    = [NSMutableArray arrayWithObjects:firstController, secondController, thirdController, nil];
+    [self.window makeKeyAndVisible];
+    
+    
+    /*
    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] ;
     ViewControllerFirst *firstView = [[ViewControllerFirst alloc] initWithNibName:@"ViewControllerFirst" bundle:nil];
     //rootView.tabBarItem.title = @"first 1";
@@ -29,7 +45,7 @@
     [self.navController pushViewController:firstView animated:YES];
     [self.window addSubview:self.navController.view];
     [self.window makeKeyAndVisible];
-  
+    */
     return YES;
 }
 

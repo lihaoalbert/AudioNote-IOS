@@ -59,6 +59,10 @@
 		C451AC5D1A5CF0EA001FFF41 /* MyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C451AC5C1A5CF0EA001FFF41 /* MyTableViewCell.m */; };
 		C4AA4C3C1A5A86FB00E6A1E7 /* ViewControllerThird.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4AA4C3B1A5A86FB00E6A1E7 /* ViewControllerThird.xib */; };
 		C4AA4C3E1A5A870800E6A1E7 /* ViewControllerThird.m in Sources */ = {isa = PBXBuildFile; fileRef = C4AA4C3D1A5A870800E6A1E7 /* ViewControllerThird.m */; };
+		C4B282721A616FED00441AFB /* ViewControllerContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C4B282711A616FED00441AFB /* ViewControllerContainer.m */; };
+		C4B282761A6173EB00441AFB /* ContainerTopBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C4B282751A6173EB00441AFB /* ContainerTopBar.m */; };
+		C4B282791A61741400441AFB /* NSMutableArray+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = C4B282781A61741400441AFB /* NSMutableArray+Util.m */; };
+		C4B2827C1A61856A00441AFB /* ViewControllerContainer.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4B2827B1A61856A00441AFB /* ViewControllerContainer.xib */; };
 		C4B813681A482F80001218E1 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C4B813671A482F80001218E1 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
 
@@ -149,6 +153,13 @@
 		C4AA4C3D1A5A870800E6A1E7 /* ViewControllerThird.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewControllerThird.m; sourceTree = "<group>"; };
 		C4AA4C3F1A5A870F00E6A1E7 /* ViewControllerThird.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewControllerThird.h; sourceTree = "<group>"; };
 		C4AA4C401A5A9A4800E6A1E7 /* DatabaseUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseUtils.h; sourceTree = "<group>"; };
+		C4B282711A616FED00441AFB /* ViewControllerContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewControllerContainer.m; sourceTree = "<group>"; };
+		C4B282731A616FF600441AFB /* ViewControllerContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewControllerContainer.h; sourceTree = "<group>"; };
+		C4B282741A6173EB00441AFB /* ContainerTopBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerTopBar.h; sourceTree = "<group>"; };
+		C4B282751A6173EB00441AFB /* ContainerTopBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerTopBar.m; sourceTree = "<group>"; };
+		C4B282771A61741400441AFB /* NSMutableArray+Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Util.h"; sourceTree = "<group>"; };
+		C4B282781A61741400441AFB /* NSMutableArray+Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Util.m"; sourceTree = "<group>"; };
+		C4B2827B1A61856A00441AFB /* ViewControllerContainer.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewControllerContainer.xib; sourceTree = "<group>"; };
 		C4B813671A482F80001218E1 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -248,13 +259,14 @@
 		C44C1E9D1A32FA7500BDE49B /* AudioNote */ = {
 			isa = PBXGroup;
 			children = (
+				C44C1EA21A32FA7500BDE49B /* AppDelegate.h */,
+				C44C1EA31A32FA7500BDE49B /* AppDelegate.m */,
 				C451AC561A5CD957001FFF41 /* MVC */,
-				C451AC551A5CD93A001FFF41 /* ViewCommonUtils */,
+				C4B2827A1A61743300441AFB /* Utils */,
+				C451AC551A5CD93A001FFF41 /* ViewUtils */,
 				C451AC541A5CD92D001FFF41 /* DatabaseUtils */,
 				C451AC531A5CD922001FFF41 /* Images */,
 				C451AC521A5CD90A001FFF41 /* ProcessPattern */,
-				C44C1EA21A32FA7500BDE49B /* AppDelegate.h */,
-				C44C1EA31A32FA7500BDE49B /* AppDelegate.m */,
 				C44C1EAB1A32FA7500BDE49B /* Images.xcassets */,
 				C44C1EAD1A32FA7500BDE49B /* LaunchScreen.xib */,
 				C4413F1C1A5E3942004BA5C3 /* SBJson */,
@@ -332,9 +344,11 @@
 			name = DatabaseUtils;
 			sourceTree = "<group>";
 		};
-		C451AC551A5CD93A001FFF41 /* ViewCommonUtils */ = {
+		C451AC551A5CD93A001FFF41 /* ViewUtils */ = {
 			isa = PBXGroup;
 			children = (
+				C4B282741A6173EB00441AFB /* ContainerTopBar.h */,
+				C4B282751A6173EB00441AFB /* ContainerTopBar.m */,
 				C4205C6A1A5FD94B001A3DB2 /* PopupView.h */,
 				C4205C6B1A5FD94B001A3DB2 /* PopupView.m */,
 				C4413F171A5E389E004BA5C3 /* ISRDataHelper.h */,
@@ -345,12 +359,15 @@
 				C451AC5C1A5CF0EA001FFF41 /* MyTableViewCell.m */,
 				C451AC591A5CE115001FFF41 /* MyTableViewCell.xib */,
 			);
-			name = ViewCommonUtils;
+			name = ViewUtils;
 			sourceTree = "<group>";
 		};
 		C451AC561A5CD957001FFF41 /* MVC */ = {
 			isa = PBXGroup;
 			children = (
+				C4B282731A616FF600441AFB /* ViewControllerContainer.h */,
+				C4B282711A616FED00441AFB /* ViewControllerContainer.m */,
+				C4B2827B1A61856A00441AFB /* ViewControllerContainer.xib */,
 				C44C1EA51A32FA7500BDE49B /* ViewControllerFirst.h */,
 				C44C1EA61A32FA7500BDE49B /* ViewControllerFirst.m */,
 				4A78E68E1A5149F3006FF062 /* ViewControllerFirst.xib */,
@@ -362,6 +379,15 @@
 				C4AA4C3B1A5A86FB00E6A1E7 /* ViewControllerThird.xib */,
 			);
 			name = MVC;
+			sourceTree = "<group>";
+		};
+		C4B2827A1A61743300441AFB /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				C4B282771A61741400441AFB /* NSMutableArray+Util.h */,
+				C4B282781A61741400441AFB /* NSMutableArray+Util.m */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -452,6 +478,7 @@
 				4A78E6B31A51527E006FF062 /* tabbar_selected_background.png in Resources */,
 				C451AC5A1A5CE115001FFF41 /* MyTableViewCell.xib in Resources */,
 				4A78E6B11A51527E006FF062 /* tabbar_normal_background.png in Resources */,
+				C4B2827C1A61856A00441AFB /* ViewControllerContainer.xib in Resources */,
 				C4AA4C3C1A5A86FB00E6A1E7 /* ViewControllerThird.xib in Resources */,
 				4A78E6B71A51527E006FF062 /* third_selected.png in Resources */,
 				C44C1EAF1A32FA7500BDE49B /* LaunchScreen.xib in Resources */,
@@ -493,11 +520,14 @@
 				C4413F311A5E3959004BA5C3 /* SBJson4StreamWriterState.m in Sources */,
 				4A78E6BC1A51555D006FF062 /* ViewControllerSecond.m in Sources */,
 				C4413F2E1A5E3959004BA5C3 /* SBJson4StreamParserState.m in Sources */,
+				C4B282721A616FED00441AFB /* ViewControllerContainer.m in Sources */,
 				C4AA4C3E1A5A870800E6A1E7 /* ViewControllerThird.m in Sources */,
 				C417E5F11A5BC0200085CBBF /* DatabaseUtils.m in Sources */,
 				C44C1EA71A32FA7500BDE49B /* ViewControllerFirst.m in Sources */,
+				C4B282761A6173EB00441AFB /* ContainerTopBar.m in Sources */,
 				C44C1EA41A32FA7500BDE49B /* AppDelegate.m in Sources */,
 				C451AC5D1A5CF0EA001FFF41 /* MyTableViewCell.m in Sources */,
+				C4B282791A61741400441AFB /* NSMutableArray+Util.m in Sources */,
 				C4413F301A5E3959004BA5C3 /* SBJson4StreamWriter.m in Sources */,
 				C4413F321A5E3959004BA5C3 /* SBJson4Writer.m in Sources */,
 				C4413F191A5E389E004BA5C3 /* ISRDataHelper.m in Sources */,

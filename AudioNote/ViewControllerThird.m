@@ -50,6 +50,7 @@
     //[self.listDict setObject:[NSArray arrayWithArray:tagDatas] forKey:@"标签列表"];
     
     // Gesture
+    /*
     UISwipeGestureRecognizer *gestureRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToFirstView)];
     gestureRight.direction = UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:gestureRight];
@@ -57,7 +58,7 @@
     UISwipeGestureRecognizer *gestureLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToSecondView)];
     gestureLeft.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:gestureLeft];
-    
+    */
     
     /*
     // reset UIBarButtonItem

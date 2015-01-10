@@ -44,6 +44,7 @@
     self.listData = [self.databaseUtils selectDBwithLimit:  20 Offset: 0];
     
     // Gesture
+    /*
     UISwipeGestureRecognizer *gestureRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToThirdView)];
     gestureRight.direction = UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:gestureRight];
@@ -51,6 +52,7 @@
     UISwipeGestureRecognizer *gestureLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToFirstView)];
     gestureLeft.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:gestureLeft];
+    */
     
     /*
     // reset UIBarButtonItem

@@ -94,7 +94,7 @@
     // latest 3 rows data list view
     self.latestView.delegate   = self;
     self.latestView.dataSource = self;
-    //[self.latestView setEditing:YES animated:YES];
+    [self.latestView setEditing:YES animated:YES];
     self.listDataLimit = 5;
     self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
     
@@ -105,6 +105,7 @@
     //self.navigationItem.rightBarButtonItem = rightButton;
     
     // Gesture
+    /*
     UISwipeGestureRecognizer *gestureRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToSecondView)];
     gestureRight.direction = UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:gestureRight];
@@ -112,7 +113,7 @@
     UISwipeGestureRecognizer *gestureLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToThirdView)];
     gestureLeft.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:gestureLeft];
-    
+    */
     
     [self.voiceBtn addTarget:self action:@selector(startVoiceRecord) forControlEvents:UIControlEventTouchDown];
     [self.voiceBtn addTarget:self action:@selector(stopVoiceRecord) forControlEvents:UIControlEventTouchUpInside];
