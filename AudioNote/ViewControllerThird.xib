@@ -15,10 +15,11 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" indicatorStyle="black" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="EdR-r1-NmY">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" indicatorStyle="black" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="EdR-r1-NmY">
                     <rect key="frame" x="8" y="24" width="304" height="453"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                    <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="separatorColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <color key="sectionIndexColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <color key="sectionIndexBackgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>

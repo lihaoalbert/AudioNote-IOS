@@ -14,9 +14,10 @@
 
 - (id) init {
     if (self = [super init]) {
-        NSArray *paths= NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+        NSArray *paths               = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
-        self.databaseFilePath=[documentsDirectory stringByAppendingPathComponent:kDatabaseName];
+        self.databaseFilePath        = [documentsDirectory stringByAppendingPathComponent:kDatabaseName];
+        NSLog(@"%@", self.databaseFilePath);
     }
     return self;
 }
@@ -238,13 +239,15 @@
         
         where = [where stringByAppendingString:@" strftime('%Y-%m-%d',create_time) = "];
         where = [where stringByAppendingFormat:@" '%@'",todayStr];
-    } else if ([type isEqual: @"this_week"]) {
-        NSCalendar *calendar    = [NSCalendar currentCalendar];
+    } else if ([type isEqual: @"latest_7_days"]) {
+        /*NSCalendar *calendar    = [NSCalendar currentCalendar];
         NSDateComponents *comps = [calendar components:NSCalendarUnitWeekOfYear fromDate:today];
         NSInteger week          = [comps weekOfYear];
         
         where = [where stringByAppendingString:@" cast(strftime('%W',create_time) as int) = "];
         where = [where stringByAppendingFormat:@" %li",(long)week];
+         */
+        where = [where stringByAppendingString:@"cast(strftime('%Y%m%d', datetime()) as int) - cast(strftime('%Y%m%d', create_time) as int) <= 7"];
     } else if ([type isEqual: @"this_month"]) {
         where = @" create_time between datetime('now','start of month','+1 second') and datetime('now','start of month','+1 month','-1 second')";
         

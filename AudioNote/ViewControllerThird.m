@@ -16,12 +16,16 @@
 @property (nonatomic, nonatomic) NSMutableDictionary  *listDict;
 @property (nonatomic, nonatomic) NSArray              *listDictKeys;
 @property (nonatomic, nonatomic) DatabaseUtils        *databaseUtils;
+@property (weak, nonatomic) UIColor                 *gBackground;
+@property (weak, nonatomic) UIColor                 *gTextcolor;
 @end
 
 @implementation ViewControllerThird
 @synthesize listDict;
 @synthesize listView;
 @synthesize databaseUtils;
+@synthesize gBackground;
+@synthesize gTextcolor;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -34,19 +38,23 @@
     //[self.listView setEditing:YES animated:YES];
     self.databaseUtils = [[DatabaseUtils alloc] init];
     
-    //NSArray *tagDatas      = (NSArray *)[self.databaseUtils reportWithType: @"Year"];
+    NSArray *tagDatas      = (NSArray *)[self.databaseUtils reportWithType: @"Year"];
     NSArray *todayData     = (NSArray *)[self.databaseUtils getReportData: @"today"];
-    NSArray *thisWeekData  = (NSArray *)[self.databaseUtils getReportData: @"this_week"];
+    NSArray *thisWeekData  = (NSArray *)[self.databaseUtils getReportData: @"latest_7_days"];
     NSArray *thisMonthData = (NSArray *)[self.databaseUtils getReportData: @"this_month"];
     NSArray *thisYearData  = (NSArray *)[self.databaseUtils getReportData: @"this_year"];
     
     self.listDict = [NSMutableDictionary dictionaryWithCapacity:0];
-    [self.listDict setObject:[NSArray arrayWithArray:todayData] forKey:@"a. 今日数据"];
-    [self.listDict setObject:[NSArray arrayWithArray:thisWeekData] forKey:@"b. 本周数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:todayData]     forKey:@"a. 今日数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:thisWeekData]  forKey:@"b. 近7天数据"];
     [self.listDict setObject:[NSArray arrayWithArray:thisMonthData] forKey:@"c. 本月数据"];
-    [self.listDict setObject:[NSArray arrayWithArray:thisYearData] forKey:@"d. 本年数据"];
-    //[self.listDict setObject:[NSArray arrayWithArray:tagDatas] forKey:@"e. 标签列表"];
+    [self.listDict setObject:[NSArray arrayWithArray:thisYearData]  forKey:@"d. 本年数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:tagDatas]      forKey:@"e. 分类合计"];
     self.listDictKeys = [[self.listDict allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    
+    
+    self.gBackground = [UIColor blackColor];
+    self.gTextcolor  = [UIColor whiteColor];
 }
 
 
@@ -57,6 +65,8 @@
     self.listDict      = nil;
     self.listDictKeys  = nil;
     self.databaseUtils = nil;
+    self.gBackground   = nil;
+    self.gTextcolor    = nil;
 }
 
 
@@ -93,7 +103,11 @@
                 initWithStyle:UITableViewCellStyleDefault
                 reuseIdentifier:GroupedTableIdentifier];
     }
-    
+    cell.backgroundColor                 = self.gBackground;
+    cell.textLabel.backgroundColor       = self.gBackground;
+    cell.detailTextLabel.backgroundColor = self.gBackground;
+    cell.textLabel.textColor       = self.gTextcolor;
+    cell.detailTextLabel.textColor = self.gTextcolor;
 
     cell.textLabel.text = [rows objectAtIndex:row];
     return cell;

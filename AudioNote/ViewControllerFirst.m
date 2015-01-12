@@ -44,6 +44,8 @@
 @property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
 // begin voice record
 @property (weak, nonatomic) IBOutlet UIButton       *voiceBtn;
+@property (weak, nonatomic) UIColor                 *gBackground;
+@property (weak, nonatomic) UIColor                 *gTextcolor;
 
 
 @end
@@ -58,6 +60,8 @@
 @synthesize latestDataList;
 @synthesize gDateFormatter;
 @synthesize listDataLimit;
+@synthesize gBackground;
+@synthesize gTextcolor;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -94,7 +98,9 @@
     // latest 3 rows data list view
     self.latestView.delegate   = self;
     self.latestView.dataSource = self;
-    self.latestView.backgroundColor = [UIColor blackColor];
+    self.latestView.backgroundColor = [UIColor clearColor];
+    self.latestView.opaque = NO;
+    self.parentViewController.view.backgroundColor = [UIColor colorWithRed:0.0 green:0.2 blue:0.5 alpha:0.7];
     //[self.latestView setEditing:YES animated:YES];
     self.listDataLimit = 5;
     self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
@@ -109,6 +115,9 @@
     self.popUpView.ParentView = self.view;
     [self.popUpView setText: @"音量:0"];
     [self.view addSubview:self.popUpView];
+    
+    self.gBackground = [UIColor blackColor];
+    self.gTextcolor  = [UIColor whiteColor];
     
     /*
     
@@ -143,6 +152,8 @@
     self.latestDataList = nil;
     self.gDateFormatter = nil;
     self.databaseUtils  = nil;
+    self.gBackground    = nil;
+    self.gTextcolor     = nil;
     
     [super viewDidUnload];
 }
@@ -346,38 +357,17 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
     }
+    cell.backgroundColor                 = self.gBackground;
+    cell.textLabel.backgroundColor       = self.gBackground;
+    cell.detailTextLabel.backgroundColor = self.gBackground;
+    cell.textLabel.textColor       = self.gTextcolor;
+    cell.detailTextLabel.textColor = self.gTextcolor;
+    
+    
     NSMutableDictionary *dict = [self.latestDataList objectAtIndex:indexPath.row];
     cell.textLabel.text       = dict[@"detail"];
     cell.detailTextLabel.text = dict[@"category"];
     return cell;
 }
-
-/*
- 
- - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
- // Return the number of sections.
- return 1;
- }
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewCellEditingStyleDelete;
-}
-
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSMutableArray *array = [self.latestDataList objectAtIndex:indexPath.row];
-    [array removeObjectAtIndex:indexPath.row];
-    
-    [tableView beginUpdates];
-    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    [tableView endUpdates];
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return @"删除";
-}*/
 
 @end
