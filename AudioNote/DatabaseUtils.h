@@ -22,7 +22,8 @@
 + (void) setUP;
 - (NSInteger) executeSQL: (NSString *) sql;
 - (NSMutableArray*) selectDBwithDate;
-- (NSMutableArray*) selectDBwithLimit: (NSInteger) limit Offset: (NSInteger) offset;
+- (NSMutableArray*) selectLimit: (NSInteger) limit Offset: (NSInteger) offset;
+- (NSMutableArray*) selectSimpleCreateTime;
 - (NSMutableArray*) reportWithType: (NSString *) type;
 - (NSString *) getReportData: (NSString *) type;
 

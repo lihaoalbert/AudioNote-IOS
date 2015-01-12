@@ -94,16 +94,11 @@
     // latest 3 rows data list view
     self.latestView.delegate   = self;
     self.latestView.dataSource = self;
+    self.latestView.backgroundColor = [UIColor blackColor];
     //[self.latestView setEditing:YES animated:YES];
     self.listDataLimit = 5;
     self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
-    
-    // UIBar
-    //UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(selectLeftAction:)];
-    //self.navigationItem.leftBarButtonItem = leftButton;
-    //UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd  target:self action:@selector(selectRightAction:)];
-    //self.navigationItem.rightBarButtonItem = rightButton;
-    
+
     
     [self.voiceBtn addTarget:self action:@selector(startVoiceRecord) forControlEvents:UIControlEventTouchDown];
     [self.voiceBtn addTarget:self action:@selector(stopVoiceRecord) forControlEvents:UIControlEventTouchUpInside];
@@ -158,17 +153,6 @@
 }
 
 
-#pragma mark - UIBarButtonItem#Action
-
--(void)selectLeftAction:(id)sender {
-    UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"提示" message:@"你点击了导航栏左按钮" delegate:self  cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-    [alter show];
-}
-
--(void)selectRightAction:(id)sender {
-    UIAlertView *alter = [[UIAlertView alloc] initWithTitle:@"提示" message:@"你点击了导航栏右按钮" delegate:self  cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-    [alter show];
-}
 
 #pragma mark - Switch Voice Record
 
@@ -283,7 +267,7 @@
     // 2.b operation only when finished convert
     if (isLast == YES) {
         if([self.iFlyRecognizerResult length] == 0) {
-            [self.popUpView setText:@"内容为空\n未创建记录."];
+            [self.popUpView setText:@"未创建"];
             [self.view addSubview:self.popUpView];
         } else {
             // caculate duration

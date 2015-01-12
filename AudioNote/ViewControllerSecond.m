@@ -17,6 +17,7 @@
 @interface ViewControllerSecond () <UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView    *listView;
 @property (nonatomic, nonatomic) NSMutableArray     *listData;
+@property (nonatomic, nonatomic) NSMutableArray     *listDataDate;
 @property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
 @property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
 @end
@@ -40,20 +41,20 @@
     self.listView.delegate   = self;
     self.listView.dataSource = self;
     //[self.listView setEditing:YES animated:YES];
-    //self.listData = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
-    self.listData = [self.databaseUtils selectDBwithLimit:  20 Offset: 0];
-    
-    self.navigationItem.backBarButtonItem = nil;
-    self.navigationItem.leftBarButtonItem = nil;
-    self.navigationItem.leftBarButtonItems = [[NSArray alloc] init];
+    // data#limit conflict with dataDate#[distinct strftime('%Y-%m-%d',create_time)]
+    self.listData    = [self.databaseUtils selectLimit:  100000 Offset: 0];
+    self.listDataDate = [self.databaseUtils selectSimpleCreateTime];
+    NSLog(@"ListData %lu", (unsigned long)self.listData.count);
+    NSLog(@"listDataDate %lu", (unsigned long)self.listDataDate.count);
     
 }
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    self.listData = nil;
-    self.listView = nil;
-    self.databaseUtils = nil;
+    self.listData        = nil;
+    self.listView        = nil;
+    self.listDataDate    = nil;
+    self.databaseUtils   = nil;
     self.viewCommonUtils = nil;
 }
 
@@ -65,21 +66,46 @@
 
 #pragma mark - <UITableViewDelegate, UITableViewDataSource>
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return [self.listDataDate count];
+}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.listData count];// limit num -
+    NSString *key        = [self.listDataDate objectAtIndex:section];
+    NSMutableArray *rows = [NSMutableArray arrayWithCapacity:0];
+    NSMutableDictionary *dict;
+    for(NSInteger i = 0; i < [self.listData count]; i++) {
+        dict = [self.listData objectAtIndex: i];
+        if([key isEqualToString: dict[@"simple_create_time"]]) {
+            [rows addObject: dict];
+        }
+    }
+    
+    return [rows count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger section = [indexPath section];
+    NSUInteger row     = [indexPath row];
+    NSString *key      = [self.listDataDate objectAtIndex:section];
+    
+    
+    NSMutableArray *rows = [NSMutableArray arrayWithCapacity:0];
+    NSMutableDictionary *dict;
+    for(NSInteger i = 0; i < [self.listData count]; i ++) {
+        dict = [self.listData objectAtIndex: i];
+        if([key isEqualToString: dict[@"simple_create_time"]]) {
+            [rows addObject: dict];
+        }
+    }
+    dict = [rows objectAtIndex: row];
+
     static NSString *cellID = @"cellID";
     MyTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (cell == nil) {
-        //cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellID];
         cell = [[[NSBundle mainBundle] loadNibNamed:@"MyTableViewCell" owner:self options:nil] lastObject];
     }
     
-    NSMutableDictionary *dict = [self.listData objectAtIndex:indexPath.row];
-    NSString *tag  =
-    [NSString stringWithFormat:@"%@", [dict objectForKey:@"category"]];
+    NSString *tag  = [NSString stringWithFormat:@"%@", [dict objectForKey:@"category"]];
     NSString *num  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
     NSString *unit = @"元";
     if ([num isEqualToString: @"0"]) {
@@ -96,14 +122,16 @@
     cell.cellUnit.text = unit;
     cell.cellTag.text  = tag;
     cell.cellDesc.text = [dict objectForKey: @"description"];
+   
     return cell;
 
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSMutableDictionary *dict = [self.listData objectAtIndex:[indexPath row]];
-    NSString *alterMsg  = [dict objectForKey: @"description"];
-    UIAlertView * alter = [[UIAlertView alloc] initWithTitle:@"选中的行信息" message:alterMsg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-    [alter show];
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return [self.listDataDate objectAtIndex:section];
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return @[];
 }
 @end

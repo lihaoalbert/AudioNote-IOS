@@ -17,7 +17,7 @@
     NSMutableArray *latestDataList = [NSMutableArray arrayWithCapacity:0];
     
     
-    NSMutableArray *dataArray = [databaseUtils selectDBwithLimit: limit Offset: offset];
+    NSMutableArray *dataArray = [databaseUtils selectLimit: limit Offset: offset];
     NSLog(@"Record Row Count: %lu", dataArray.count);
     for (NSDictionary  *dict in dataArray) {
         NSString *detail = @"";

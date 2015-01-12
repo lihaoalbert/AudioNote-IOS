@@ -126,7 +126,7 @@
 }  // end of selectDBwithDate()
 
 
-- (NSMutableArray*) selectDBwithLimit: (NSInteger) limit Offset: (NSInteger) offset {
+- (NSMutableArray*) selectLimit: (NSInteger) limit Offset: (NSInteger) offset {
     sqlite3 *database;
     sqlite3_stmt *statement;
     NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
@@ -138,13 +138,13 @@
     }
     
     ////////////////////////////////
-    // Select Data into NSData
+    // Select Data into NSMutableDictionary
     ////////////////////////////////
-    NSString *query = @"select id, input,description,category,nMoney,nTime,begin,duration,create_time,modify_time from voice_record order by create_time desc ";
+    NSString *query = @"select id, input,description,category,nMoney,nTime,begin,duration,create_time,modify_time, strftime('%Y-%m-%d',create_time) as simple_create_time from voice_record order by create_time desc ";
     query = [query stringByAppendingFormat:@" limit %lu offset %lu", limit, offset];
     int _id, _nMoney, _nTime, _duration;
     NSString *_input, *_description, *_category;
-    NSString *_begin, *_create_time, *_modify_time;
+    NSString *_begin, *_create_time, *_modify_time, *_simple_create_time;
     if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
         while (sqlite3_step(statement) == SQLITE_ROW) {
             _id          = sqlite3_column_int(statement, 0);
@@ -157,6 +157,7 @@
             _duration    = sqlite3_column_int(statement, 7);
             _create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 8)encoding:NSUTF8StringEncoding];
             _modify_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 9)encoding:NSUTF8StringEncoding];
+            _simple_create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 10)encoding:NSUTF8StringEncoding];
             //NSLog(@"_id = %i\n_input = %@ \n_description = %@ \n_category = %@\n_nMoney = %i\n _nTime = %i\n _begin       = %@\n_duration = %i\n_create_time = %@\n_modify_time = %@\n===================\n", _id, _input, _description, _category, _nMoney, _nTime, _begin, _duration, _create_time, _modify_time);
             
             
@@ -171,6 +172,7 @@
             [mutableDictionary setObject:[NSNumber numberWithInteger:_duration]  forKey:@"duration"];
             [mutableDictionary setObject:_create_time forKey:@"create_time"];
             [mutableDictionary setObject:_modify_time forKey:@"modify_time"];
+            [mutableDictionary setObject:_simple_create_time forKey:@"simple_create_time"];
             [mutableArray addObject: mutableDictionary];
         }
         sqlite3_finalize(statement);
@@ -179,6 +181,36 @@
     return mutableArray;
 }  // end of selectDBwithDate()
 
+
+
+- (NSMutableArray*) selectSimpleCreateTime {
+    sqlite3 *database;
+    sqlite3_stmt *statement;
+    NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
+    
+    if (sqlite3_open([self.databaseFilePath UTF8String], &database) != SQLITE_OK) {
+        NSLog(@"Sqlite3 DataBase Open Failed.");
+        NSLog(@"Abort Line Number: %i", __LINE__);
+        return mutableArray;
+    }
+    
+    ////////////////////////////////
+    // Select Data into NSMutableDictionary
+    ////////////////////////////////
+    NSString *query = @"select distinct strftime('%Y-%m-%d',create_time) as create_time from voice_record order by strftime('%Y-%m-%d',create_time) desc;";
+    NSString *_create_time;
+    if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
+        while (sqlite3_step(statement) == SQLITE_ROW) {
+            _create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 0)encoding:NSUTF8StringEncoding];
+
+            [mutableArray addObject: _create_time];
+        }
+        sqlite3_finalize(statement);
+    }
+    sqlite3_close(database);
+    
+    return mutableArray;
+}  // end of selectSimpleCreateDateLimit()
 
 
 
@@ -207,11 +239,10 @@
         where = [where stringByAppendingString:@" strftime('%Y-%m-%d',create_time) = "];
         where = [where stringByAppendingFormat:@" '%@'",todayStr];
     } else if ([type isEqual: @"this_week"]) {
+        NSCalendar *calendar    = [NSCalendar currentCalendar];
+        NSDateComponents *comps = [calendar components:NSCalendarUnitWeekOfYear fromDate:today];
+        NSInteger week          = [comps weekOfYear];
         
-        NSCalendar *calendar = [[NSCalendar alloc] init];
-        NSDateComponents *comps =[calendar components:NSCalendarUnitWeekdayOrdinal fromDate:today];
-        NSInteger week = [comps weekOfYear]; // 今年的第几周
-
         where = [where stringByAppendingString:@" cast(strftime('%W',create_time) as int) = "];
         where = [where stringByAppendingFormat:@" %li",(long)week];
     } else if ([type isEqual: @"this_month"]) {
