@@ -43,24 +43,6 @@
     //self.listData = [self.viewCommonUtils getDataListWithDB: self.databaseUtils];
     self.listData = [self.databaseUtils selectDBwithLimit:  20 Offset: 0];
     
-    // Gesture
-    /*
-    UISwipeGestureRecognizer *gestureRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToThirdView)];
-    gestureRight.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:gestureRight];
-    
-    UISwipeGestureRecognizer *gestureLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToFirstView)];
-    gestureLeft.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:gestureLeft];
-    */
-    
-    /*
-    // reset UIBarButtonItem
-    UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
-                                   initWithTitle:@""
-                                   style:UIBarButtonItemStylePlain target:nil action:nil];
-    [self.navigationItem setBackBarButtonItem:backButton];
-    */
     self.navigationItem.backBarButtonItem = nil;
     self.navigationItem.leftBarButtonItem = nil;
     self.navigationItem.leftBarButtonItems = [[NSArray alloc] init];
@@ -73,21 +55,6 @@
     self.listView = nil;
     self.databaseUtils = nil;
     self.viewCommonUtils = nil;
-}
-
-// Swipe Gesture Functions
-- (void)swipeToFirstView
-{
-    ViewControllerFirst *firstView = [[ViewControllerFirst alloc] init];
-    [self.navigationController pushViewController:firstView animated:YES];
-    firstView.title = @"小6语记";
-}
-
-- (void)swipeToThirdView
-{
-    ViewControllerThird *thirdView = [[ViewControllerThird alloc] init];
-    [self.navigationController pushViewController:thirdView animated:YES];
-    thirdView.title = @"数据报表";
 }
 
 - (void)didReceiveMemoryWarning {

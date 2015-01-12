@@ -12,7 +12,7 @@
 #import "ViewControllerThird.h"
 
 #import "PopupView.h"
-#import "Phantom.h"
+#import "processPattern.h"
 #import "DatabaseUtils.h"
 #import "ViewCommonUtils.h"
 #import "ISRDataHelper.h"
@@ -94,7 +94,7 @@
     // latest 3 rows data list view
     self.latestView.delegate   = self;
     self.latestView.dataSource = self;
-    [self.latestView setEditing:YES animated:YES];
+    //[self.latestView setEditing:YES animated:YES];
     self.listDataLimit = 5;
     self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
     
@@ -104,16 +104,6 @@
     //UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd  target:self action:@selector(selectRightAction:)];
     //self.navigationItem.rightBarButtonItem = rightButton;
     
-    // Gesture
-    /*
-    UISwipeGestureRecognizer *gestureRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToSecondView)];
-    gestureRight.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:gestureRight];
-    
-    UISwipeGestureRecognizer *gestureLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToThirdView)];
-    gestureLeft.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:gestureLeft];
-    */
     
     [self.voiceBtn addTarget:self action:@selector(startVoiceRecord) forControlEvents:UIControlEventTouchDown];
     [self.voiceBtn addTarget:self action:@selector(stopVoiceRecord) forControlEvents:UIControlEventTouchUpInside];
@@ -147,27 +137,6 @@
     }
     */
 }
-
-
-#pragma mark - Swipe Gesture Functions
-
--(void)swipeToSecondView {
-    NSLog(@"%@", self.navigationController.childViewControllers);
-    ViewControllerSecond *secondView = [[ViewControllerSecond alloc] init];
-    [self.navigationController pushViewController:secondView animated:YES];
-    secondView.title = @"明细列表";
-    secondView.navigationItem.leftBarButtonItem = nil;
-    secondView.navigationItem.backBarButtonItem = nil;
-}
-
--(void)swipeToThirdView {
-    NSLog(@"%@", self.navigationController.childViewControllers);
-    ViewControllerThird *thirdView = [[ViewControllerThird alloc] init];
-    [self.navigationController pushViewController:thirdView animated:YES];
-    thirdView.title = @"数据报表";
-}
-
-
 
 - (void)viewDidUnload {
     //取消识别
@@ -381,9 +350,11 @@
 
 #pragma mark - <UITableViewDelegate, UITableViewDataSource>
 
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.latestDataList count];// limit num -
+    return [self.latestDataList count];
 }
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellID = @"cellID";
@@ -397,5 +368,32 @@
     return cell;
 }
 
+/*
+ 
+ - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+ // Return the number of sections.
+ return 1;
+ }
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleDelete;
+}
+
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSMutableArray *array = [self.latestDataList objectAtIndex:indexPath.row];
+    [array removeObjectAtIndex:indexPath.row];
+    
+    [tableView beginUpdates];
+    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [tableView endUpdates];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return @"删除";
+}*/
 
 @end

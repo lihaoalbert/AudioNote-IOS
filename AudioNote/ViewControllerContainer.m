@@ -55,18 +55,18 @@
     self.scrollView.bounces       = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
     [self.view addSubview:self.scrollView];
     
     // ContainerTopBar
     self.topBar                  = [[ContainerTopBar alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.frame), kTopBarHeight)];
     self.topBar.font             = [UIFont systemFontOfSize:16.0];
-    self.topBar.backgroundColor  = [UIColor whiteColor];
+    self.topBar.backgroundColor  = [UIColor blackColor];
     self.topBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     self.topBar.font             = [UIFont systemFontOfSize:20.0];
-    self.topBar.textColor        = [UIColor darkGrayColor];
+    self.topBar.textColor        = [UIColor whiteColor];
     self.topBar.textAlignment    = NSTextAlignmentCenter;
     self.topBar.frame            = CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.bounds), kTopBarHeight);
+    self.view.backgroundColor    = [UIColor blackColor];
     [self.view addSubview:self.topBar];
 }
 
