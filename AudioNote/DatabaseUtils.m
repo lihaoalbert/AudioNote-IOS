@@ -184,37 +184,6 @@
 
 
 
-- (NSMutableArray*) selectSimpleCreateTime {
-    sqlite3 *database;
-    sqlite3_stmt *statement;
-    NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
-    
-    if (sqlite3_open([self.databaseFilePath UTF8String], &database) != SQLITE_OK) {
-        NSLog(@"Sqlite3 DataBase Open Failed.");
-        NSLog(@"Abort Line Number: %i", __LINE__);
-        return mutableArray;
-    }
-    
-    ////////////////////////////////
-    // Select Data into NSMutableDictionary
-    ////////////////////////////////
-    NSString *query = @"select distinct strftime('%Y-%m-%d',create_time) as create_time from voice_record order by strftime('%Y-%m-%d',create_time) desc;";
-    NSString *_create_time;
-    if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
-        while (sqlite3_step(statement) == SQLITE_ROW) {
-            _create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 0)encoding:NSUTF8StringEncoding];
-
-            [mutableArray addObject: _create_time];
-        }
-        sqlite3_finalize(statement);
-    }
-    sqlite3_close(database);
-    
-    return mutableArray;
-}  // end of selectSimpleCreateDateLimit()
-
-
-
 - (NSMutableArray *) getReportData: (NSString *) type {
     sqlite3 *database;
     sqlite3_stmt *statement;

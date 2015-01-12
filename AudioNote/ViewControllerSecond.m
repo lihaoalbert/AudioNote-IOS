@@ -17,7 +17,7 @@
 @interface ViewControllerSecond () <UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView    *listView;
 @property (nonatomic, nonatomic) NSMutableArray     *listData;
-@property (nonatomic, nonatomic) NSMutableArray     *listDataDate;
+@property (nonatomic, nonatomic) NSArray            *listDataDate;
 @property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
 @property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
 @end
@@ -42,11 +42,17 @@
     self.listView.dataSource = self;
     //[self.listView setEditing:YES animated:YES];
     // data#limit conflict with dataDate#[distinct strftime('%Y-%m-%d',create_time)]
-    self.listData    = [self.databaseUtils selectLimit:  100000 Offset: 0];
-    self.listDataDate = [self.databaseUtils selectSimpleCreateTime];
-    NSLog(@"ListData %lu", (unsigned long)self.listData.count);
-    NSLog(@"listDataDate %lu", (unsigned long)self.listDataDate.count);
+    self.listData = [self.databaseUtils selectLimit:  100000 Offset: 0];
     
+    NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithCapacity:0];
+    for (NSMutableDictionary *dict in self.listData) {
+        NSString *simple_create_time = dict[@"simple_create_time"];
+        [dicts setObject:simple_create_time forKey:simple_create_time];
+    }
+    self.listDataDate = [[dicts allValues] sortedArrayUsingSelector:@selector(compare:)];
+    self.listDataDate = [[self.listDataDate reverseObjectEnumerator] allObjects];
+    //NSSortDescriptor* sortOrder = [NSSortDescriptor sortDescriptorWithKey: @"self" ascending: NO];
+    //self.listDataDate = [[dicts allValues] sortedArrayUsingDescriptors: [NSArray arrayWithObject: sortOrder]];
 }
 - (void)viewDidUnload
 {
