@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *cellTag;  // 分类
 @property (weak, nonatomic) IBOutlet UILabel *cellDesc; // 保留字
 @property (weak, nonatomic) IBOutlet UILabel *cellUnit; // 金额/时间
+@property (weak, nonatomic) IBOutlet UILabel *cellTime; // 创建时间 12：10
 
 @end
 

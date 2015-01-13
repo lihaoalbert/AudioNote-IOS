@@ -5,6 +5,11 @@
 //  Created by lijunjie on 14-12-6.
 //  Copyright (c) 2014年 Intfocus. All rights reserved.
 //
+//  IOS 总控制处.
+//  功能
+//  1. 所有界面实例在此创建放入 viewControllers。
+//      viewControllers中界面切换在ViewControllerContainer.m中实现。
+//  2.
 
 #import "AppDelegate.h"
 #import "ViewControllerContainer.h"
@@ -34,20 +39,15 @@
     thirdController.title                  = @"数据报表";
     containerController.viewControllers    = [NSMutableArray arrayWithObjects:firstController, secondController, thirdController, nil];
     [self.window makeKeyAndVisible];
-    
-    
-    /*
-   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] ;
-    ViewControllerFirst *firstView = [[ViewControllerFirst alloc] initWithNibName:@"ViewControllerFirst" bundle:nil];
-    //rootView.tabBarItem.title = @"first 1";
-    firstView.title = @"小6语记";
-    self.navController = [[UINavigationController alloc] init];
-    [self.navController pushViewController:firstView animated:YES];
-    [self.window addSubview:self.navController.view];
-    [self.window makeKeyAndVisible];
-    */
+ 
     return YES;
 }
+
+// 禁止app横屏， 否则界面会乱掉
+- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

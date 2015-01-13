@@ -5,6 +5,11 @@
 //  Created by lijunjie on 14-12-6.
 //  Copyright (c) 2014年 Intfocus. All rights reserved.
 //
+// 功能:
+// 1. 语音转文字（科大讯飞）
+// 2. 文句解析，找出相对应的分类。（/ProcessPattern)
+// 3. 录入文句，解析结果写入数据库。（/DatabaseUtils)
+// 3.1 写入数据库同时，post到服务器一份，作为改善算法的参考。
 
 #import <UIKit/UIKit.h>
 #import "ViewControllerFirst.h"
@@ -22,32 +27,35 @@
 
 @interface ViewControllerFirst () <IFlySpeechRecognizerDelegate,UIActionSheetDelegate, UITableViewDelegate, UITableViewDataSource>
 
-//识别对象
+//识别对象（功能1）
 @property (nonatomic, strong) IFlySpeechRecognizer * iFlySpeechRecognizer;
-//数据上传对象
+//数据上传对象（功能1）
 @property (nonatomic, strong) IFlyDataUploader     * uploader;
 
 @property (nonatomic, strong) PopupView            * popUpView;   // show volumn when voice
 @property (nonatomic)         BOOL                 isCanceled;    // voice status
 
-// iFly recognizer convert audio to text.
+// iFly recognizer convert audio to text. （功能1）
 @property (nonatomic, nonatomic) NSMutableString    *iFlyRecognizerResult;
 @property (nonatomic, nonatomic) NSDate             *iFlyRecognizerStartDate;
 @property (nonatomic, nonatomic) NSDateFormatter    *gDateFormatter;
 // show iFlyRecognizerResult changing dynamically.
 @property (weak, nonatomic) IBOutlet UILabel        *iFlyRecognizerShow;
+
 // latest record list ui
 @property (weak, nonatomic) IBOutlet UITableView    *latestView;
 @property (nonatomic, nonatomic) NSMutableArray     *latestDataList;
 @property (nonatomic, nonatomic) NSInteger          listDataLimit;
 @property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
 @property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
+
 // begin voice record
 @property (weak, nonatomic) IBOutlet UIButton       *voiceBtn;
+
+// 调整画面颜色
 @property (weak, nonatomic) UIColor                 *gBackground;
 @property (weak, nonatomic) UIColor                 *gTextcolor;
-
-
+@property (weak, nonatomic) UIColor                 *gHighlightedTextColor;
 @end
 
 
@@ -75,17 +83,14 @@
     self.isCanceled      = YES;
     //[self.databaseUtils executeSQL: @"delete from voice_record"];
     
-    
     // config iflyRecognizer
     NSString *initString = [[NSString alloc] initWithFormat:@"appid=%@", @"5437b538"];
     [IFlySpeechUtility createUtility:initString];
-    
-
-    //创建识别
+    // 创建识别
     self.iFlySpeechRecognizer = [self.viewCommonUtils CreateRecognizer:self Domain:@"iat"];
     self.uploader = [[IFlyDataUploader alloc] init];
     
-    [IFlySetting setLogFile:LVL_NONE]; //LVL_ALL
+    [IFlySetting setLogFile:LVL_NONE]; //未来查看科大讯飞日志时使用: LVL_ALL
     [IFlySetting showLogcat:NO];
     NSLog(@"IFly Version: %@", [IFlySetting getVersion]);
     
@@ -95,52 +100,48 @@
     // global date foramt
     self.gDateFormatter = [[NSDateFormatter alloc] init];
     [self.gDateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    // latest 3 rows data list view
+    
+    
+    // latest n rows data list view
+    self.listDataLimit = 5;
     self.latestView.delegate   = self;
     self.latestView.dataSource = self;
+    
+    //self.latestView = [self.latestView initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 100)];
     self.latestView.backgroundColor = [UIColor clearColor];
     self.latestView.opaque = NO;
     self.parentViewController.view.backgroundColor = [UIColor colorWithRed:0.0 green:0.2 blue:0.5 alpha:0.7];
     //[self.latestView setEditing:YES animated:YES];
-    self.listDataLimit = 5;
     self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
 
-    
+    // 开始录音按钮设置与启动
     [self.voiceBtn addTarget:self action:@selector(startVoiceRecord) forControlEvents:UIControlEventTouchDown];
     [self.voiceBtn addTarget:self action:@selector(stopVoiceRecord) forControlEvents:UIControlEventTouchUpInside];
     
     
-
+    // 录音中的画面显示
     self.popUpView = [[PopupView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/4, self.view.frame.size.height/2, self.view.frame.size.width/2, self.view.frame.size.height/2)];
     self.popUpView.ParentView = self.view;
     [self.popUpView setText: @"音量:0"];
-    [self.view addSubview:self.popUpView];
+    //[self.view addSubview:self.popUpView];
     
     self.gBackground = [UIColor blackColor];
     self.gTextcolor  = [UIColor whiteColor];
-    
-    /*
-    
-    // init data
-    for(NSInteger i = 1; i < 8; i ++) {
-        NSInteger t_duration    = (NSInteger)random()%10;
-        NSString *t_createTime  = [NSString stringWithFormat: @"2015-01-%li 12:12:12", (long)i];
-        if(i < 10)
-            t_createTime  = [NSString stringWithFormat: @"2015-01-0%li 12:12:12", (long)i];
-
-        NSString *t_nTime    = @"40";
-        NSString *t_nMoney   = @"0";
-        NSString *t_szType   = @"生活";
-        NSString *t_szRemain = @"学习英语";
-        
-        NSString *insertSQL = [NSString stringWithFormat: @"Insert into voice_record(input,description,category,nMoney,nTime,begin,duration,create_time,modify_time) VALUES('%@','%@','%@',%@,%@,'%@',%li,'%@','%@');", @"学习英语四十分钟", t_szRemain, t_szType, t_nMoney, t_nTime, t_createTime, t_duration,  t_createTime, t_createTime];
-        
-        NSLog(@"Insert SQL:\n%@", insertSQL);
-        NSInteger lastRowId = [self.databaseUtils executeSQL: insertSQL];
-        NSLog(@"Insert Into SQL#%li - successfully.", lastRowId);
-    }
-    */
+    self.gHighlightedTextColor  = [UIColor orangeColor];
 }
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+ NSLog(@"View Did applicationDidBecomeActive");
+}
+
+- (void)viewVillAppear:(BOOL)animated {
+    NSLog(@"View Did viewVillAppear");
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    NSLog(@"View Did Disappear");
+}
+
 
 - (void)viewDidUnload {
     //取消识别
@@ -154,6 +155,7 @@
     self.databaseUtils  = nil;
     self.gBackground    = nil;
     self.gTextcolor     = nil;
+    self.gHighlightedTextColor     = nil;
     
     [super viewDidUnload];
 }
@@ -166,7 +168,6 @@
 
 
 #pragma mark - Switch Voice Record
-
 
 -(void)startVoiceRecord {
     self.isCanceled = NO;
@@ -257,25 +258,23 @@
  * @see
  */
 - (void) onResults:(NSArray *) results isLast:(BOOL)isLast {
-    
+    // result数组内容很复杂，提取最简单的语音转义字符串
     NSMutableString *mutableString = [[NSMutableString alloc] init];
     NSDictionary    *dic = results[0];
-    
     for (NSString *key in dic) {
         [mutableString appendFormat:@"%@",key];
     }
-    
     NSString *resultStr = [[ISRDataHelper shareInstance] getResultFromJson:mutableString];
     NSLog(@"听写结果：%@",resultStr);
     
     [self.iFlyRecognizerResult appendFormat:@"%@",resultStr];
 
     
-    // 1.b show recognize text changing dynamically.
-    self.iFlyRecognizerShow.text = self.iFlyRecognizerResult;
+    // 录音过程中，实时显示录音转义文句，暂时未使用到
+    //self.iFlyRecognizerShow.text = self.iFlyRecognizerResult;
     
     // monitor whether recognize continue
-    // 2.b operation only when finished convert
+    // operation only when finished converting
     if (isLast == YES) {
         if([self.iFlyRecognizerResult length] == 0) {
             [self.popUpView setText:@"未创建"];
@@ -298,6 +297,7 @@
             // All the result will be saved in g_szRemain, g_szType,g_nMoney,g_nTime
             ////////////////////////////////
             
+            // 下面开始实现功能2
             // default value then not deal with failed
             NSString *t_nTime    = @"0";
             NSString *t_nMoney   = @"0";
@@ -307,7 +307,7 @@
             char szTemp[MAX_INPUT_LEN];
             strcpy(szTemp,(char *)[self.iFlyRecognizerResult.copy UTF8String]);
             szTemp[MAX_INPUT_LEN-1] = '\0';
-            if (process(szTemp) == SUCCESS) {
+            if (process(szTemp, self.databaseUtils) == SUCCESS) {
                 ////////////////////////////////
                 // Insert to DB (process successfully)
                 ////////////////////////////////
@@ -321,11 +321,13 @@
             
             NSLog(@"Insert SQL:\n%@", insertSQL);
             
-            
             NSInteger lastRowId = [self.databaseUtils executeSQL: insertSQL];
-            NSLog(@"Insert Into SQL#%li - successfully.", lastRowId);
+            if(lastRowId > 0)
+                NSLog(@"Insert Into Database#%li - successfully.", lastRowId);
+            else
+                NSLog(@"Insert Into Database#%li - failed.", lastRowId);
             
-            
+            //[TODO] 功能 3.1
             
             self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
             [self.latestView reloadData];
@@ -362,6 +364,10 @@
     cell.detailTextLabel.backgroundColor = self.gBackground;
     cell.textLabel.textColor       = self.gTextcolor;
     cell.detailTextLabel.textColor = self.gTextcolor;
+    
+    cell.textLabel.highlightedTextColor  = self.gHighlightedTextColor;
+    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:cell.frame];
+    cell.selectedBackgroundView.backgroundColor = self.gBackground;
     
     
     NSMutableDictionary *dict = [self.latestDataList objectAtIndex:indexPath.row];

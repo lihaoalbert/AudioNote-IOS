@@ -16,8 +16,10 @@
 @property (nonatomic, nonatomic) NSMutableDictionary  *listDict;
 @property (nonatomic, nonatomic) NSArray              *listDictKeys;
 @property (nonatomic, nonatomic) DatabaseUtils        *databaseUtils;
-@property (weak, nonatomic) UIColor                 *gBackground;
-@property (weak, nonatomic) UIColor                 *gTextcolor;
+@property (weak, nonatomic) UIColor                   *gBackground;
+@property (weak, nonatomic) UIColor                   *gTextcolor;
+@property (weak, nonatomic) UIColor                   *gHighlightedTextColor;
+
 @end
 
 @implementation ViewControllerThird
@@ -53,8 +55,9 @@
     self.listDictKeys = [[self.listDict allKeys] sortedArrayUsingSelector:@selector(compare:)];
     
     
-    self.gBackground = [UIColor blackColor];
-    self.gTextcolor  = [UIColor whiteColor];
+    self.gBackground            = [UIColor blackColor];
+    self.gTextcolor             = [UIColor whiteColor];
+    self.gHighlightedTextColor  = [UIColor yellowColor];
 }
 
 
@@ -67,6 +70,7 @@
     self.databaseUtils = nil;
     self.gBackground   = nil;
     self.gTextcolor    = nil;
+    self.gHighlightedTextColor = nil;
 }
 
 
@@ -106,9 +110,13 @@
     cell.backgroundColor                 = self.gBackground;
     cell.textLabel.backgroundColor       = self.gBackground;
     cell.detailTextLabel.backgroundColor = self.gBackground;
-    cell.textLabel.textColor       = self.gTextcolor;
-    cell.detailTextLabel.textColor = self.gTextcolor;
-
+    cell.textLabel.textColor             = self.gTextcolor;
+    cell.detailTextLabel.textColor       = self.gTextcolor;
+    cell.textLabel.highlightedTextColor  = self.gHighlightedTextColor;
+    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:cell.frame];
+    cell.selectedBackgroundView.backgroundColor = self.gBackground;
+    //cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     cell.textLabel.text = [rows objectAtIndex:row];
     return cell;
 }

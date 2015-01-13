@@ -31,6 +31,7 @@
 #include <string.h>
 #include "dictType.h"
 #include "dictList.h"
+#import "DatabaseUtils.h"
 
 #define MAX_INPUT_LEN           1024
 
@@ -314,7 +315,7 @@ int getMinute(char *pCh)
     return 0;
 } // end of getMinute(char *p)
 
-int process(char szParam[MAX_INPUT_LEN])
+int process(char szParam[MAX_INPUT_LEN], DatabaseUtils *database)
 {
     char *pCh=NULL,*pChStart=NULL, *pCh2=NULL;//#005 增加了*pCh2=NULL
     char szInput[MAX_INPUT_LEN], szTemp[MAX_INPUT_LEN], szChStart[MAX_INPUT_LEN];
@@ -917,21 +918,32 @@ int process(char szParam[MAX_INPUT_LEN])
     // 6. (already done)
     debug_printf("after step 6, szInput=[%s]\n",szInput);
     
-    // 7. Find Database (TODO)
-    
-    // 8. Match dict
-    nLen = sizeof(g_szDictList) / sizeof(g_szDictList[0]);
+    // 7. Find Database
     strncpy(g_szRemain,szInput,MAX_INPUT_LEN-1);
     g_szRemain[MAX_INPUT_LEN-1] = '\0';
-    for (i=0;i<nLen;i++) {
-        if (strstr(szInput,g_szDictList[i]) != NULL) {
-            strncpy(g_szType,g_szDictType[i],MAX_INPUT_LEN-1);
-            g_szType[MAX_INPUT_LEN-1] = '\0';
-            return SUCCESS;
+    NSString *description = [NSString stringWithUTF8String:g_szRemain];
+    NSString *category = [database selectTag: description];
+    NSLog(@"category:%@\n description:%@", category, description);
+    
+    // 如果 database 里面找不到 （返回-1)
+    if([category isEqualToString:@"-1"]) {
+        // 8. Match dict
+        nLen = sizeof(g_szDictList) / sizeof(g_szDictList[0]);
+        for (i=0;i<nLen;i++) {
+            if (strstr(szInput,g_szDictList[i]) != NULL) {
+                strncpy(g_szType,g_szDictType[i],MAX_INPUT_LEN-1);
+                g_szType[MAX_INPUT_LEN-1] = '\0';
+                return SUCCESS;
+            }
         }
+    // Database 里面有找到
+    } else {
+        strncpy(g_szType,(char *)[category UTF8String],MAX_INPUT_LEN-1);
+        g_szType[MAX_INPUT_LEN-1] = '\0';
+        return SUCCESS;
     }
     
-    // 9. No match, default=生活
+    // 9. No match, default=生活 （Database and Dict 都找不到）
     strncpy(g_szType,"生活",MAX_INPUT_LEN-1);
     g_szType[MAX_INPUT_LEN-1] = '\0';
     return SUCCESS;

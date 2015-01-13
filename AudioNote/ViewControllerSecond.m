@@ -20,6 +20,9 @@
 @property (nonatomic, nonatomic) NSArray            *listDataDate;
 @property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
 @property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
+@property (weak, nonatomic) UIColor                 *gBackground;
+@property (weak, nonatomic) UIColor                 *gTextcolor;
+@property (weak, nonatomic) UIColor                 *gHighlightedTextColor;
 @end
 
 @implementation ViewControllerSecond
@@ -53,6 +56,10 @@
     self.listDataDate = [[self.listDataDate reverseObjectEnumerator] allObjects];
     //NSSortDescriptor* sortOrder = [NSSortDescriptor sortDescriptorWithKey: @"self" ascending: NO];
     //self.listDataDate = [[dicts allValues] sortedArrayUsingDescriptors: [NSArray arrayWithObject: sortOrder]];
+    
+    self.gBackground = [UIColor blackColor];
+    self.gTextcolor  = [UIColor whiteColor];
+    self.gHighlightedTextColor  = [UIColor yellowColor];
 }
 - (void)viewDidUnload
 {
@@ -62,6 +69,9 @@
     self.listDataDate    = nil;
     self.databaseUtils   = nil;
     self.viewCommonUtils = nil;
+    self.gBackground    = nil;
+    self.gTextcolor     = nil;
+    self.gHighlightedTextColor     = nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -111,6 +121,13 @@
         cell = [[[NSBundle mainBundle] loadNibNamed:@"MyTableViewCell" owner:self options:nil] lastObject];
     }
     
+    NSString *time = [NSString stringWithFormat:@"%@", [dict objectForKey:@"create_time"]];
+    if(time.length == 19) {
+        time = [time substringWithRange:NSMakeRange(11, 5)];
+    } else {
+        time = @"unkown";
+    }
+    NSLog(@"%lu", (unsigned long)time.length);
     NSString *tag  = [NSString stringWithFormat:@"%@", [dict objectForKey:@"category"]];
     NSString *num  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
     NSString *unit = @"元";
@@ -124,11 +141,30 @@
         //tag = [tag stringByAppendingString:@"金额"];
     }
 
+    cell.cellTime.text = time;
     cell.cellNum.text  = num;
     cell.cellUnit.text = unit;
     cell.cellTag.text  = tag;
     cell.cellDesc.text = [dict objectForKey: @"description"];
+    
    
+    cell.backgroundColor                 = self.gBackground;
+    cell.textLabel.backgroundColor       = self.gBackground;
+    cell.detailTextLabel.backgroundColor = self.gBackground;
+    cell.cellNum.textColor               = self.gTextcolor;
+    cell.cellUnit.textColor              = self.gTextcolor;
+    cell.cellTag.textColor               = self.gTextcolor;
+    cell.cellDesc.textColor              = self.gTextcolor;
+    cell.detailTextLabel.textColor       = self.gTextcolor;
+    cell.cellTime.highlightedTextColor   = self.gHighlightedTextColor;
+    cell.cellNum.highlightedTextColor    = self.gHighlightedTextColor;
+    cell.cellUnit.highlightedTextColor   = self.gHighlightedTextColor;
+    cell.cellTag.highlightedTextColor    = self.gHighlightedTextColor;
+    cell.cellDesc.highlightedTextColor   = self.gHighlightedTextColor;
+    cell.textLabel.highlightedTextColor  = self.gHighlightedTextColor;
+    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:cell.frame];
+    cell.selectedBackgroundView.backgroundColor = self.gBackground;
+    
     return cell;
 
 }

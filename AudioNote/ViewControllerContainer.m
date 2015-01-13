@@ -5,7 +5,7 @@
 //  Created by lijunjie on 15-1-10.
 //  Copyright (c) 2015年 Intfocus. All rights reserved.
 //
-
+// 当前有三个界面, 放在一个容器里面，此文件为容器处理。（容器类型: scrollView)
 
 #import "ViewControllerContainer.h"
 #import "NSMutableArray+Util.h"
@@ -108,24 +108,38 @@
 // 滑动结束后回调
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     // self.scrollView.userInteractionEnabled = YES;
+    NSLog(@"before refresh");
     [self refresh];
 }
 
 /** 为了实现循环滚动，要重新排版每个view的frame, 要重新排版就要对数组中引用的对象指针进行排列
- *  思路：当移动到最末尾的时候（self.scrollView.contentOffset.x到达最大），改变数组中指针排序，并调用layoutSubViews重新排版
- 比如排版为：红绿蓝紫，假设当前页是紫色页，更改数组指针，让紫色变为第二个页面，即：调成绿紫蓝红，并调用setContentOffSet为pageWidth, 0 显示紫色
- 同理，当移动到最开始的也对指针进行排序
+ *  思路：
+        当移动到最末尾的时候（self.scrollView.contentOffset.x到达最大），改变数组中指针排序，并调用layoutSubViews重新排版
+        比如排版为：[红绿蓝紫]，假设当前页是[紫色]页，更改数组指针，让[紫色]变为第二个页面，即：调成[绿紫蓝红]，并调用setContentOffSet为pageWidth, 0 显示紫色
+        同理，当移动到最开始的也对指针进行排序
  */
 - (void)refresh {
-    NSUInteger currentPage = self.scrollView.contentOffset.x / self.pageWidth;
-    self.topBar.text = [[_viewControllers valueForKey:@"title"] objectAtIndex:currentPage];
-    if (currentPage == self.viewControllers.count-1) { // 移到了最右边的view
+    NSLog(@"before 1");
+    NSLog(@"%@", _viewControllers);
+    NSUInteger currentPage  = self.scrollView.contentOffset.x / self.pageWidth;
+    NSLog(@"offset: %f, width: %f, move:%lu", self.scrollView.contentOffset.x , self.pageWidth, (unsigned long)currentPage);
+    NSUInteger viewCount    = [self.viewControllers count];
+    NSUInteger currentIndex = currentPage >= viewCount ? viewCount - 1 : currentPage;
+    //NSLog(@"_viewControllers： %lu currentIndex: %lu", (unsigned long)[_viewControllers count], currentIndex);
+    self.topBar.text = [[_viewControllers valueForKey:@"title"] objectAtIndex:currentIndex];
+    NSLog(@"before 3");
+    if (currentPage == viewCount-1) { // 移到了最右边的view
+        NSLog(@"before");
         [self.viewControllers moveRightStep:2];
+        NSLog(@"after");
+        //UIView *currentView = [self.viewControllers lastObject];
+        //NSLog(@"%@", currentView);
         [self layoutSubViews];
         return;
     }
     if (currentPage == 0) {
         [self.viewControllers moveRight];
+        NSLog(@"%@", [self.viewControllers lastObject]);
         [self layoutSubViews];
     }
 }

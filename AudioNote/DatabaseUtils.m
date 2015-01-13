@@ -47,7 +47,7 @@
     
     int result = sqlite3_open([self.databaseFilePath UTF8String], &database);
     if (result != SQLITE_OK) {
-        NSLog(@"open data failed - line number: %i.", __LINE__);
+        NSLog(@"open database failed - line number: %i.", __LINE__);
         return -__LINE__;
     }
  
@@ -183,6 +183,34 @@
 }  // end of selectDBwithDate()
 
 
+- (NSString*) selectTag: (NSString *) description {
+    sqlite3 *database;
+    sqlite3_stmt *statement;
+    NSString *category = @"-1";
+    
+    if (sqlite3_open([self.databaseFilePath UTF8String], &database) != SQLITE_OK) {
+        NSLog(@"Sqlite3 DataBase Open Failed.");
+        NSLog(@"Abort Line Number: %i", __LINE__);
+        return category;
+    }
+    
+    ////////////////////////////////
+    // Select Data into NSMutableDictionary
+    ////////////////////////////////
+    NSString *query = @"select category from voice_record where description = ";
+    query = [query stringByAppendingFormat:@"'%@' order by id desc ", description];
+    NSLog(@"%@", query);
+    if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
+        if (sqlite3_step(statement) == SQLITE_ROW) {
+            category       = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 0)encoding:NSUTF8StringEncoding];
+        }
+        sqlite3_finalize(statement);
+    }
+    sqlite3_close(database);
+    return category;
+}  // end of selectTag()
+
+
 
 - (NSMutableArray *) getReportData: (NSString *) type {
     sqlite3 *database;
@@ -208,6 +236,8 @@
         
         where = [where stringByAppendingString:@" strftime('%Y-%m-%d',create_time) = "];
         where = [where stringByAppendingFormat:@" '%@'",todayStr];
+    // [TODO] 分拆出来成为独立的function lastest_n_days
+        
     } else if ([type isEqual: @"latest_7_days"]) {
         /*NSCalendar *calendar    = [NSCalendar currentCalendar];
         NSDateComponents *comps = [calendar components:NSCalendarUnitWeekOfYear fromDate:today];
