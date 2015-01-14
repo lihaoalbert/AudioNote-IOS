@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "DidShowCurrent.h"
 
-@interface ViewControllerSecond : UIViewController
+@interface ViewControllerSecond : UIViewController<DidShowCurrent>
 
 @end

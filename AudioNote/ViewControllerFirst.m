@@ -129,8 +129,6 @@
     self.gTextcolor  = [UIColor whiteColor];
     self.gHighlightedTextColor  = [UIColor orangeColor];
     
-    self.latestView.frame = self.view.bounds;
-    
     
     NSLog(@"TableView: %f", self.latestView.bounds.size.width);
     NSLog(@"view:%f", self.view.bounds.size.width);
@@ -216,8 +214,8 @@
         return;
     }
     NSString * vol = [NSString stringWithFormat:@"音量：%d",volume];
-    NSLog(@"isCanceled: %i, Volumne:%@", self.isCanceled, vol);
-    NSLog(@"iFlyRecognizerResult: %@", self.iFlyRecognizerResult.copy);
+    //NSLog(@"isCanceled: %i, Volumne:%@", self.isCanceled, vol);
+    //NSLog(@"iFlyRecognizerResult: %@", self.iFlyRecognizerResult.copy);
     [self.popUpView setText:vol];
     [self.view addSubview:self.popUpView];
 }
@@ -251,9 +249,7 @@
  * @param   errorCode   -[out] 错误类，具体用法见IFlySpeechError
  */
 - (void) onError:(IFlySpeechError *) error {
-    NSString *text ;
-    
-    NSLog(@"%@",text);
+    NSLog(@"onError: %@",error);
 }
 
 /**
@@ -271,7 +267,7 @@
         [mutableString appendFormat:@"%@",key];
     }
     NSString *resultStr = [[ISRDataHelper shareInstance] getResultFromJson:mutableString];
-    NSLog(@"听写结果：%@",resultStr);
+    //NSLog(@"听写结果：%@",resultStr);
     
     [self.iFlyRecognizerResult appendFormat:@"%@",resultStr];
 
@@ -337,11 +333,11 @@
             // 3.1 写入数据库同时，post到服务器一份，作为改善算法的参考。
             ////////////////////////////////
             NSString *device  = [NSString stringWithFormat:@"device=name:%@", [[UIDevice currentDevice] name]];
-            device = [device stringByAppendingFormat:@";model:%@", [[UIDevice currentDevice] model]];
-            device = [device stringByAppendingFormat:@";localizedModel:%@", [[UIDevice currentDevice] localizedModel]];
-            device = [device stringByAppendingFormat:@";systemName:%@", [[UIDevice currentDevice] systemName]];
-            device = [device stringByAppendingFormat:@";identifierForVendor:%@", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
-            device = [device stringByAppendingFormat:@";IFlyVersion:%@", [IFlySetting getVersion]];
+            device = [device stringByAppendingFormat:@",model:%@", [[UIDevice currentDevice] model]];
+            device = [device stringByAppendingFormat:@",localizedModel:%@", [[UIDevice currentDevice] localizedModel]];
+            device = [device stringByAppendingFormat:@",systemName:%@", [[UIDevice currentDevice] systemName]];
+            device = [device stringByAppendingFormat:@",identifierForVendor:%@", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
+            device = [device stringByAppendingFormat:@",IFlyVersion:%@", [IFlySetting getVersion]];
             NSString *data = [NSString stringWithFormat:@"data={\"input\":\"%@\"", self.iFlyRecognizerResult.copy];
             data = [data stringByAppendingFormat:@", \"szRemain\":\"%@\"", t_szRemain];
             data = [data stringByAppendingFormat:@", \"szType\":\"%@\"", t_szType];
@@ -401,5 +397,11 @@
     cell.detailTextLabel.text = dict[@"category"];
     return cell;
 }
+
+#pragma mark - <CurrentShow>
+- (void)didShowCurrent {
+    NSLog(@"switch to first view.");
+}
+
 
 @end

@@ -10,9 +10,12 @@
 #import "ViewControllerContainer.h"
 #import "NSMutableArray+Util.h"
 #import "ContainerTopBar.h"
+#import "DidShowCurrent.h"
 // http://www.dreamingwish.com/frontui/article/default/uiscrollview-infinite-loop-scrolling.html
 #define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
 #define kTopBarHeight 44.0
+#define ScreenWidth [[UIScreen mainScreen] bounds].size.width
+#define ScreenHeight [[UIScreen mainScreen] bounds].size.height
 
 @interface ViewControllerContainer() <UIScrollViewDelegate>
 
@@ -20,6 +23,8 @@
 @property (nonatomic, strong) ContainerTopBar *topBar;
 @property (nonatomic) CGFloat pageWidth;
 @property (nonatomic) CGFloat pageHeight;
+@property (nonatomic, assign) UIViewController<DidShowCurrent> *currentController;
+
 
 @end
 
@@ -55,36 +60,36 @@
     self.scrollView.bounces       = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
     [self.view addSubview:self.scrollView];
     
     // ContainerTopBar
     self.topBar                  = [[ContainerTopBar alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.frame), kTopBarHeight)];
     self.topBar.font             = [UIFont systemFontOfSize:16.0];
-    self.topBar.backgroundColor  = [UIColor blackColor];
+    self.topBar.backgroundColor  = [UIColor clearColor];
     self.topBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     self.topBar.font             = [UIFont systemFontOfSize:20.0];
     self.topBar.textColor        = [UIColor whiteColor];
     self.topBar.textAlignment    = NSTextAlignmentCenter;
     self.topBar.frame            = CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.bounds), kTopBarHeight);
-    self.view.backgroundColor    = [UIColor blackColor];
-    [self.view addSubview:self.topBar];
-}
+    [self.view addSubview:self.topBar];}
 
 - (void)setViewControllers:(NSMutableArray *)viewControllers {
     _viewControllers = [NSMutableArray arrayWithArray:viewControllers];
-
     for (UIViewController *viewController in viewControllers) {
         [viewController willMoveToParentViewController:self];
-        viewController.view.frame = CGRectMake(0.0, kTopBarHeight, CGRectGetWidth(self.scrollView.frame), self.view.bounds.size.height-kTopBarHeight);;
-        NSLog(@"viewController: %@", viewController);
-        NSLog(@"width: %f", CGRectGetWidth(self.scrollView.frame));
-        NSLog(@"width: %f", viewController.view.bounds.size.width);
+        viewController.view.frame = CGRectMake(0.0, kTopBarHeight, CGRectGetWidth(self.scrollView.frame), self.view.bounds.size.height-kTopBarHeight);
         [self.scrollView addSubview:viewController.view];
         [viewController didMoveToParentViewController:self];
     }
-    [self refresh];
+    
+    self.topBar.text = [[_viewControllers valueForKey:@"title"] firstObject];
+    _currentController = _viewControllers.firstObject;
+    
+    [self layoutSubViewsWithDirection:kMoveDirectionRight];
 }
 
+/*
 - (void)layoutSubViews {
     CGFloat x = 0.0;
     for (UIViewController *viewController in self.viewControllers) {
@@ -93,7 +98,34 @@
     }
     self.scrollView.contentSize   = CGSizeMake(x, self.pageWidth);
     self.scrollView.contentOffset = CGPointMake(self.pageWidth, 0);
+}*/
+- (void)layoutSubViewsWithDirection:(MoveDirection)direction
+{
+    /**
+     * Step 1: 重排数组索引
+     * Step 2: 根据重排好的数组重排子视图frame
+     * Step 3: 设置scrollView的contentOffset以正确显示
+     */
+    direction == kMoveDirectionLeft ? [self.viewControllers moveLeft] : [self.viewControllers moveRight];
+    CGFloat x = 0.0;
+    for (UIViewController *viewController in self.viewControllers) {
+        viewController.view.frame = CGRectMake(x, 0, self.pageWidth, self.pageHeight);
+        x += CGRectGetWidth(self.scrollView.frame);
+    }
+    self.scrollView.contentSize = CGSizeMake(x, self.pageWidth);
+    
+    switch (direction) {
+        case kMoveDirectionLeft:
+            self.scrollView.contentOffset = CGPointMake(self.pageWidth*(self.viewControllers.count-2), 0);
+            break;
+        case kMoveDirectionRight:
+            self.scrollView.contentOffset = CGPointMake(self.pageWidth, 0);
+            break;
+        default:
+            break;
+    }
 }
+
 
 - (CGFloat)pageWidth {
     return CGRectGetWidth(self.scrollView.frame);
@@ -110,47 +142,72 @@
 #pragma mark - <UIScrollViewDelegate>
 
 // 滑动结束后回调
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
     // self.scrollView.userInteractionEnabled = YES;
-    //NSLog(@"before refresh");
-    [self refresh];
+    // [self refresh];
+    
+    NSUInteger currentPage = self.scrollView.contentOffset.x / self.pageWidth;
+    self.topBar.text = [[_viewControllers valueForKey:@"title"] objectAtIndex:currentPage];
+    
+    if (currentPage == self.viewControllers.count-1) { // 移到了最右边
+        [self layoutSubViewsWithDirection:kMoveDirectionLeft];
+        self.currentController = [self.viewControllers objectAtIndex:self.viewControllers.count-2];
+    } else if (currentPage == 0) { // 移到了最左边
+        [self layoutSubViewsWithDirection:kMoveDirectionRight];
+        self.currentController = [self.viewControllers objectAtIndex:2];
+    }
+    
+    currentPage = self.scrollView.contentOffset.x / self.pageWidth;
+    self.currentController = [self.viewControllers objectAtIndex:currentPage];
+}
+
+- (void)setCurrentController:(UIViewController<DidShowCurrent> *)currentController
+{
+    if (_currentController != currentController) {
+        _currentController = currentController;
+        [_currentController didShowCurrent];
+    }
 }
 
 /** 为了实现循环滚动，要重新排版每个view的frame, 要重新排版就要对数组中引用的对象指针进行排列
- *  思路：
-        当移动到最末尾的时候（self.scrollView.contentOffset.x到达最大），改变数组中指针排序，并调用layoutSubViews重新排版
-        比如排版为：[红绿蓝紫]，假设当前页是[紫色]页，更改数组指针，让[紫色]变为第二个页面，即：调成[绿紫蓝红]，并调用setContentOffSet为pageWidth, 0 显示紫色
-        同理，当移动到最开始的也对指针进行排序
+ *  思路：当移动到最末尾的时候（self.scrollView.contentOffset.x到达最大），改变数组中指针排序，并调用layoutSubViews重新排版
+ 比如排版为：红绿蓝紫，假设当前页是紫色页，更改数组指针，让紫色变为第二个页面，即：调成绿紫蓝红，并调用setContentOffSet为pageWidth, 0 显示紫色
+ 同理，当移动到最开始的也对指针进行排序
  */
-- (void)refresh {
-    NSUInteger currentPage  = self.scrollView.contentOffset.x / self.pageWidth;
-    NSLog(@"offset: %f, width: %f, move:%lu", self.scrollView.contentOffset.x , self.pageWidth, (unsigned long)currentPage);
-    NSUInteger viewCount    = [self.viewControllers count];
-    self.topBar.text = [[_viewControllers valueForKey:@"title"] objectAtIndex:currentPage];
-    if (currentPage == viewCount-1) { // 移到了最右边的view
-        [self.viewControllers moveRightStep:2];
-        [self layoutSubViews];
-        return;
-    }
-    if (currentPage == 0) {
-        [self.viewControllers moveRight];
-        //NSLog(@"%@", [self.viewControllers lastObject]);
-        [self layoutSubViews];
-    }
-}
+/**
+ - (void)refresh
+ {
+ NSUInteger currentPage = self.scrollView.contentOffset.x / self.pageWidth;
+ self.topBar.text = [[_viewControllers valueForKey:@"title"] objectAtIndex:currentPage];
+ if (currentPage == self.viewControllers.count-1) { // 移到了最右边的view
+ [self.viewControllers moveRightStep:2];
+ [self layoutSubViews];
+ return;
+ }
+ if (currentPage == 0) {
+ [self.viewControllers moveRight];
+ [self layoutSubViews];
+ return;
+ }
+ }
+ */
 
 #if 0
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
     if (!decelerate) {
         self.scrollView.userInteractionEnabled = YES;
     }
 }
 
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
     self.scrollView.userInteractionEnabled = YES;
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
     self.scrollView.userInteractionEnabled = NO;
 }
 #endif

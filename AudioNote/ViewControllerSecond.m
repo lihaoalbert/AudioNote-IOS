@@ -40,6 +40,29 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    [self refresh];
+}
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    
+    self.listData        = nil;
+    self.listView        = nil;
+    self.listDataDate    = nil;
+    self.databaseUtils   = nil;
+    self.viewCommonUtils = nil;
+    self.gBackground    = nil;
+    self.gTextcolor     = nil;
+    self.gHighlightedTextColor     = nil;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+- (void) refresh {
     // init Utils
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
@@ -58,42 +81,9 @@
     
     NSLog(@"TableView2: %f", self.listView.bounds.size.width);
     NSLog(@"view2:%f", self.view.bounds.size.width);
-    
-    // Gesture
-    UISwipeGestureRecognizer *gestureUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(refresh)];
-    gestureUp.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.view addGestureRecognizer:gestureUp];
-    
-    UISwipeGestureRecognizer *gestureDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(refresh)];
-    gestureDown.direction = UISwipeGestureRecognizerDirectionDown;
-    [self.view addGestureRecognizer:gestureDown];
-    
-    
-    [self refresh];
-}
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    self.listData        = nil;
-    self.listView        = nil;
-    self.listDataDate    = nil;
-    self.databaseUtils   = nil;
-    self.viewCommonUtils = nil;
-    self.gBackground    = nil;
-    self.gTextcolor     = nil;
-    self.gHighlightedTextColor     = nil;
-}
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
-#pragma mark - Swipe Gesture Functions
-
-- (void) refresh {
-    self.listData = [self.databaseUtils selectLimit:  100000 Offset: 0];
+    self.listData = [self.databaseUtils selectLimit: 100000 Offset: 0];
+    NSLog(@"listData Count: %lu", (unsigned long)[self.listData count]);
     
     NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithCapacity:0];
     for (NSMutableDictionary *dict in self.listData) {
@@ -102,6 +92,7 @@
     }
     self.listDataDate = [[dicts allValues] sortedArrayUsingSelector:@selector(compare:)];
     self.listDataDate = [[self.listDataDate reverseObjectEnumerator] allObjects];
+    
     [self.listView reloadData];
 }
 
@@ -155,37 +146,37 @@
     
     if (![nMoney isEqualToString: @"0"]) {
         
-        cell.cellMoney.text = nMoney;
+        cell.cellMoney.text     = nMoney;
         cell.cellMoneyUnit.text = @"元";
         cell.cellMoneyDesc.text = [dict objectForKey: @"description"];
-        cell.cellTagLeft.text = tag;
-        cell.cellTime.text  = @"";
-        cell.cellTimeUnit.text = @"";
-        cell.cellTimeDesc.text = @"";
-        cell.cellTagRight.text = @"";
+        cell.cellTagLeft.text   = tag;
+        cell.cellTime.text      = @"";
+        cell.cellTimeUnit.text  = @"";
+        cell.cellTimeDesc.text  = @"";
+        cell.cellTagRight.text  = @"";
         
     } else if (![nTime isEqualToString:@"0"]) {
         
-        cell.cellMoney.text = @"";
+        cell.cellMoney.text     = @"";
         cell.cellMoneyUnit.text = @"";
         cell.cellMoneyDesc.text = @"";
-        cell.cellTagLeft.text = @"";
+        cell.cellTagLeft.text   = @"";
         
-        cell.cellTime.text  = nTime;
+        cell.cellTime.text     = nTime;
         cell.cellTimeUnit.text = @"分钟";
         cell.cellTimeDesc.text =[dict objectForKey: @"description"];
         cell.cellTagRight.text = tag;
 
     } else {
         
-        cell.cellMoney.text = @"";
+        cell.cellMoney.text     = @"";
         cell.cellMoneyUnit.text = @"";
         cell.cellMoneyDesc.text = @"";
-        cell.cellTagLeft.text = @"";
+        cell.cellTagLeft.text   = @"";
         
-        cell.cellTime.text  = @"";
+        cell.cellTime.text     = @"";
         cell.cellTimeUnit.text = @"";
-        cell.cellTimeDesc.text =[dict objectForKey: @"input"];
+        cell.cellTimeDesc.text = [dict objectForKey: @"input"];
         cell.cellTagRight.text = @"日志";
         
     }
@@ -200,12 +191,12 @@
     cell.backgroundColor                 = self.gBackground;
     cell.textLabel.backgroundColor       = self.gBackground;
     cell.detailTextLabel.backgroundColor = self.gBackground;
-    cell.cellMoney.textColor               = self.gTextcolor;
-    cell.cellMoney.highlightedTextColor    = self.gHighlightedTextColor;
-    cell.cellMoneyUnit.textColor               = self.gTextcolor;
-    cell.cellMoneyUnit.highlightedTextColor    = self.gHighlightedTextColor;
-    cell.textLabel.highlightedTextColor  = self.gHighlightedTextColor;
-    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:cell.frame];
+    cell.cellMoney.textColor             = self.gTextcolor;
+    cell.cellMoney.highlightedTextColor  = self.gHighlightedTextColor;
+    cell.cellMoneyUnit.textColor            = self.gTextcolor;
+    cell.cellMoneyUnit.highlightedTextColor = self.gHighlightedTextColor;
+    cell.textLabel.highlightedTextColor     = self.gHighlightedTextColor;
+    cell.selectedBackgroundView             = [[UIView alloc] initWithFrame:cell.frame];
     cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
     
     return cell;
@@ -219,4 +210,14 @@
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
     return @[];
 }
+
+
+#pragma mark - <CurrentShow>
+
+- (void)didShowCurrent {
+    [self refresh];
+    NSLog(@"switch second view.");
+}
+
+
 @end

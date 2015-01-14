@@ -17,7 +17,7 @@
         NSArray *paths               = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         self.databaseFilePath        = [documentsDirectory stringByAppendingPathComponent:kDatabaseName];
-        NSLog(@"%@", self.databaseFilePath);
+        //NSLog(@"%@", self.databaseFilePath);
     }
     return self;
 }
@@ -264,7 +264,7 @@
     } else {
         where = @" 2 = 2";
     }
-    NSLog(@"%@", where);
+    //NSLog(@"%@", where);
     
     NSString *query = @"select sum(nMoney) as nMoney, sum(nTime) as nTime from voice_record where ";
     query = [query stringByAppendingString:where];

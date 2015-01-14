@@ -35,31 +35,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    // TableView
-    self.listView.delegate   = self;
-    self.listView.dataSource = self;
-    
-    //[self.listView setEditing:YES animated:YES];
-    self.databaseUtils = [[DatabaseUtils alloc] init];
-    
-    NSArray *tagDatas      = (NSArray *)[self.databaseUtils getReportDataWithType: @"Year"];
-    NSArray *todayData     = (NSArray *)[self.databaseUtils getReportData: @"today"];
-    NSArray *thisWeekData  = (NSArray *)[self.databaseUtils getReportData: @"latest_7_days"];
-    NSArray *thisMonthData = (NSArray *)[self.databaseUtils getReportData: @"this_month"];
-    NSArray *thisYearData  = (NSArray *)[self.databaseUtils getReportData: @"this_year"];
-    
-    self.listDict = [NSMutableDictionary dictionaryWithCapacity:0];
-    [self.listDict setObject:[NSArray arrayWithArray:todayData]     forKey:@"a. 今日数据"];
-    [self.listDict setObject:[NSArray arrayWithArray:thisWeekData]  forKey:@"b. 近7天数据"];
-    [self.listDict setObject:[NSArray arrayWithArray:thisMonthData] forKey:@"c. 本月数据"];
-    [self.listDict setObject:[NSArray arrayWithArray:thisYearData]  forKey:@"d. 本年数据"];
-    [self.listDict setObject:[NSArray arrayWithArray:tagDatas]      forKey:@"e. 分类合计"];
-    self.listDictKeys = [[self.listDict allKeys] sortedArrayUsingSelector:@selector(compare:)];
-    
-    
-    self.gBackground            = [UIColor blackColor];
-    self.gTextcolor             = [UIColor whiteColor];
-    self.gHighlightedTextColor  = [UIColor yellowColor];
+    [self refresh];
 }
 
 
@@ -81,7 +57,36 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void) refresh {
+    
+    // TableView
+    self.listView.delegate   = self;
+    self.listView.dataSource = self;
+    
+    //[self.listView setEditing:YES animated:YES];
+    self.databaseUtils = [[DatabaseUtils alloc] init];
+    
+    
+    self.gBackground            = [UIColor blackColor];
+    self.gTextcolor             = [UIColor whiteColor];
+    self.gHighlightedTextColor  = [UIColor yellowColor];
 
+    NSArray *tagDatas      = (NSArray *)[self.databaseUtils getReportDataWithType: @"Year"];
+    NSArray *todayData     = (NSArray *)[self.databaseUtils getReportData: @"today"];
+    NSArray *thisWeekData  = (NSArray *)[self.databaseUtils getReportData: @"latest_7_days"];
+    NSArray *thisMonthData = (NSArray *)[self.databaseUtils getReportData: @"this_month"];
+    NSArray *thisYearData  = (NSArray *)[self.databaseUtils getReportData: @"this_year"];
+    
+    self.listDict = [NSMutableDictionary dictionaryWithCapacity:0];
+    [self.listDict setObject:[NSArray arrayWithArray:todayData]     forKey:@"a. 今日数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:thisWeekData]  forKey:@"b. 近7天数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:thisMonthData] forKey:@"c. 本月数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:thisYearData]  forKey:@"d. 本年数据"];
+    [self.listDict setObject:[NSArray arrayWithArray:tagDatas]      forKey:@"e. 分类合计"];
+    self.listDictKeys = [[self.listDict allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    
+    [self.listView reloadData];
+}
 #pragma mark - Table View Data Source Methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -120,10 +125,12 @@
     //cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     cell.textLabel.text = [rows objectAtIndex:row];
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextAlignment:NSTextAlignmentCenter];
     return [self.listDictKeys objectAtIndex:section];
 }
 
@@ -131,5 +138,11 @@
     return @[];
 }
 
+
+#pragma mark - <CurrentShow>
+- (void)didShowCurrent {
+    [self refresh];
+    NSLog(@"switch to third view.");
+}
 
 @end

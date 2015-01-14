@@ -19,7 +19,6 @@
     
     
     NSMutableArray *dataArray = [databaseUtils selectLimit: limit Offset: offset];
-    NSLog(@"Record Row Count: %lu", dataArray.count);
     for (NSDictionary  *dict in dataArray) {
         NSString *detail = @"";
         NSString *nTime  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];
@@ -105,7 +104,7 @@
 - (NSString *) httpGet: (NSString *) path {
     NSString *str         = [api_base_url stringByAppendingFormat:@"?%@", path];
     str = [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSLog(@"%@", str);
+    NSLog(@"URL: %@", str);
     NSURL *url            = [NSURL URLWithString:str];
     NSURLRequest *request = [[NSURLRequest alloc]initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
     NSData *received      = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
@@ -116,7 +115,7 @@
 
 - (NSString *) httpPost: (NSString *) str {
     str = [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSLog(@"%@", str);
+    NSLog(@"Path: %@", str);
     NSURL *url = [NSURL URLWithString:api_base_url];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
     [request setHTTPMethod:@"POST"];

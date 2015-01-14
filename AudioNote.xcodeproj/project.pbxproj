@@ -131,6 +131,7 @@
 		C428374A1A664A0200EC1CAB /* 运动025.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "运动025.png"; path = "../../../../../Downloads/归档/icon_wite/运动025.png"; sourceTree = "<group>"; };
 		C42837531A66599E00EC1CAB /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = line.png; path = ../../../../../Downloads/line.png; sourceTree = "<group>"; };
 		C42837551A665FAC00EC1CAB /* line-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "line-1.png"; path = "../../../../../Downloads/line-1.png"; sourceTree = "<group>"; };
+		C435F2FF1A66B4C60084BC98 /* DidShowCurrent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DidShowCurrent.h; path = ../../../../Downloads/ForJunJie_scroll_2/ForJunJie/DidShowCurrent.h; sourceTree = "<group>"; };
 		C4413F171A5E389E004BA5C3 /* ISRDataHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISRDataHelper.h; sourceTree = "<group>"; };
 		C4413F181A5E389E004BA5C3 /* ISRDataHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISRDataHelper.m; sourceTree = "<group>"; };
 		C4413F1D1A5E3959004BA5C3 /* SBJson4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJson4.h; path = SBJson/SBJson4.h; sourceTree = "<group>"; };
@@ -420,6 +421,7 @@
 		C4B2827A1A61743300441AFB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				C435F2FF1A66B4C60084BC98 /* DidShowCurrent.h */,
 				C4B282771A61741400441AFB /* NSMutableArray+Util.h */,
 				C4B282781A61741400441AFB /* NSMutableArray+Util.m */,
 			);

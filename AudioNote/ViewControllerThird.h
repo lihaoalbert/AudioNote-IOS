@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DidShowCurrent.h"
 
-@interface ViewControllerThird : UIViewController
+@interface ViewControllerThird : UIViewController<DidShowCurrent>
 
 @end

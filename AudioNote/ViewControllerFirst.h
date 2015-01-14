@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "DidShowCurrent.h"
 
 // ifly frameworks
 /* without ui
@@ -26,7 +27,7 @@
 #import "iflyMSC/IFlySpeechConstant.h"
 */
 #import "iflyMSC/IFlySetting.h"
-@interface ViewControllerFirst : UIViewController
+@interface ViewControllerFirst : UIViewController<DidShowCurrent>
 
 @end
 
