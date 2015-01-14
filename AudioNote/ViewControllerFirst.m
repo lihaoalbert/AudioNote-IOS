@@ -22,8 +22,6 @@
 #import "ViewCommonUtils.h"
 #import "ISRDataHelper.h"
 
-//#define myNSLog NSLog
-#define myNSLog NSLog
 
 @interface ViewControllerFirst () <IFlySpeechRecognizerDelegate,UIActionSheetDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -75,8 +73,23 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    
     // setup database
     [DatabaseUtils setUP];
+    
+    [self refresh];
+    
+}
+
+- (void) refresh {
+    //self.view.backgroundColor = [UIColor redColor];
+    
+    self.latestView.frame = self.view.bounds;
+    NSLog(@"************************");
+    NSLog(@"TableView1: %f", self.latestView.bounds.size.width);
+    NSLog(@"view1:%f", self.view.bounds.size.width);
+    
+    NSLog(@"************************");
     // init Utils
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
@@ -113,7 +126,7 @@
     self.parentViewController.view.backgroundColor = [UIColor colorWithRed:0.0 green:0.2 blue:0.5 alpha:0.7];
     //[self.latestView setEditing:YES animated:YES];
     self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
-
+    
     // 开始录音按钮设置与启动
     [self.voiceBtn addTarget:self action:@selector(startVoiceRecord) forControlEvents:UIControlEventTouchDown];
     [self.voiceBtn addTarget:self action:@selector(stopVoiceRecord) forControlEvents:UIControlEventTouchUpInside];
@@ -128,24 +141,8 @@
     self.gBackground = [UIColor blackColor];
     self.gTextcolor  = [UIColor whiteColor];
     self.gHighlightedTextColor  = [UIColor orangeColor];
-    
-    
-    NSLog(@"TableView: %f", self.latestView.bounds.size.width);
-    NSLog(@"view:%f", self.view.bounds.size.width);
-}
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
- NSLog(@"View Did applicationDidBecomeActive");
 }
-
-- (void)viewVillAppear:(BOOL)animated {
-    NSLog(@"View Did viewVillAppear");
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    NSLog(@"View Did Disappear");
-}
-
 
 - (void)viewDidUnload {
     //取消识别

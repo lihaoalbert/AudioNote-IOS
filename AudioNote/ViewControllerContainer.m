@@ -53,6 +53,9 @@
         self.extendedLayoutIncludesOpaqueBars = NO;
     }
     
+    [self.view setContentHuggingPriority:ScreenWidth forAxis:UILayoutConstraintAxisHorizontal];
+    
+    NSLog(@"screenWidth: %f, Height:%f", ScreenWidth, ScreenHeight);
     // UIScrollView
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, kTopBarHeight,CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - kTopBarHeight)];
     self.scrollView.delegate      = self;
@@ -78,7 +81,8 @@
     _viewControllers = [NSMutableArray arrayWithArray:viewControllers];
     for (UIViewController *viewController in viewControllers) {
         [viewController willMoveToParentViewController:self];
-        viewController.view.frame = CGRectMake(0.0, kTopBarHeight, CGRectGetWidth(self.scrollView.frame), self.view.bounds.size.height-kTopBarHeight);
+        viewController.view.frame = CGRectMake(0.0, kTopBarHeight, ScreenWidth, self.view.bounds.size.height-kTopBarHeight);
+        NSLog(@"%@, width: %f, height:%f", viewController.nibName, viewController.view.bounds.size.width, viewController.view.bounds.size.height);
         [self.scrollView addSubview:viewController.view];
         [viewController didMoveToParentViewController:self];
     }
@@ -109,7 +113,7 @@
     direction == kMoveDirectionLeft ? [self.viewControllers moveLeft] : [self.viewControllers moveRight];
     CGFloat x = 0.0;
     for (UIViewController *viewController in self.viewControllers) {
-        viewController.view.frame = CGRectMake(x, 0, self.pageWidth, self.pageHeight);
+        viewController.view.frame = CGRectMake(x, 0, ScreenWidth, self.pageHeight);
         x += CGRectGetWidth(self.scrollView.frame);
     }
     self.scrollView.contentSize = CGSizeMake(x, self.pageWidth);

@@ -18,6 +18,12 @@
 #import "DatabaseUtils.h"
 #import "ViewCommonUtils.h"
 
+#define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
+#define kTopBarHeight 44.0
+#define ScreenWidth [[UIScreen mainScreen] bounds].size.width
+#define ScreenHeight [[UIScreen mainScreen] bounds].size.height
+
+
 @interface ViewControllerSecond () <UITableViewDelegate, UITableViewDataSource>
 @property (strong, nonatomic) IBOutlet UITableView    *listView;
 @property (nonatomic, nonatomic) NSMutableArray     *listData;
@@ -63,6 +69,10 @@
 
 
 - (void) refresh {
+
+    //self.view.backgroundColor = [UIColor greenColor];
+    
+    self.listView.frame = self.view.bounds;
     // init Utils
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
@@ -92,6 +102,8 @@
     }
     self.listDataDate = [[dicts allValues] sortedArrayUsingSelector:@selector(compare:)];
     self.listDataDate = [[self.listDataDate reverseObjectEnumerator] allObjects];
+    
+    
     
     [self.listView reloadData];
 }

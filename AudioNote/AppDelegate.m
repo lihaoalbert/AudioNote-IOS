@@ -16,6 +16,11 @@
 #import "ViewControllerFirst.h"
 #import "ViewControllerSecond.h"
 #import "ViewControllerThird.h"
+#define myNSLog NSLog
+#define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
+#define kTopBarHeight 44.0
+#define ScreenWidth [[UIScreen mainScreen] bounds].size.width
+#define ScreenHeight [[UIScreen mainScreen] bounds].size.height
 
 @interface AppDelegate ()
 
@@ -38,6 +43,11 @@
     ViewControllerThird *thirdController   = [[ViewControllerThird alloc] init];
     thirdController.title                  = @"报表";
     containerController.viewControllers    = [NSMutableArray arrayWithObjects:firstController, secondController, thirdController, nil];
+    
+    for (UIViewController *viewController in containerController.viewControllers) {
+        [viewController.view setContentHuggingPriority:ScreenWidth forAxis:UILayoutConstraintAxisHorizontal];
+    }
+
     [self.window makeKeyAndVisible];
 
 
