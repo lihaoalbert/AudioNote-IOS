@@ -42,7 +42,7 @@
     //[self.listView setEditing:YES animated:YES];
     self.databaseUtils = [[DatabaseUtils alloc] init];
     
-    NSArray *tagDatas      = (NSArray *)[self.databaseUtils reportWithType: @"Year"];
+    NSArray *tagDatas      = (NSArray *)[self.databaseUtils getReportDataWithType: @"Year"];
     NSArray *todayData     = (NSArray *)[self.databaseUtils getReportData: @"today"];
     NSArray *thisWeekData  = (NSArray *)[self.databaseUtils getReportData: @"latest_7_days"];
     NSArray *thisMonthData = (NSArray *)[self.databaseUtils getReportData: @"this_month"];

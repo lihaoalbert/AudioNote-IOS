@@ -23,12 +23,15 @@
     for (NSDictionary  *dict in dataArray) {
         NSString *detail = @"";
         NSString *nTime  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];
-        if ([nTime isEqualToString:@"0"]) {
+        NSString *nMoney  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
+        if (![nMoney isEqualToString:@"0"]) {
             detail = [detail stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nMoney"]]];
             detail = [detail stringByAppendingString:@" 元 - "];
-        } else {
+        } else if (![nTime isEqualToString:@"0"]) {
             detail = [detail stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nTime"]]];
             detail = [detail stringByAppendingString:@" 分钟 - "];
+        } else {
+            detail = dict[@"input"];
         }
         detail = [detail stringByAppendingString:dict[@"description"]];
         NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];

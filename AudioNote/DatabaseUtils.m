@@ -158,7 +158,11 @@
             _duration    = sqlite3_column_int(statement, 7);
             _create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 8)encoding:NSUTF8StringEncoding];
             _modify_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 9)encoding:NSUTF8StringEncoding];
-            _simple_create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 10)encoding:NSUTF8StringEncoding];
+            //_simple_create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 10)encoding:NSUTF8StringEncoding];
+            if ([_modify_time length] == 19)
+                _simple_create_time = [_create_time substringWithRange:NSMakeRange(0, 10)];
+            else
+                _simple_create_time = _create_time;
             //NSLog(@"_id = %i\n_input = %@ \n_description = %@ \n_category = %@\n_nMoney = %i\n _nTime = %i\n _begin       = %@\n_duration = %i\n_create_time = %@\n_modify_time = %@\n===================\n", _id, _input, _description, _category, _nMoney, _nTime, _begin, _duration, _create_time, _modify_time);
             
             
@@ -282,7 +286,7 @@
 
 }
 
--(NSMutableArray*) reportWithType: (NSString *) type {
+-(NSMutableArray*) getReportDataWithType: (NSString *) type {
     sqlite3 *database;
     sqlite3_stmt *statement;
     NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
@@ -311,9 +315,9 @@
             [mutableDictionary setObject:[NSNumber numberWithInteger:_nMoney]  forKey:@"nMoney"];
             [mutableDictionary setObject:[NSNumber numberWithInteger:_nTime]  forKey:@"nTime"];
              */
-            NSString *str = _category;
-            str = [str stringByAppendingFormat:@"%i", _nMoney];
-            str = [str stringByAppendingFormat:@"%i", _nTime];
+            NSString *str = _category.length == 0 ? @"日志" : _category;
+            str = [str stringByAppendingFormat:@": %i 元 / ", _nMoney];
+            str = [str stringByAppendingFormat:@"%i 分钟", _nTime];
             [mutableArray addObject: str];
         }
         sqlite3_finalize(statement);

@@ -24,7 +24,7 @@
 //- (NSMutableArray*) selectFrom: (NSString*) from To: (NSString*) to;
 - (NSMutableArray*) selectLimit: (NSInteger) limit Offset: (NSInteger) offset;
 // 报表使用的数据来源
-- (NSMutableArray*) reportWithType: (NSString *) type;
+- (NSMutableArray*) getReportDataWithType: (NSString *) type;
 - (NSString *) getReportData: (NSString *) type;
 // /ProcessPattern文件中代码调用， 取得数据库中最后一笔description的分类
 - (NSString*) selectTag: (NSString *) description;

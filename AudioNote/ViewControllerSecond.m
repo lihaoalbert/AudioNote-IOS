@@ -19,7 +19,7 @@
 #import "ViewCommonUtils.h"
 
 @interface ViewControllerSecond () <UITableViewDelegate, UITableViewDataSource>
-@property (weak, nonatomic) IBOutlet UITableView    *listView;
+@property (strong, nonatomic) IBOutlet UITableView    *listView;
 @property (nonatomic, nonatomic) NSMutableArray     *listData;
 @property (nonatomic, nonatomic) NSArray            *listDataDate;
 @property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
@@ -48,25 +48,28 @@
     self.listView.delegate   = self;
     self.listView.dataSource = self;
     //[self.listView setEditing:YES animated:YES];
-    // data#limit conflict with dataDate#[distinct strftime('%Y-%m-%d',create_time)]
-    self.listData = [self.databaseUtils selectLimit:  100000 Offset: 0];
-    
-    NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithCapacity:0];
-    for (NSMutableDictionary *dict in self.listData) {
-        NSString *simple_create_time = dict[@"simple_create_time"];
-        [dicts setObject:simple_create_time forKey:simple_create_time];
-    }
-    self.listDataDate = [[dicts allValues] sortedArrayUsingSelector:@selector(compare:)];
-    self.listDataDate = [[self.listDataDate reverseObjectEnumerator] allObjects];
-    //NSSortDescriptor* sortOrder = [NSSortDescriptor sortDescriptorWithKey: @"self" ascending: NO];
-    //self.listDataDate = [[dicts allValues] sortedArrayUsingDescriptors: [NSArray arrayWithObject: sortOrder]];
     
     self.gBackground = [UIColor blackColor];
     self.gTextcolor  = [UIColor whiteColor];
-    self.gHighlightedTextColor  = [UIColor orangeColor];
+    self.gHighlightedTextColor  = [UIColor colorWithRed:228.0f/255.0f green:120.0f/255.0f blue:51.0f/255.0f alpha:0.5];
     
     
-    self.listView.frame = self.view.bounds;
+    self.listView =  [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    
+    NSLog(@"TableView2: %f", self.listView.bounds.size.width);
+    NSLog(@"view2:%f", self.view.bounds.size.width);
+    
+    // Gesture
+    UISwipeGestureRecognizer *gestureUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(refresh)];
+    gestureUp.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.view addGestureRecognizer:gestureUp];
+    
+    UISwipeGestureRecognizer *gestureDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(refresh)];
+    gestureDown.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:gestureDown];
+    
+    
+    [self refresh];
 }
 - (void)viewDidUnload
 {
@@ -84,6 +87,22 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+#pragma mark - Swipe Gesture Functions
+
+- (void) refresh {
+    self.listData = [self.databaseUtils selectLimit:  100000 Offset: 0];
+    
+    NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithCapacity:0];
+    for (NSMutableDictionary *dict in self.listData) {
+        NSString *simple_create_time = dict[@"simple_create_time"];
+        [dicts setObject:simple_create_time forKey:simple_create_time];
+    }
+    self.listDataDate = [[dicts allValues] sortedArrayUsingSelector:@selector(compare:)];
+    self.listDataDate = [[self.listDataDate reverseObjectEnumerator] allObjects];
+    [self.listView reloadData];
 }
 
 
@@ -127,57 +146,74 @@
     if (cell == nil) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"MyTableViewCell" owner:self options:nil] lastObject];
     }
-    
-    NSString *time = [NSString stringWithFormat:@"%@", [dict objectForKey:@"create_time"]];
-    if(time.length == 19) {
-        time = [time substringWithRange:NSMakeRange(11, 5)];
-    } else {
-        time = @"unkown";
-    }
-    NSLog(@"%lu", (unsigned long)time.length);
-    NSString *tag  = [NSString stringWithFormat:@"%@", [dict objectForKey:@"category"]];
-    NSString *num  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
-    NSString *unit = @"元";
-    if ([num isEqualToString: @"0"]) {
-        num  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];
-        unit = @"分钟";
-        //tag = [tag stringByAppendingString:@"时间"];
-    } else {
-        num  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
-        unit = @"元";
-        //tag = [tag stringByAppendingString:@"金额"];
-    }
-
-    cell.cellTime.text = time;
-    cell.cellNum.text  = num;
-    cell.cellUnit.text = unit;
-    cell.cellTag.text  = tag;
-    cell.cellDesc.text = [dict objectForKey: @"description"];
-    
+    cell.frame = CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height + 10);
    
+    NSString *tag  = [NSString stringWithFormat:@"%@", [dict objectForKey:@"category"]];
+    NSString *nMoney  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
+    NSString *nTime  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];
+    
+    
+    if (![nMoney isEqualToString: @"0"]) {
+        
+        cell.cellMoney.text = nMoney;
+        cell.cellMoneyUnit.text = @"元";
+        cell.cellMoneyDesc.text = [dict objectForKey: @"description"];
+        cell.cellTagLeft.text = tag;
+        cell.cellTime.text  = @"";
+        cell.cellTimeUnit.text = @"";
+        cell.cellTimeDesc.text = @"";
+        cell.cellTagRight.text = @"";
+        
+    } else if (![nTime isEqualToString:@"0"]) {
+        
+        cell.cellMoney.text = @"";
+        cell.cellMoneyUnit.text = @"";
+        cell.cellMoneyDesc.text = @"";
+        cell.cellTagLeft.text = @"";
+        
+        cell.cellTime.text  = nTime;
+        cell.cellTimeUnit.text = @"分钟";
+        cell.cellTimeDesc.text =[dict objectForKey: @"description"];
+        cell.cellTagRight.text = tag;
+
+    } else {
+        
+        cell.cellMoney.text = @"";
+        cell.cellMoneyUnit.text = @"";
+        cell.cellMoneyDesc.text = @"";
+        cell.cellTagLeft.text = @"";
+        
+        cell.cellTime.text  = @"";
+        cell.cellTimeUnit.text = @"";
+        cell.cellTimeDesc.text =[dict objectForKey: @"input"];
+        cell.cellTagRight.text = @"日志";
+        
+    }
+    
+    [cell.cellMoney sizeToFit];
+    [cell.cellTime sizeToFit];
+    
+    UIImage *image = [UIImage imageNamed:@"line-1"];
+    cell.cellDivider.image  = image;
+    cell.cellDivider.center = self.view.center;
+ 
     cell.backgroundColor                 = self.gBackground;
     cell.textLabel.backgroundColor       = self.gBackground;
     cell.detailTextLabel.backgroundColor = self.gBackground;
-    cell.cellNum.textColor               = self.gTextcolor;
-    cell.cellUnit.textColor              = self.gTextcolor;
-    cell.cellTag.textColor               = self.gTextcolor;
-    cell.cellDesc.textColor              = self.gTextcolor;
-    cell.detailTextLabel.textColor       = self.gTextcolor;
-    cell.cellTime.highlightedTextColor   = self.gHighlightedTextColor;
-    cell.cellNum.highlightedTextColor    = self.gHighlightedTextColor;
-    cell.cellUnit.highlightedTextColor   = self.gHighlightedTextColor;
-    cell.cellTag.highlightedTextColor    = self.gHighlightedTextColor;
-    cell.cellDesc.highlightedTextColor   = self.gHighlightedTextColor;
+    cell.cellMoney.textColor               = self.gTextcolor;
+    cell.cellMoney.highlightedTextColor    = self.gHighlightedTextColor;
+    cell.cellMoneyUnit.textColor               = self.gTextcolor;
+    cell.cellMoneyUnit.highlightedTextColor    = self.gHighlightedTextColor;
     cell.textLabel.highlightedTextColor  = self.gHighlightedTextColor;
     cell.selectedBackgroundView = [[UIView alloc] initWithFrame:cell.frame];
-    cell.selectedBackgroundView.backgroundColor = self.gBackground;
+    cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
     
     return cell;
-
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return [self.listDataDate objectAtIndex:section];
+    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextAlignment:NSTextAlignmentCenter];
+    return [self.listDataDate objectAtIndex:section];;
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {

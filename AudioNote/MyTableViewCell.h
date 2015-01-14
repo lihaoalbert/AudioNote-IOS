@@ -15,11 +15,17 @@
 
 @interface MyTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *cellNum;  // 值: 金额/时间
-@property (weak, nonatomic) IBOutlet UILabel *cellTag;  // 分类
-@property (weak, nonatomic) IBOutlet UILabel *cellDesc; // 保留字
-@property (weak, nonatomic) IBOutlet UILabel *cellUnit; // 金额/时间
-@property (weak, nonatomic) IBOutlet UILabel *cellTime; // 创建时间 12：10
+@property (weak, nonatomic) IBOutlet UILabel *cellMoney;
+@property (weak, nonatomic) IBOutlet UILabel *cellMoneyUnit;
+@property (weak, nonatomic) IBOutlet UILabel *cellTime;
+@property (weak, nonatomic) IBOutlet UILabel *cellTimeUnit;
+@property (weak, nonatomic) IBOutlet UILabel *cellTagLeft;
+@property (weak, nonatomic) IBOutlet UILabel *cellTagRight;
+@property (weak, nonatomic) IBOutlet UILabel *cellMoneyDesc;
+@property (weak, nonatomic) IBOutlet UILabel *cellTimeDesc;
+
+@property (weak, nonatomic) IBOutlet UIImageView *cellDivider;
+
 
 @end
 

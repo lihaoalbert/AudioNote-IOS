@@ -72,9 +72,13 @@
 
 - (void)setViewControllers:(NSMutableArray *)viewControllers {
     _viewControllers = [NSMutableArray arrayWithArray:viewControllers];
+
     for (UIViewController *viewController in viewControllers) {
         [viewController willMoveToParentViewController:self];
-        viewController.view.frame = CGRectMake(0.0, kTopBarHeight, CGRectGetWidth(self.scrollView.frame), self.view.bounds.size.height-kTopBarHeight);
+        viewController.view.frame = CGRectMake(0.0, kTopBarHeight, CGRectGetWidth(self.scrollView.frame), self.view.bounds.size.height-kTopBarHeight);;
+        NSLog(@"viewController: %@", viewController);
+        NSLog(@"width: %f", CGRectGetWidth(self.scrollView.frame));
+        NSLog(@"width: %f", viewController.view.bounds.size.width);
         [self.scrollView addSubview:viewController.view];
         [viewController didMoveToParentViewController:self];
     }
@@ -108,7 +112,7 @@
 // 滑动结束后回调
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     // self.scrollView.userInteractionEnabled = YES;
-    NSLog(@"before refresh");
+    //NSLog(@"before refresh");
     [self refresh];
 }
 
@@ -119,27 +123,18 @@
         同理，当移动到最开始的也对指针进行排序
  */
 - (void)refresh {
-    NSLog(@"before 1");
-    NSLog(@"%@", _viewControllers);
     NSUInteger currentPage  = self.scrollView.contentOffset.x / self.pageWidth;
     NSLog(@"offset: %f, width: %f, move:%lu", self.scrollView.contentOffset.x , self.pageWidth, (unsigned long)currentPage);
     NSUInteger viewCount    = [self.viewControllers count];
-    NSUInteger currentIndex = currentPage >= viewCount ? viewCount - 1 : currentPage;
-    //NSLog(@"_viewControllers： %lu currentIndex: %lu", (unsigned long)[_viewControllers count], currentIndex);
-    self.topBar.text = [[_viewControllers valueForKey:@"title"] objectAtIndex:currentIndex];
-    NSLog(@"before 3");
+    self.topBar.text = [[_viewControllers valueForKey:@"title"] objectAtIndex:currentPage];
     if (currentPage == viewCount-1) { // 移到了最右边的view
-        NSLog(@"before");
         [self.viewControllers moveRightStep:2];
-        NSLog(@"after");
-        //UIView *currentView = [self.viewControllers lastObject];
-        //NSLog(@"%@", currentView);
         [self layoutSubViews];
         return;
     }
     if (currentPage == 0) {
         [self.viewControllers moveRight];
-        NSLog(@"%@", [self.viewControllers lastObject]);
+        //NSLog(@"%@", [self.viewControllers lastObject]);
         [self layoutSubViews];
     }
 }

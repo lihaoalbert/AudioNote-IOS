@@ -130,6 +130,10 @@
     self.gHighlightedTextColor  = [UIColor orangeColor];
     
     self.latestView.frame = self.view.bounds;
+    
+    
+    NSLog(@"TableView: %f", self.latestView.bounds.size.width);
+    NSLog(@"view:%f", self.view.bounds.size.width);
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

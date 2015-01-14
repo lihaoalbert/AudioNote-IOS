@@ -9,6 +9,14 @@
 #import "MyTableViewCell.h"
 
 @implementation MyTableViewCell
-
+@synthesize cellMoney;
+@synthesize cellDivider;
+@synthesize cellMoneyDesc;
+@synthesize cellMoneyUnit;
+@synthesize cellTagLeft;
+@synthesize cellTagRight;
+@synthesize cellTimeDesc;
+@synthesize cellTimeUnit;
+@synthesize cellTime;
 
 @end
