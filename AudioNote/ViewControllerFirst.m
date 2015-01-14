@@ -128,6 +128,8 @@
     self.gBackground = [UIColor blackColor];
     self.gTextcolor  = [UIColor whiteColor];
     self.gHighlightedTextColor  = [UIColor orangeColor];
+    
+    self.latestView.frame = self.view.bounds;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -327,7 +329,27 @@
             else
                 NSLog(@"Insert Into Database#%li - failed.", lastRowId);
             
-            //[TODO] 功能 3.1
+            ////////////////////////////////
+            // 3.1 写入数据库同时，post到服务器一份，作为改善算法的参考。
+            ////////////////////////////////
+            NSString *device  = [NSString stringWithFormat:@"device=name:%@", [[UIDevice currentDevice] name]];
+            device = [device stringByAppendingFormat:@";model:%@", [[UIDevice currentDevice] model]];
+            device = [device stringByAppendingFormat:@";localizedModel:%@", [[UIDevice currentDevice] localizedModel]];
+            device = [device stringByAppendingFormat:@";systemName:%@", [[UIDevice currentDevice] systemName]];
+            device = [device stringByAppendingFormat:@";identifierForVendor:%@", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
+            device = [device stringByAppendingFormat:@";IFlyVersion:%@", [IFlySetting getVersion]];
+            NSString *data = [NSString stringWithFormat:@"data={\"input\":\"%@\"", self.iFlyRecognizerResult.copy];
+            data = [data stringByAppendingFormat:@", \"szRemain\":\"%@\"", t_szRemain];
+            data = [data stringByAppendingFormat:@", \"szType\":\"%@\"", t_szType];
+            data = [data stringByAppendingFormat:@", \"nMoney\":\"%@\"", t_nMoney];
+            data = [data stringByAppendingFormat:@", \"nTime\":\"%@\"", t_nTime];
+            data = [data stringByAppendingString:@"}"];
+
+            NSString *path = [NSString stringWithFormat:@"%@&%@", device, data];
+            NSString *response = [self.viewCommonUtils httpPost: path];
+            NSLog(@"Response: %@", response);
+            // 功能 3.1 END
+            
             
             self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
             [self.latestView reloadData];

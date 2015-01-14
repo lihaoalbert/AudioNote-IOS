@@ -5,6 +5,10 @@
 //  Created by weiwang on 14/12/29.
 //  Copyright (c) 2014年 Intfocus. All rights reserved.
 //
+// 数据列表:
+// 1. 数据列表按日期分组，使用tableView#Group
+// 2. tableView#Cell展示界面使用/ViewUtils/MyTableViewCell.xib
+//
 
 #import "ViewControllerSecond.h"
 #import "ViewControllerFirst.h"
@@ -59,7 +63,10 @@
     
     self.gBackground = [UIColor blackColor];
     self.gTextcolor  = [UIColor whiteColor];
-    self.gHighlightedTextColor  = [UIColor yellowColor];
+    self.gHighlightedTextColor  = [UIColor orangeColor];
+    
+    
+    self.listView.frame = self.view.bounds;
 }
 - (void)viewDidUnload
 {

@@ -5,6 +5,8 @@
 //  Created by lijunjie on 15-1-5.
 //  Copyright (c) 2015年 Intfocus. All rights reserved.
 //
+// 数据报表:
+// 1. 展示方式: 今日，最近七天，本月，本年，按标签
 
 #import "ViewControllerThird.h"
 #import "ViewControllerSecond.h"

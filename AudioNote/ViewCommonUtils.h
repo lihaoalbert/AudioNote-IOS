@@ -36,8 +36,9 @@
  <Param name=delegate> object which implement IFlySpeechRecognizerDelegate</Param>
  <Param name=domain> domain:iat,search,video,poi,music,asr;iat,普通文本听写; search,热词搜索;video,视频音乐搜索;asr: 关键词识别;</Param>
  */
--(id) CreateRecognizer:(id)delegate Domain:(NSString*) domain;
-
+- (id) CreateRecognizer:(id)delegate Domain:(NSString*) domain;
+- (NSString *) httpGet: (NSString *) path;
+- (NSString *) httpPost: (NSString *) str;
 @end
 
 

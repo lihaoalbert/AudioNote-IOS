@@ -11,6 +11,7 @@
 
 @implementation ViewCommonUtils
 #define myNSLog 
+#define api_base_url @"http://xiao6yuji.com/api/ios"
 
 // voice record list with format
 - (NSMutableArray*) getDataListWith: (DatabaseUtils*) databaseUtils Limit: (NSInteger) limit Offset: (NSInteger) offset {
@@ -69,7 +70,7 @@
  domain:识别的服务类型
  iat,search,video,poi,music,asr;iat,普通文本听写; search,热词搜索;video,视频音乐搜索;asr: 关键词识别
  */
--(id) CreateRecognizer:(id)delegate Domain:(NSString*) domain {
+- (id) CreateRecognizer:(id)delegate Domain:(NSString*) domain {
     IFlySpeechRecognizer * iflySpeechRecognizer = nil;
     
     // 创建识别对象
@@ -98,5 +99,28 @@
     return iflySpeechRecognizer;
 }
 
+- (NSString *) httpGet: (NSString *) path {
+    NSString *str         = [api_base_url stringByAppendingFormat:@"?%@", path];
+    str = [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSLog(@"%@", str);
+    NSURL *url            = [NSURL URLWithString:str];
+    NSURLRequest *request = [[NSURLRequest alloc]initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+    NSData *received      = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSString *response    = [[NSString alloc]initWithData:received encoding:NSUTF8StringEncoding];
+    return response;
 
+}
+
+- (NSString *) httpPost: (NSString *) str {
+    str = [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSLog(@"%@", str);
+    NSURL *url = [NSURL URLWithString:api_base_url];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+    [request setHTTPMethod:@"POST"];
+    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    [request setHTTPBody:data];
+    NSData *received = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSString *response = [[NSString alloc]initWithData:received encoding:NSUTF8StringEncoding];
+    return response;
+}
 @end

@@ -9,7 +9,7 @@
 //  功能
 //  1. 所有界面实例在此创建放入 viewControllers。
 //      viewControllers中界面切换在ViewControllerContainer.m中实现。
-//  2.
+//  2. app屏幕是允许横屏，在此设置
 
 #import "AppDelegate.h"
 #import "ViewControllerContainer.h"
@@ -34,12 +34,13 @@
     ViewControllerFirst *firstController   = [[ViewControllerFirst alloc] init];
     firstController.title                  = @"小6语记";
     ViewControllerSecond *secondController = [[ViewControllerSecond alloc] init];
-    secondController.title                 = @"数据列表";
+    secondController.title                 = @"列表";
     ViewControllerThird *thirdController   = [[ViewControllerThird alloc] init];
-    thirdController.title                  = @"数据报表";
+    thirdController.title                  = @"报表";
     containerController.viewControllers    = [NSMutableArray arrayWithObjects:firstController, secondController, thirdController, nil];
     [self.window makeKeyAndVisible];
- 
+
+
     return YES;
 }
 
