@@ -83,7 +83,6 @@
 - (void) refresh {
     //self.view.backgroundColor = [UIColor redColor];
     
-    self.latestView.frame = self.view.bounds;
     NSLog(@"************************");
     NSLog(@"TableView1: %f", self.latestView.bounds.size.width);
     NSLog(@"view1:%f", self.view.bounds.size.width);
@@ -282,6 +281,7 @@
             NSTimeInterval duration = [self.iFlyRecognizerStartDate timeIntervalSinceNow];
             NSInteger t_duration    = round(duration < 0 ? -duration : duration);
             NSString *t_createTime  = [self.gDateFormatter stringFromDate:self.iFlyRecognizerStartDate];
+            NSString *t_begin       = t_createTime.copy;
 
             NSLog(@"**************************");
             NSLog(@"content:  %@", self.iFlyRecognizerResult);
@@ -316,8 +316,13 @@
                 t_szRemain = [NSString stringWithUTF8String: g_szRemain];
                 t_szTime   = [NSString stringWithUTF8String: g_szTime];
                 NSLog(@"g_t_szTime: %@", t_szTime);
+                
+                NSString *_ymd_old = [t_createTime substringWithRange:NSMakeRange(0, 10)];
+                
+                t_createTime =[t_createTime stringByReplacingOccurrencesOfString:_ymd_old withString:t_szTime];
             }
-            NSString *insertSQL = [NSString stringWithFormat: @"Insert into voice_record(input,description,category,nMoney,nTime,nDate,begin,duration,create_time,modify_time) VALUES('%@','%@','%@',%@,%@,'%@','%@',%li,'%@','%@');", self.iFlyRecognizerResult.copy, t_szRemain, t_szType, t_nMoney, t_nTime, t_szTime, t_createTime, t_duration,  t_createTime, t_createTime];
+            
+            NSString *insertSQL = [NSString stringWithFormat: @"Insert into voice_record(input,description,category,nMoney,nTime,nDate,begin,duration,create_time,modify_time) VALUES('%@','%@','%@',%@,%@,'%@','%@',%li,'%@','%@');", self.iFlyRecognizerResult.copy, t_szRemain, t_szType, t_nMoney, t_nTime, t_szTime, t_begin, t_duration,  t_createTime, t_createTime];
             
             NSLog(@"Insert SQL:\n%@", insertSQL);
             

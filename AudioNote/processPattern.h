@@ -44,7 +44,7 @@ char g_szRemain[MAX_INPUT_LEN];
 char g_szTime[MAX_INPUT_LEN];//返回提到的日期（如：昨天）解析结果yyyy-mm-dd#007
 
 //Begin of #007
-char *pDate(int nday) {
+void pDate(int nday) {
     time_t t;
     struct tm *tmLocal;
     time(&t);
@@ -65,11 +65,9 @@ char *pDate(int nday) {
     snprintf(g_szTime,MAX_INPUT_LEN-1,"%04d-%02d-%02d",
              tmLocal->tm_year+1900,
              tmLocal->tm_mon+1,
-             tmLocal->tm_mday,
-             tmLocal->tm_hour,
-             tmLocal->tm_min,
-             tmLocal->tm_sec);
-    return 'a';
+             tmLocal->tm_mday);
+    g_szTime[MAX_INPUT_LEN-1]='\0';
+    
 }
 //End of #007
 
@@ -370,8 +368,10 @@ int process(char szParam[MAX_INPUT_LEN], DatabaseUtils *database)
         g_nDateOffset = 0;
         pDate(g_nDateOffset);
     }
-    else
+    else {
         g_nDateOffset = 0;
+        pDate(g_nDateOffset);
+    }
     
     if ((pCh=strstr(szInput,"早上")) != NULL) {
         strcpy(pCh,pCh+6);

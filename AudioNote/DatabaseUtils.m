@@ -17,7 +17,7 @@
         NSArray *paths               = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         self.databaseFilePath        = [documentsDirectory stringByAppendingPathComponent:kDatabaseName];
-        NSLog(@"%@", self.databaseFilePath);
+        //NSLog(@"%@", self.databaseFilePath);
     }
     return self;
 }

@@ -18,11 +18,6 @@
 #import "DatabaseUtils.h"
 #import "ViewCommonUtils.h"
 
-#define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
-#define kTopBarHeight 44.0
-#define ScreenWidth [[UIScreen mainScreen] bounds].size.width
-#define ScreenHeight [[UIScreen mainScreen] bounds].size.height
-
 
 @interface ViewControllerSecond () <UITableViewDelegate, UITableViewDataSource>
 @property (strong, nonatomic) IBOutlet UITableView    *listView;
@@ -69,13 +64,7 @@
 
 
 - (void) refresh {
-
     //self.view.backgroundColor = [UIColor greenColor];
-    
-    self.listView.frame = self.view.bounds;
-    // init Utils
-    self.databaseUtils   = [[DatabaseUtils alloc] init];
-    self.viewCommonUtils = [[ViewCommonUtils alloc] init];
     
     // TableView
     self.listView.delegate   = self;
@@ -87,11 +76,15 @@
     self.gHighlightedTextColor  = [UIColor colorWithRed:228.0f/255.0f green:120.0f/255.0f blue:51.0f/255.0f alpha:0.5];
     
     
-    self.listView =  [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    //self.listView =  [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     
     NSLog(@"TableView2: %f", self.listView.bounds.size.width);
     NSLog(@"view2:%f", self.view.bounds.size.width);
-
+    
+    // init Utils
+    self.databaseUtils   = [[DatabaseUtils alloc] init];
+    self.viewCommonUtils = [[ViewCommonUtils alloc] init];
+    
     self.listData = [self.databaseUtils selectLimit: 1000000 Offset: 0];
     NSLog(@"listData Count: %lu", (unsigned long)[self.listData count]);
     

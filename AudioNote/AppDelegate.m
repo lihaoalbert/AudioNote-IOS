@@ -44,9 +44,9 @@
     thirdController.title                  = @"报表";
     containerController.viewControllers    = [NSMutableArray arrayWithObjects:firstController, secondController, thirdController, nil];
     
-    for (UIViewController *viewController in containerController.viewControllers) {
-        [viewController.view setContentHuggingPriority:ScreenWidth forAxis:UILayoutConstraintAxisHorizontal];
-    }
+    //for (UIViewController *viewController in containerController.viewControllers) {
+    //    [viewController.view setContentHuggingPriority:ScreenWidth forAxis:UILayoutConstraintAxisHorizontal];
+    //}
 
     [self.window makeKeyAndVisible];
 

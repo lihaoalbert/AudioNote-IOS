@@ -13,12 +13,6 @@
 #import "ViewControllerFirst.h"
 #import "DatabaseUtils.h"
 
-#define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
-#define kTopBarHeight 44.0
-#define ScreenWidth [[UIScreen mainScreen] bounds].size.width
-#define ScreenHeight [[UIScreen mainScreen] bounds].size.height
-
-
 @interface ViewControllerThird () <UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView      *listView;
 @property (nonatomic, nonatomic) NSMutableDictionary  *listDict;
@@ -64,14 +58,10 @@
 }
 
 - (void) refresh {
-    
     //self.view.backgroundColor = [UIColor blueColor];
     
-    self.listView.frame = self.view.bounds;
     NSLog(@"TableView3: %f", self.listView.bounds.size.width);
     NSLog(@"view3:%f", self.view.bounds.size.width);
-
-    
 
     // TableView
     self.listView.delegate   = self;
