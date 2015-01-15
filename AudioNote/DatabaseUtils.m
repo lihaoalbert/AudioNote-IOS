@@ -17,7 +17,7 @@
         NSArray *paths               = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         self.databaseFilePath        = [documentsDirectory stringByAppendingPathComponent:kDatabaseName];
-        //NSLog(@"%@", self.databaseFilePath);
+        NSLog(@"%@", self.databaseFilePath);
     }
     return self;
 }
@@ -32,6 +32,7 @@
             category varchar(100) NOT NULL,       \
             nMoney Integer NOT NULL DEFAULT '0',  \
             nTime Integer NOT NULL DEFAULT '0',   \
+            nDate varchar(50) NOT NULL DEFAULT '', \
             begin datetime NOT NULL,              \
             duration integer NOT NULL DEFAULT '0',\
             create_time datetime NOT NULL,        \
@@ -39,6 +40,15 @@
             );                                    \
         CREATE INDEX IF NOT EXISTS idx_category ON voice_record(category); \
         CREATE INDEX IF NOT EXISTS idx_create_time ON voice_record(create_time);";
+        // input       - 语音转义文句
+        // description - 文句解析保留字
+        // category    - 分类
+        // nMoney      - 金额 （整型）
+        // nTime       - 时间 （整型)
+        // nDate       - 日期  (2015-01-15)
+        // begin       - 开始录音时间
+        // duration    - 录音持续时间
+        //
     [databaseUtils executeSQL: table_voice_record];
 }
 
@@ -141,10 +151,10 @@
     ////////////////////////////////
     // Select Data into NSMutableDictionary
     ////////////////////////////////
-    NSString *query = @"select id, input,description,category,nMoney,nTime,begin,duration,create_time,modify_time, strftime('%Y-%m-%d',create_time) as simple_create_time from voice_record order by create_time desc ";
+    NSString *query = @"select id, input,description,category,nMoney,nTime,begin,duration,create_time,modify_time, nDate from voice_record order by create_time desc ";
     query = [query stringByAppendingFormat:@" limit %lu offset %lu", limit, offset];
     int _id, _nMoney, _nTime, _duration;
-    NSString *_input, *_description, *_category;
+    NSString *_input, *_description, *_category, *_nDate;
     NSString *_begin, *_create_time, *_modify_time, *_simple_create_time;
     if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
         while (sqlite3_step(statement) == SQLITE_ROW) {
@@ -158,7 +168,7 @@
             _duration    = sqlite3_column_int(statement, 7);
             _create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 8)encoding:NSUTF8StringEncoding];
             _modify_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 9)encoding:NSUTF8StringEncoding];
-            //_simple_create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 10)encoding:NSUTF8StringEncoding];
+            _nDate       = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 10)encoding:NSUTF8StringEncoding];
             if ([_modify_time length] == 19)
                 _simple_create_time = [_create_time substringWithRange:NSMakeRange(0, 10)];
             else
@@ -173,6 +183,7 @@
             [mutableDictionary setObject:_category forKey:@"category"];
             [mutableDictionary setObject:[NSNumber numberWithInteger:_nMoney]  forKey:@"nMoney"];
             [mutableDictionary setObject:[NSNumber numberWithInteger:_nTime]  forKey:@"nTime"];
+            [mutableDictionary setObject:_nDate forKey:@"nDate"];
             [mutableDictionary setObject:_begin forKey:@"begin"];
             [mutableDictionary setObject:[NSNumber numberWithInteger:_duration]  forKey:@"duration"];
             [mutableDictionary setObject:_create_time forKey:@"create_time"];
@@ -268,6 +279,11 @@
     
     NSString *query = @"select sum(nMoney) as nMoney, sum(nTime) as nTime from voice_record where ";
     query = [query stringByAppendingString:where];
+    
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setPositiveFormat:@"###,##0"];
+    NSString *formatMoney;
+    
     int _nMoney, _nTime;
     if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
         while (sqlite3_step(statement) == SQLITE_ROW) {
@@ -275,7 +291,10 @@
             _nTime    = sqlite3_column_int(statement, 1);
             //NSLog(@"_type = %@\n_nMoney = %i\n _nTime = %i\n===================\n", type, _nMoney, _nTime);
 
-            data = [data stringByAppendingFormat:@"%i 元 / ", _nMoney];
+            
+            formatMoney = [numberFormatter stringFromNumber:[NSNumber numberWithInt: _nMoney]];
+            
+            data = [data stringByAppendingFormat:@"%@ 元 / ", formatMoney];
             data = [data stringByAppendingFormat:@"%i 分钟", _nTime];
             [mutableArray addObject: data];
         }
@@ -303,20 +322,22 @@
     NSString *query = @"select category, sum(nMoney) as nMoney, sum(nTime) as nTime from voice_record group by category;";
     int _nMoney, _nTime;
     NSString *_category;
+    
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setPositiveFormat:@"###,##0"];
+    NSString *formatMoney;
+    
     if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
         while (sqlite3_step(statement) == SQLITE_ROW) {
             _category = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 0)encoding:NSUTF8StringEncoding];
             _nMoney   = sqlite3_column_int(statement, 1);
             _nTime    = sqlite3_column_int(statement, 2);
-            //NSLog(@"_category = %@\n_nMoney = %i\n _nTime = %i\n===================\n", _category, _nMoney, _nTime);
-            /*
-            NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
-            [mutableDictionary setObject:_category forKey:@"category"];
-            [mutableDictionary setObject:[NSNumber numberWithInteger:_nMoney]  forKey:@"nMoney"];
-            [mutableDictionary setObject:[NSNumber numberWithInteger:_nTime]  forKey:@"nTime"];
-             */
+
+            
+            formatMoney = [numberFormatter stringFromNumber:[NSNumber numberWithInt: _nMoney]];
+            
             NSString *str = _category.length == 0 ? @"日志" : _category;
-            str = [str stringByAppendingFormat:@": %i 元 / ", _nMoney];
+            str = [str stringByAppendingFormat:@": %@ 元 / ", formatMoney];
             str = [str stringByAppendingFormat:@"%i 分钟", _nTime];
             [mutableArray addObject: str];
         }

@@ -12,6 +12,8 @@
 @implementation ViewCommonUtils
 #define myNSLog 
 #define api_base_url @"http://xiao6yuji.com/api/ios"
+#define RMB_WAN 10000
+#define TIME_HOUR 60
 
 // voice record list with format
 - (NSMutableArray*) getDataListWith: (DatabaseUtils*) databaseUtils Limit: (NSInteger) limit Offset: (NSInteger) offset {
@@ -23,12 +25,17 @@
         NSString *detail = @"";
         NSString *nTime  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];
         NSString *nMoney  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
+        NSDictionary *dictUtils;
+        ViewCommonUtils *viewCommonUtils = [[ViewCommonUtils alloc] init];
+        
         if (![nMoney isEqualToString:@"0"]) {
-            detail = [detail stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nMoney"]]];
-            detail = [detail stringByAppendingString:@" 元 - "];
+            dictUtils = [viewCommonUtils dealWithMoney:nMoney];
+            detail = [detail stringByAppendingString:dictUtils[@"nMoney"]];
+            detail = [detail stringByAppendingFormat:@" %@ - ", dictUtils[@"unit"]];
         } else if (![nTime isEqualToString:@"0"]) {
-            detail = [detail stringByAppendingString:[NSString stringWithFormat:@"%@",dict[@"nTime"]]];
-            detail = [detail stringByAppendingString:@" 分钟 - "];
+            dictUtils = [viewCommonUtils dealWithHour:nTime];
+            detail = [detail stringByAppendingString:dictUtils[@"nTime"]];
+            detail = [detail stringByAppendingFormat:@" %@ - ", dictUtils[@"unit"]];
         } else {
             detail = dict[@"input"];
         }
@@ -42,30 +49,6 @@
     return latestDataList;
 }
 
-- (void)switchViewController: (NSArray*) viewControllers
-                        From: (UIViewController*) fromViewController
-                          to: (UIViewController*) toViewController {
-    
-    /*
-    UIViewController* FromViewControllerClass = [fromViewController class];
-    UIViewController* ToViewControllerClass   = [toViewController class];
-    UIViewController* vc;
-    for (vc in viewControllers) {
-        if ([vc isKindOfClass:[fromViewController class]]) {
-            [fromViewController class] *dpvc = ([fromViewController class] *)vc;
-            [dpvc bannerHide];
-            break;
-        }
-    }
-    
-    for (vc in viewControllers) {
-        if ([vc isKindOfClass: ToViewControllerClass]) {
-            [fromViewController popToRootViewControllerAnimated:NO];
-            [fromViewController pushViewController:vc animated:YES];
-            break;
-        }
-    }*/
-}
 
 /**
  创建识别对象
@@ -124,5 +107,35 @@
     NSData *received = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
     NSString *response = [[NSString alloc]initWithData:received encoding:NSUTF8StringEncoding];
     return response;
+}
+
+// 100000 元 => 10 万元
+- (NSDictionary *) dealWithMoney: (NSString *) nMoney {
+    NSString *unit = @"元";
+    NSInteger iMoney = [nMoney intValue];
+    
+    if (iMoney > RMB_WAN) {
+        nMoney = [NSString stringWithFormat:@"%.3ld", iMoney / RMB_WAN];
+        unit   = @"万元";
+    }
+    return [NSDictionary dictionaryWithObjectsAndKeys:nMoney,@"nMoney",unit,@"unit", nil];
+}
+
+// 90 分钟 => 1.5 小时
+- (NSDictionary *) dealWithHour: (NSString *) nTime {
+    NSString *unit = @"分钟";
+    NSInteger iTime = [nTime intValue];
+    
+    if (iTime > TIME_HOUR) {
+        nTime = [NSString stringWithFormat:@"%.1ld", iTime / TIME_HOUR];
+        unit   = @"小时";
+    }
+    return [NSDictionary dictionaryWithObjectsAndKeys:nTime,@"nTime",unit,@"unit", nil];
+}
+
+- (NSString *) moneyformat: (int) num {
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setPositiveFormat:@"###,##0"];
+    return [numberFormatter stringFromNumber:[NSNumber numberWithInt: num]];
 }
 @end

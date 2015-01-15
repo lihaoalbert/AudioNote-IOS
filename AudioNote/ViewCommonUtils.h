@@ -27,9 +27,6 @@
 @interface ViewCommonUtils : NSObject
 
 - (NSMutableArray*) getDataListWith: (DatabaseUtils*) databaseUtils Limit: (NSInteger) limit Offset: (NSInteger) offset;
-- (void)switchViewController: (UIViewController*) viewControllers
-                        From: (UIViewController*) fromViewController
-                          to: (UIViewController*) toViewController;
 
 /*
  * @ 创建识别对象
@@ -39,6 +36,9 @@
 - (id) CreateRecognizer:(id)delegate Domain:(NSString*) domain;
 - (NSString *) httpGet: (NSString *) path;
 - (NSString *) httpPost: (NSString *) str;
+- (NSDictionary *) dealWithMoney: (NSString *) nMoney;
+- (NSDictionary *) dealWithHour: (NSString *) nTime;
+- (NSString *) moneyformat: (int) num;
 @end
 
 

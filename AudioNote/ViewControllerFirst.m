@@ -73,7 +73,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    
     // setup database
     [DatabaseUtils setUP];
     
@@ -283,7 +282,7 @@
             NSTimeInterval duration = [self.iFlyRecognizerStartDate timeIntervalSinceNow];
             NSInteger t_duration    = round(duration < 0 ? -duration : duration);
             NSString *t_createTime  = [self.gDateFormatter stringFromDate:self.iFlyRecognizerStartDate];
-            
+
             NSLog(@"**************************");
             NSLog(@"content:  %@", self.iFlyRecognizerResult);
             NSLog(@"created:  %@", t_createTime);
@@ -302,6 +301,7 @@
             NSString *t_nMoney   = @"0";
             NSString *t_szType   = @"";
             NSString *t_szRemain = @"";
+            NSString *t_szTime   = @"";
             
             char szTemp[MAX_INPUT_LEN];
             strcpy(szTemp,(char *)[self.iFlyRecognizerResult.copy UTF8String]);
@@ -314,9 +314,10 @@
                 t_nMoney   = [NSString stringWithFormat:@"%d", g_nMoney];
                 t_szType   = [NSString stringWithUTF8String: g_szType];
                 t_szRemain = [NSString stringWithUTF8String: g_szRemain];
-                
+                t_szTime   = [NSString stringWithUTF8String: g_szTime];
+                NSLog(@"g_t_szTime: %@", t_szTime);
             }
-            NSString *insertSQL = [NSString stringWithFormat: @"Insert into voice_record(input,description,category,nMoney,nTime,begin,duration,create_time,modify_time) VALUES('%@','%@','%@',%@,%@,'%@',%li,'%@','%@');", self.iFlyRecognizerResult.copy, t_szRemain, t_szType, t_nMoney, t_nTime, t_createTime, t_duration,  t_createTime, t_createTime];
+            NSString *insertSQL = [NSString stringWithFormat: @"Insert into voice_record(input,description,category,nMoney,nTime,nDate,begin,duration,create_time,modify_time) VALUES('%@','%@','%@',%@,%@,'%@','%@',%li,'%@','%@');", self.iFlyRecognizerResult.copy, t_szRemain, t_szType, t_nMoney, t_nTime, t_szTime, t_createTime, t_duration,  t_createTime, t_createTime];
             
             NSLog(@"Insert SQL:\n%@", insertSQL);
             
@@ -343,8 +344,8 @@
             data = [data stringByAppendingString:@"}"];
 
             NSString *path = [NSString stringWithFormat:@"%@&%@", device, data];
-            NSString *response = [self.viewCommonUtils httpPost: path];
-            NSLog(@"Response: %@", response);
+            //NSString *response = [self.viewCommonUtils httpPost: path];
+            //NSLog(@"Response: %@", response);
             // 功能 3.1 END
             
             
@@ -388,10 +389,11 @@
     cell.selectedBackgroundView = [[UIView alloc] initWithFrame:cell.frame];
     cell.selectedBackgroundView.backgroundColor = self.gBackground;
     
-    
     NSMutableDictionary *dict = [self.latestDataList objectAtIndex:indexPath.row];
     cell.textLabel.text       = dict[@"detail"];
     cell.detailTextLabel.text = dict[@"category"];
+    [cell.textLabel setFont:[UIFont systemFontOfSize:16.0]];
+    [cell.detailTextLabel setFont:[UIFont systemFontOfSize:16.0]];
     return cell;
 }
 

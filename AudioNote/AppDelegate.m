@@ -39,7 +39,7 @@
     ViewControllerFirst *firstController   = [[ViewControllerFirst alloc] init];
     firstController.title                  = @"小6语记";
     ViewControllerSecond *secondController = [[ViewControllerSecond alloc] init];
-    secondController.title                 = @"列表";
+    secondController.title                 = @"时间线";
     ViewControllerThird *thirdController   = [[ViewControllerThird alloc] init];
     thirdController.title                  = @"报表";
     containerController.viewControllers    = [NSMutableArray arrayWithObjects:firstController, secondController, thirdController, nil];

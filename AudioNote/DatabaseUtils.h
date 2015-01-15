@@ -13,11 +13,11 @@
 #import <sqlite3.h>
 
 #define kDatabaseName @"voice_record.sqlite3"
-#define myLog NSLog
+
 
 @interface DatabaseUtils : NSObject
 
-@property NSString *databaseFilePath;
+@property NSString        *databaseFilePath;
 
 + (void) setUP;
 - (NSInteger) executeSQL: (NSString *) sql;

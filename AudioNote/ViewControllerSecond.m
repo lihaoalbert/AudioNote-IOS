@@ -92,7 +92,7 @@
     NSLog(@"TableView2: %f", self.listView.bounds.size.width);
     NSLog(@"view2:%f", self.view.bounds.size.width);
 
-    self.listData = [self.databaseUtils selectLimit: 100000 Offset: 0];
+    self.listData = [self.databaseUtils selectLimit: 1000000 Offset: 0];
     NSLog(@"listData Count: %lu", (unsigned long)[self.listData count]);
     
     NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithCapacity:0];
@@ -151,15 +151,17 @@
     }
     cell.frame = CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height + 10);
    
-    NSString *tag  = [NSString stringWithFormat:@"%@", [dict objectForKey:@"category"]];
-    NSString *nMoney  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
+    NSString *tag    = [NSString stringWithFormat:@"%@", [dict objectForKey:@"category"]];
+    NSString *nMoney = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
     NSString *nTime  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];
     
+    NSDictionary *dictUtils;
     
     if (![nMoney isEqualToString: @"0"]) {
         
-        cell.cellMoney.text     = nMoney;
-        cell.cellMoneyUnit.text = @"元";
+        dictUtils = [self.viewCommonUtils dealWithMoney:nMoney];
+        cell.cellMoney.text     = dictUtils[@"nMoney"];
+        cell.cellMoneyUnit.text = dictUtils[@"unit"];
         cell.cellMoneyDesc.text = [dict objectForKey: @"description"];
         cell.cellTagLeft.text   = tag;
         cell.cellTime.text      = @"";
@@ -169,13 +171,14 @@
         
     } else if (![nTime isEqualToString:@"0"]) {
         
+        dictUtils = [self.viewCommonUtils dealWithHour:nTime];
         cell.cellMoney.text     = @"";
         cell.cellMoneyUnit.text = @"";
         cell.cellMoneyDesc.text = @"";
         cell.cellTagLeft.text   = @"";
         
-        cell.cellTime.text     = nTime;
-        cell.cellTimeUnit.text = @"分钟";
+        cell.cellTime.text     = dictUtils[@"nTime"];
+        cell.cellTimeUnit.text = dictUtils[@"unit"];
         cell.cellTimeDesc.text =[dict objectForKey: @"description"];
         cell.cellTagRight.text = tag;
 
@@ -210,6 +213,16 @@
     cell.textLabel.highlightedTextColor     = self.gHighlightedTextColor;
     cell.selectedBackgroundView             = [[UIView alloc] initWithFrame:cell.frame];
     cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
+    
+    
+    [cell.cellMoney setFont:[UIFont systemFontOfSize:16.0]];
+    [cell.cellTime setFont:[UIFont systemFontOfSize:16.0]];
+    [cell.cellTagLeft setFont:[UIFont systemFontOfSize:16.0]];
+    [cell.cellTagRight setFont:[UIFont systemFontOfSize:16.0]];
+    [cell.cellMoneyDesc setFont:[UIFont systemFontOfSize:12.0]];
+    [cell.cellMoneyUnit setFont:[UIFont systemFontOfSize:12.0]];
+    [cell.cellTimeDesc setFont:[UIFont systemFontOfSize:12.0]];
+    [cell.cellTimeUnit setFont:[UIFont systemFontOfSize:12.0]];
     
     return cell;
 }

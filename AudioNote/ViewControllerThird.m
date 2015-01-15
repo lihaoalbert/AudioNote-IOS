@@ -141,6 +141,8 @@
     
     cell.textLabel.text = [rows objectAtIndex:row];
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    [cell.textLabel setFont:[UIFont systemFontOfSize:16.0]];
+    [cell.detailTextLabel setFont:[UIFont systemFontOfSize:16.0]];
     return cell;
 }
 
