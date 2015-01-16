@@ -127,6 +127,28 @@
     //[self.latestView setEditing:YES animated:YES];
     self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
     
+    if([self.latestDataList count] == 0) {
+        NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
+        NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
+        
+        [mutableDictionary setObject:@"欢迎使用【小6语记】记账" forKey:@"detail"];
+        [mutableDictionary setObject:@"" forKey: @"category"];
+        [mutableArray addObject:mutableDictionary];
+        
+         mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
+        
+        [mutableDictionary setObject:@"1: 按住麦克风" forKey:@"detail"];
+        [mutableDictionary setObject:@"" forKey: @"category"];
+        [mutableArray addObject:mutableDictionary];
+        
+        mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
+        
+        [mutableDictionary setObject:@"2: 说出金额、时间花费" forKey:@"detail"];
+        [mutableDictionary setObject:@"" forKey: @"category"];
+        [mutableArray addObject:mutableDictionary];
+        
+        self.latestDataList = mutableArray;
+    }
     // 开始录音按钮设置与启动
     [self.voiceBtn addTarget:self action:@selector(startVoiceRecord) forControlEvents:UIControlEventTouchDown];
     [self.voiceBtn addTarget:self action:@selector(stopVoiceRecord) forControlEvents:UIControlEventTouchUpInside];
