@@ -44,6 +44,7 @@
         
         [mutableDictionary setObject:detail forKey:@"detail"];
         [mutableDictionary setObject:[dict objectForKey:@"category"] forKey: @"category"];
+        [mutableDictionary setObject:[dict objectForKey:@"id"]   forKey:@"id"];
         [latestDataList addObject:mutableDictionary];
     }
     return latestDataList;

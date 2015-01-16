@@ -88,13 +88,20 @@
     NSLog(@"************************");
     NSLog(@"TableView1: %f", self.latestView.bounds.size.width);
     NSLog(@"view1:%f", self.view.bounds.size.width);
-    
     NSLog(@"************************");
+    
+    
+    // latest n rows data list view
+    self.listDataLimit = 5;
+    self.latestView.delegate   = self;
+    self.latestView.dataSource = self;
+    
+    
     // init Utils
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
-    self.isCanceled      = YES;
     //[self.databaseUtils executeSQL: @"delete from voice_record"];
+    self.isCanceled      = YES;
     
     // config iflyRecognizer
     NSString *initString = [[NSString alloc] initWithFormat:@"appid=%@", @"5437b538"];
@@ -115,16 +122,15 @@
     [self.gDateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     
     
-    // latest n rows data list view
-    self.listDataLimit = 5;
-    self.latestView.delegate   = self;
-    self.latestView.dataSource = self;
     
     //self.latestView = [self.latestView initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 100)];
     self.latestView.backgroundColor = [UIColor clearColor];
     self.latestView.opaque = NO;
     self.parentViewController.view.backgroundColor = [UIColor colorWithRed:0.0 green:0.2 blue:0.5 alpha:0.7];
     //[self.latestView setEditing:YES animated:YES];
+    
+    
+    
     self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
     
     if([self.latestDataList count] == 0) {
@@ -133,19 +139,33 @@
         
         [mutableDictionary setObject:@"欢迎使用【小6语记】记账" forKey:@"detail"];
         [mutableDictionary setObject:@"" forKey: @"category"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:-1]  forKey:@"id"];
         [mutableArray addObject:mutableDictionary];
         
          mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
-        
-        [mutableDictionary setObject:@"1: 按住麦克风" forKey:@"detail"];
+        [mutableDictionary setObject:@"1. 按住麦克风" forKey:@"detail"];
         [mutableDictionary setObject:@"" forKey: @"category"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:-1]  forKey:@"id"];
         [mutableArray addObject:mutableDictionary];
         
         mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
-        
-        [mutableDictionary setObject:@"2: 说出金额、时间花费" forKey:@"detail"];
+        [mutableDictionary setObject:@"2. 说出你的时间、金钱花费" forKey:@"detail"];
         [mutableDictionary setObject:@"" forKey: @"category"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:-1]  forKey:@"id"];
         [mutableArray addObject:mutableDictionary];
+        
+        mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
+        [mutableDictionary setObject:@"如：	\"我花了580块买衣服\"" forKey:@"detail"];
+        [mutableDictionary setObject:@"" forKey: @"category"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:-1]  forKey:@"id"];
+        [mutableArray addObject:mutableDictionary];
+        
+        mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
+        [mutableDictionary setObject:@"	      \"昨天跑步1个半小时\"" forKey:@"detail"];
+        [mutableDictionary setObject:@"" forKey: @"category"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:-1]  forKey:@"id"];
+        [mutableArray addObject:mutableDictionary];
+        
         
         self.latestDataList = mutableArray;
     }
@@ -157,7 +177,7 @@
     CGFloat b_height = self.view.bounds.size.height;
     NSLog(@"view width: %f, height: %f", b_width, b_height);
     NSLog(@"screen width: %f, height: %f", ScreenWidth, ScreenHeight);
-    self.voiceBtn.frame = CGRectMake(b_width/4, 0, b_width, b_height/2);
+    self.voiceBtn.frame = CGRectMake(b_width/8, b_height/2, b_width*3/4, b_height/2);
     
     // 录音中的画面显示
     self.popUpView = [[PopupView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/4, self.view.frame.size.height/2, self.view.frame.size.width/2, self.view.frame.size.height/2)];
@@ -169,7 +189,9 @@
     self.gBackground = [UIColor blackColor];
     self.gTextcolor  = [UIColor whiteColor];
     self.gHighlightedTextColor  = [UIColor orangeColor];
-
+    
+    
+    [self.latestView reloadData];
 }
 
 - (void)viewDidUnload {
@@ -429,11 +451,61 @@
     cell.detailTextLabel.text = dict[@"category"];
     [cell.textLabel setFont:[UIFont systemFontOfSize:16.0]];
     [cell.detailTextLabel setFont:[UIFont systemFontOfSize:16.0]];
+    
+    // remove blue selection
+    //cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleTableViewCellLongPress:)];
+    [cell addGestureRecognizer:gesture];
+
+    
     return cell;
 }
 
+
+#pragma mark - <UIAlertView>
+
+- (void) handleTableViewCellLongPress:(UILongPressGestureRecognizer *)gesture{
+    if (gesture.state != UIGestureRecognizerStateBegan)
+        return;
+    
+    UITableViewCell *cell = (UITableViewCell *)gesture.view;
+
+    NSIndexPath *indexPath = [self.latestView indexPathForCell:cell];
+    NSMutableDictionary *dict = [self.latestDataList objectAtIndex: indexPath.row];
+    NSString *id = [NSString stringWithFormat:@"%@", dict[@"id"]];
+    if (![id isEqualToString: @"-1"]) {
+        NSString *msg = [NSString stringWithFormat:@"确认删除 - %@", dict[@"detail"]];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"删除" message: msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alert setTag:indexPath.row];
+        [alert show];
+    }
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    NSInteger row = [alertView tag];
+    if (buttonIndex == 0) {
+        NSLog(@"取消: %ld", (long)row);
+    }
+    if(buttonIndex == 1) {
+        NSLog(@"确定: %ld", (long)row);
+        NSMutableDictionary *dict = [self.latestDataList objectAtIndex: row];
+        NSString *id = [NSString stringWithFormat:@"%@", dict[@"id"]];
+        NSLog(@"id: %@", id);
+        if(![id isEqualToString: @"-1"]) {
+            NSLog(@"%@", dict);
+            [self.databaseUtils deleteWithId: id];
+            [self refresh];
+        } else {
+            NSLog(@"let it go.");
+        }
+    }
+}
+
 #pragma mark - <CurrentShow>
+
 - (void)didShowCurrent {
+    [self refresh];
     NSLog(@"switch to first view.");
 }
 

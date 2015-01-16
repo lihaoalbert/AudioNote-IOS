@@ -28,6 +28,7 @@
 - (NSString *) getReportData: (NSString *) type;
 // /ProcessPattern文件中代码调用， 取得数据库中最后一笔description的分类
 - (NSString*) selectTag: (NSString *) description;
+- (void) deleteWithId: (NSString *) id;
 
 @end
 
