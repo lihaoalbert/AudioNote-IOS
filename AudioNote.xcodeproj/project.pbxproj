@@ -43,6 +43,8 @@
 		C42837521A664A0200EC1CAB /* 运动025.png in Resources */ = {isa = PBXBuildFile; fileRef = C428374A1A664A0200EC1CAB /* 运动025.png */; };
 		C42837541A66599E00EC1CAB /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = C42837531A66599E00EC1CAB /* line.png */; };
 		C42837561A665FAC00EC1CAB /* line-1.png in Resources */ = {isa = PBXBuildFile; fileRef = C42837551A665FAC00EC1CAB /* line-1.png */; };
+		C42F20751A6915C6005B7ECF /* ios_xiao6_icon-72-72.png in Resources */ = {isa = PBXBuildFile; fileRef = C42F20731A6915C6005B7ECF /* ios_xiao6_icon-72-72.png */; };
+		C42F20761A6915C6005B7ECF /* ios_xiao6_icon-57-57.png in Resources */ = {isa = PBXBuildFile; fileRef = C42F20741A6915C6005B7ECF /* ios_xiao6_icon-57-57.png */; };
 		C4363D081A68B1990016A414 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4363D071A68B1990016A414 /* LaunchScreen.xib */; };
 		C4363D0C1A68B5E70016A414 /* macphone.png in Resources */ = {isa = PBXBuildFile; fileRef = C4363D0B1A68B5E70016A414 /* macphone.png */; };
 		C4413F191A5E389E004BA5C3 /* ISRDataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C4413F181A5E389E004BA5C3 /* ISRDataHelper.m */; };
@@ -132,6 +134,8 @@
 		C428374A1A664A0200EC1CAB /* 运动025.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "运动025.png"; path = "../../../../../Downloads/归档/icon_wite/运动025.png"; sourceTree = "<group>"; };
 		C42837531A66599E00EC1CAB /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = line.png; path = ../../../../../Downloads/line.png; sourceTree = "<group>"; };
 		C42837551A665FAC00EC1CAB /* line-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "line-1.png"; path = "../../../../Downloads/line-1.png"; sourceTree = "<group>"; };
+		C42F20731A6915C6005B7ECF /* ios_xiao6_icon-72-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios_xiao6_icon-72-72.png"; sourceTree = "<group>"; };
+		C42F20741A6915C6005B7ECF /* ios_xiao6_icon-57-57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios_xiao6_icon-57-57.png"; sourceTree = "<group>"; };
 		C435F2FF1A66B4C60084BC98 /* DidShowCurrent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DidShowCurrent.h; path = ../../../../Downloads/ForJunJie_scroll_2/ForJunJie/DidShowCurrent.h; sourceTree = "<group>"; };
 		C4363D071A68B1990016A414 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		C4363D0B1A68B5E70016A414 /* macphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = macphone.png; path = ../../../../Downloads/macphone.png; sourceTree = "<group>"; };
@@ -263,6 +267,8 @@
 		C435F3001A675B8F0084BC98 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				C42F20731A6915C6005B7ECF /* ios_xiao6_icon-72-72.png */,
+				C42F20741A6915C6005B7ECF /* ios_xiao6_icon-57-57.png */,
 				C4363D0B1A68B5E70016A414 /* macphone.png */,
 				C481B54A1A65219500CCA5DA /* ios_icon-87-87.png */,
 				C481B54B1A65219500CCA5DA /* ios_icon-58-58.png */,
@@ -539,6 +545,7 @@
 				C42837511A664A0200EC1CAB /* 娱乐001.png in Resources */,
 				4A78E6B71A51527E006FF062 /* third_selected.png in Resources */,
 				4A78E68F1A5149F3006FF062 /* ViewControllerFirst.xib in Resources */,
+				C42F20751A6915C6005B7ECF /* ios_xiao6_icon-72-72.png in Resources */,
 				4A78E6B61A51527E006FF062 /* third_normal@2x.png in Resources */,
 				C481B54C1A65219500CCA5DA /* ios_icon-87-87.png in Resources */,
 				C42837521A664A0200EC1CAB /* 运动025.png in Resources */,
@@ -562,6 +569,7 @@
 				4A78E6B81A51527E006FF062 /* third_selected@2x.png in Resources */,
 				C428374C1A664A0200EC1CAB /* 生活001.png in Resources */,
 				C42837501A664A0200EC1CAB /* 饮食016.png in Resources */,
+				C42F20761A6915C6005B7ECF /* ios_xiao6_icon-57-57.png in Resources */,
 				C44C1EAC1A32FA7500BDE49B /* Images.xcassets in Resources */,
 				C481B54D1A65219500CCA5DA /* ios_icon-58-58.png in Resources */,
 				4A78E6A51A51527E006FF062 /* first_normal.png in Resources */,
@@ -708,7 +716,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: junjie li (79B4ZK38RS)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Lib",
@@ -726,8 +734,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: junjie li (79B4ZK38RS)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Lib",
