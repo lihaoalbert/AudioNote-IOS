@@ -363,7 +363,7 @@
                 // Insert to DB (process successfully)
                 ////////////////////////////////
                 t_nTime    = [NSString stringWithFormat:@"%d", g_nTime];
-                t_nMoney   = [NSString stringWithFormat:@"%d", g_nMoney];
+                t_nMoney   = [NSString stringWithFormat:@"%d", (int)roundf(g_fMoney + 0.5)]; //g_nMoney
                 t_szType   = [NSString stringWithUTF8String: g_szType];
                 t_szRemain = [NSString stringWithUTF8String: g_szRemain];
                 t_szTime   = [NSString stringWithUTF8String: g_szTime];
