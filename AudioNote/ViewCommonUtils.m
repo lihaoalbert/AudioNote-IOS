@@ -115,7 +115,7 @@
     NSInteger iMoney = [nMoney intValue];
     
     if (iMoney > RMB_WAN) {
-        nMoney = [NSString stringWithFormat:@"%.3ld", iMoney / RMB_WAN];
+        nMoney = [NSString stringWithFormat:@"%.1f", roundf(iMoney * 10 / RMB_WAN ) / 10];
         unit   = @"万元";
     }
     return [NSDictionary dictionaryWithObjectsAndKeys:nMoney,@"nMoney",unit,@"unit", nil];

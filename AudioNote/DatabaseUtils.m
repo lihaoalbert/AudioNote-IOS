@@ -17,7 +17,7 @@
         NSArray *paths               = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         self.databaseFilePath        = [documentsDirectory stringByAppendingPathComponent:kDatabaseName];
-        //NSLog(@"%@", self.databaseFilePath);
+        NSLog(@"%@", self.databaseFilePath);
     }
     return self;
 }
@@ -319,8 +319,8 @@
     ////////////////////////////////
     // Select Data into NSData
     ////////////////////////////////
-    NSString *query = @"select category, sum(nMoney) as nMoney, sum(nTime) as nTime from voice_record group by category;";
-    int _nMoney, _nTime;
+    NSString *query = @"select category, sum(nMoney) as nMoney, sum(nTime) as nTime, count(1) as nCount from voice_record group by category;";
+    int _nMoney, _nTime, _nCount;
     NSString *_category;
     
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
@@ -332,13 +332,19 @@
             _category = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 0)encoding:NSUTF8StringEncoding];
             _nMoney   = sqlite3_column_int(statement, 1);
             _nTime    = sqlite3_column_int(statement, 2);
+            _nCount   = sqlite3_column_int(statement, 3);
 
             
             formatMoney = [numberFormatter stringFromNumber:[NSNumber numberWithInt: _nMoney]];
             
-            NSString *str = _category.length == 0 ? @"日志" : _category;
-            str = [str stringByAppendingFormat:@": %@ 元 / ", formatMoney];
-            str = [str stringByAppendingFormat:@"%i 分钟", _nTime];
+            NSString *str = _category;
+            if(_category.length == 0) {
+                str = @"日志";
+                str = [str stringByAppendingFormat:@": %i 笔", _nCount];
+            } else {
+                str = [str stringByAppendingFormat:@": %@ 元 / ", formatMoney];
+                str = [str stringByAppendingFormat:@"%i 分钟", _nTime];
+            }
             [mutableArray addObject: str];
         }
         sqlite3_finalize(statement);

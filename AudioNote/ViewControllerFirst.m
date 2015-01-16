@@ -21,7 +21,9 @@
 #import "DatabaseUtils.h"
 #import "ViewCommonUtils.h"
 #import "ISRDataHelper.h"
-
+#define kTopBarHeight 44.0
+#define ScreenWidth [[UIScreen mainScreen] bounds].size.width
+#define ScreenHeight [[UIScreen mainScreen] bounds].size.height
 
 @interface ViewControllerFirst () <IFlySpeechRecognizerDelegate,UIActionSheetDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -129,9 +131,15 @@
     [self.voiceBtn addTarget:self action:@selector(startVoiceRecord) forControlEvents:UIControlEventTouchDown];
     [self.voiceBtn addTarget:self action:@selector(stopVoiceRecord) forControlEvents:UIControlEventTouchUpInside];
     
+    CGFloat b_width = self.view.bounds.size.width;
+    CGFloat b_height = self.view.bounds.size.height;
+    NSLog(@"view width: %f, height: %f", b_width, b_height);
+    NSLog(@"screen width: %f, height: %f", ScreenWidth, ScreenHeight);
+    self.voiceBtn.frame = CGRectMake(b_width/4, 0, b_width, b_height/2);
     
     // 录音中的画面显示
     self.popUpView = [[PopupView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/4, self.view.frame.size.height/2, self.view.frame.size.width/2, self.view.frame.size.height/2)];
+    
     self.popUpView.ParentView = self.view;
     [self.popUpView setText: @"音量:0"];
     //[self.view addSubview:self.popUpView];

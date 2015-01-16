@@ -73,7 +73,8 @@
     
     self.gBackground            = [UIColor blackColor];
     self.gTextcolor             = [UIColor whiteColor];
-    self.gHighlightedTextColor  = [UIColor yellowColor];
+    self.gHighlightedTextColor = [UIColor orangeColor];
+    
 
     NSArray *tagDatas      = (NSArray *)[self.databaseUtils getReportDataWithType: @"Year"];
     NSArray *todayData     = (NSArray *)[self.databaseUtils getReportData: @"today"];
@@ -138,6 +139,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextAlignment:NSTextAlignmentCenter];
+    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextColor:[UIColor orangeColor]];
     return [self.listDictKeys objectAtIndex:section];
 }
 

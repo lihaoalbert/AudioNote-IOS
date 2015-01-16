@@ -68,11 +68,10 @@
     
     // ContainerTopBar
     self.topBar                  = [[ContainerTopBar alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.frame), kTopBarHeight)];
-    self.topBar.font             = [UIFont systemFontOfSize:16.0];
     self.topBar.backgroundColor  = [UIColor clearColor];
     self.topBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
-    self.topBar.font             = [UIFont systemFontOfSize:20.0];
-    self.topBar.textColor        = [UIColor whiteColor];
+    self.topBar.font             = [UIFont systemFontOfSize:12.0];
+    self.topBar.textColor        = [UIColor lightGrayColor];
     self.topBar.textAlignment    = NSTextAlignmentCenter;
     self.topBar.frame            = CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.bounds), kTopBarHeight);
     [self.view addSubview:self.topBar];}

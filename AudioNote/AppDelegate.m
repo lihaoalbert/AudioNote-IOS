@@ -37,11 +37,11 @@
     self.window.rootViewController         = containerController;
     self.window.backgroundColor            = [UIColor whiteColor];
     ViewControllerFirst *firstController   = [[ViewControllerFirst alloc] init];
-    firstController.title                  = @"小6语记";
+    firstController.title                  = @"对今天满意吗？";
     ViewControllerSecond *secondController = [[ViewControllerSecond alloc] init];
-    secondController.title                 = @"时间线";
+    secondController.title                 = @"认真生活每一天";
     ViewControllerThird *thirdController   = [[ViewControllerThird alloc] init];
-    thirdController.title                  = @"报表";
+    thirdController.title                  = @"没有报表";
     containerController.viewControllers    = [NSMutableArray arrayWithObjects:firstController, secondController, thirdController, nil];
     
     //for (UIViewController *viewController in containerController.viewControllers) {
