@@ -362,9 +362,7 @@
                 ////////////////////////////////
                 // Insert to DB (process successfully)
                 ////////////////////////////////
-                if(g_fMoney > 0)
-                    g_nMoney = (int)(g_fMoney + 0.5);
-                
+ 
                 t_nTime    = [NSString stringWithFormat:@"%d", g_nTime];
                 t_nMoney   = [NSString stringWithFormat:@"%d", g_nMoney];
                 t_szType   = [NSString stringWithUTF8String: g_szType];

@@ -20,7 +20,7 @@
     NSMutableArray *latestDataList = [NSMutableArray arrayWithCapacity:0];
     
     
-    NSMutableArray *dataArray = [databaseUtils selectLimit: limit Offset: offset Order: @"id"];
+    NSMutableArray *dataArray = [databaseUtils selectLimit: limit Offset: offset Order: @"id" Format: @""];
     for (NSDictionary  *dict in dataArray) {
         NSString *detail = @"";
         NSString *nTime  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];

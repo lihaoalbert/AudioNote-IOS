@@ -21,8 +21,14 @@
 
 + (void) setUP;
 - (NSInteger) executeSQL: (NSString *) sql;
-//- (NSMutableArray*) selectFrom: (NSString*) from To: (NSString*) to;
-- (NSMutableArray*) selectLimit: (NSInteger) limit Offset: (NSInteger) offset Order: (NSString *) column;
+- (NSMutableArray*) selectFrom: (NSString*) from
+                            To: (NSString *) to
+                         Order: (NSString *) column
+                        Format: (NSString *) format;
+- (NSMutableArray*) selectLimit: (NSInteger) limit
+                         Offset: (NSInteger) offset
+                          Order: (NSString *) column
+                         Format: (NSString *) format;
 // 报表使用的数据来源
 - (NSMutableArray*) getReportDataWithType: (NSString *) type;
 - (NSString *) getReportData: (NSString *) type;

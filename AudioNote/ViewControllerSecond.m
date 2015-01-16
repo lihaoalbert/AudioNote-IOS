@@ -86,7 +86,7 @@
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
     
-    self.listData = [self.databaseUtils selectLimit: 1000000 Offset: 0 Order: @"id"];
+    self.listData = [self.databaseUtils selectLimit: 1000000 Offset: 0 Order: @"id" Format:@""];
     NSLog(@"listData Count: %lu", (unsigned long)[self.listData count]);
     
     NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithCapacity:0];
@@ -201,10 +201,10 @@
     cell.textLabel.backgroundColor       = self.gBackground;
     cell.detailTextLabel.backgroundColor = self.gBackground;
     cell.cellMoney.textColor             = self.gTextcolor;
-    cell.cellMoney.highlightedTextColor  = self.gHighlightedTextColor;
+    //cell.cellMoney.highlightedTextColor  = self.gHighlightedTextColor;
     cell.cellMoneyUnit.textColor            = self.gTextcolor;
-    cell.cellMoneyUnit.highlightedTextColor = self.gHighlightedTextColor;
-    cell.textLabel.highlightedTextColor     = self.gHighlightedTextColor;
+    //cell.cellMoneyUnit.highlightedTextColor = self.gHighlightedTextColor;
+    //cell.textLabel.highlightedTextColor     = self.gHighlightedTextColor;
     cell.selectedBackgroundView             = [[UIView alloc] initWithFrame:cell.frame];
     cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
     

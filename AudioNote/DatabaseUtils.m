@@ -17,7 +17,7 @@
         NSArray *paths               = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         self.databaseFilePath        = [documentsDirectory stringByAppendingPathComponent:kDatabaseName];
-        //NSLog(@"%@", self.databaseFilePath);
+        NSLog(@"%@", self.databaseFilePath);
     }
     return self;
 }
@@ -89,7 +89,10 @@
 }
 
 
--(NSMutableArray*) selectDBwithDate{//char *beginDate, char *endDate) {
+- (NSMutableArray*) selectFrom: (NSString*) from
+                            To: (NSString *) to
+                         Order: (NSString *) column
+                        Format: (NSString *) format {
     sqlite3 *database;
     sqlite3_stmt *statement;
     NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
@@ -100,10 +103,19 @@
         return mutableArray;
     }
     
+    //create_time >= '%s 00:00:00' AND create_time <= '%s 23:59:59'
+    if(from.length == 10)
+        from = [NSString stringWithFormat:@"%@ 00:00:00", from];
+    if(to.length == 10)
+        to = [NSString stringWithFormat:@"%@ 23:59:59", to];
+    
     ////////////////////////////////
     // Select Data into NSData
     ////////////////////////////////
-    NSString *query = @"select id, input,description,category,nMoney,nTime,begin,duration,create_time,modify_time from voice_record;";
+    NSString *query = @"select id, input,description,category,nMoney,nTime,begin,duration,create_time,modify_time";
+    query = [query stringByAppendingString:@" from voice_record where "];
+    query = [query stringByAppendingFormat:@" create_time >= '%@' and create_time <= '%@' ", from , to];
+    NSLog(@"executeSQL: %@", query);
     int _id, _nMoney, _nTime, _duration;
     NSString *_input, *_description, *_category;
     NSString *_begin, *_create_time, *_modify_time;
@@ -133,16 +145,41 @@
             [mutableDictionary setObject:[NSNumber numberWithInteger:_duration]  forKey:@"duration"];
             [mutableDictionary setObject:_create_time forKey:@"create_time"];
             [mutableDictionary setObject:_modify_time forKey:@"modify_time"];
-            [mutableArray addObject: mutableDictionary];
+            
+            
+            if([format isEqualToString: @"json"]) {
+                ////////////////////////////
+                // Transform mutableDictionary to json NSString
+                ////////////////////////////
+                NSError *error;
+                NSData *jsonData;
+                NSString *jsonStr;
+                
+                if ([NSJSONSerialization isValidJSONObject:mutableDictionary]) {
+                    // NSMutableDictionary convert to JSON Data
+                    jsonData = [NSJSONSerialization dataWithJSONObject:mutableDictionary options:NSJSONWritingPrettyPrinted error:&error];
+                    // JSON Data convert to NSString
+                    jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                    //NSLog(@"NSMutableDictionary to JSON String: %@", jsonStr);
+                }
+                
+                // put josnString to NSMutableArray
+                [mutableArray addObject:jsonStr];
+            } else {
+                [mutableArray addObject: mutableDictionary];
+            }
         }
         sqlite3_finalize(statement);
     }
     sqlite3_close(database);
     return mutableArray;
-}  // end of selectDBwithDate()
+}  // end of selectFrom: To: Order: Format:()
 
 
-- (NSMutableArray*) selectLimit: (NSInteger) limit Offset: (NSInteger) offset Order: (NSString *) column {
+- (NSMutableArray*) selectLimit: (NSInteger) limit
+                         Offset: (NSInteger) offset
+                          Order: (NSString *) column
+                         Format: (NSString *) format{
     sqlite3 *database;
     sqlite3_stmt *statement;
     NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
@@ -194,7 +231,29 @@
             [mutableDictionary setObject:_create_time forKey:@"create_time"];
             [mutableDictionary setObject:_modify_time forKey:@"modify_time"];
             [mutableDictionary setObject:_simple_create_time forKey:@"simple_create_time"];
-            [mutableArray addObject: mutableDictionary];
+            
+            
+            if([format isEqualToString: @"json"]) {
+                ////////////////////////////
+                // Transform mutableDictionary to json NSString
+                ////////////////////////////
+                NSError *error;
+                NSData *jsonData;
+                NSString *jsonStr;
+                
+                if ([NSJSONSerialization isValidJSONObject:mutableDictionary]) {
+                    // NSMutableDictionary convert to JSON Data
+                    jsonData = [NSJSONSerialization dataWithJSONObject:mutableDictionary options:NSJSONWritingPrettyPrinted error:&error];
+                    // JSON Data convert to NSString
+                    jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                    //NSLog(@"NSMutableDictionary to JSON String: %@", jsonStr);
+                }
+                
+                // put josnString to NSMutableArray
+                [mutableArray addObject:jsonStr];
+            } else {
+                [mutableArray addObject: mutableDictionary];
+            }
         }
         sqlite3_finalize(statement);
     }
