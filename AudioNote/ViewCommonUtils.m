@@ -20,7 +20,7 @@
     NSMutableArray *latestDataList = [NSMutableArray arrayWithCapacity:0];
     
     
-    NSMutableArray *dataArray = [databaseUtils selectLimit: limit Offset: offset];
+    NSMutableArray *dataArray = [databaseUtils selectLimit: limit Offset: offset Order: @"id"];
     for (NSDictionary  *dict in dataArray) {
         NSString *detail = @"";
         NSString *nTime  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];
@@ -127,7 +127,7 @@
     NSInteger iTime = [nTime intValue];
     
     if (iTime > TIME_HOUR) {
-        nTime = [NSString stringWithFormat:@"%.1ld", iTime / TIME_HOUR];
+        nTime = [NSString stringWithFormat:@"%.1f", roundf(iTime * 10 / TIME_HOUR ) / 10];
         unit   = @"小时";
     }
     return [NSDictionary dictionaryWithObjectsAndKeys:nTime,@"nTime",unit,@"unit", nil];

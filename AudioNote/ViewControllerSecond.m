@@ -85,7 +85,7 @@
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
     
-    self.listData = [self.databaseUtils selectLimit: 1000000 Offset: 0];
+    self.listData = [self.databaseUtils selectLimit: 1000000 Offset: 0 Order: @"id"];
     NSLog(@"listData Count: %lu", (unsigned long)[self.listData count]);
     
     NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithCapacity:0];

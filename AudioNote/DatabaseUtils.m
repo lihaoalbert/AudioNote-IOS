@@ -137,7 +137,7 @@
 }  // end of selectDBwithDate()
 
 
-- (NSMutableArray*) selectLimit: (NSInteger) limit Offset: (NSInteger) offset {
+- (NSMutableArray*) selectLimit: (NSInteger) limit Offset: (NSInteger) offset Order: (NSString *) column {
     sqlite3 *database;
     sqlite3_stmt *statement;
     NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
@@ -151,7 +151,7 @@
     ////////////////////////////////
     // Select Data into NSMutableDictionary
     ////////////////////////////////
-    NSString *query = @"select id, input,description,category,nMoney,nTime,begin,duration,create_time,modify_time, nDate from voice_record order by create_time desc ";
+    NSString *query = [NSString stringWithFormat:@"select id, input,description,category,nMoney,nTime,begin,duration,create_time,modify_time, nDate from voice_record order by %@ desc ", column];
     query = [query stringByAppendingFormat:@" limit %lu offset %lu", limit, offset];
     int _id, _nMoney, _nTime, _duration;
     NSString *_input, *_description, *_category, *_nDate;

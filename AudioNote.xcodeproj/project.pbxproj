@@ -43,6 +43,7 @@
 		C42837521A664A0200EC1CAB /* 运动025.png in Resources */ = {isa = PBXBuildFile; fileRef = C428374A1A664A0200EC1CAB /* 运动025.png */; };
 		C42837541A66599E00EC1CAB /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = C42837531A66599E00EC1CAB /* line.png */; };
 		C42837561A665FAC00EC1CAB /* line-1.png in Resources */ = {isa = PBXBuildFile; fileRef = C42837551A665FAC00EC1CAB /* line-1.png */; };
+		C4363D081A68B1990016A414 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4363D071A68B1990016A414 /* LaunchScreen.xib */; };
 		C4413F191A5E389E004BA5C3 /* ISRDataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C4413F181A5E389E004BA5C3 /* ISRDataHelper.m */; };
 		C4413F2C1A5E3959004BA5C3 /* SBJson4Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = C4413F1F1A5E3959004BA5C3 /* SBJson4Parser.m */; };
 		C4413F2D1A5E3959004BA5C3 /* SBJson4StreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C4413F211A5E3959004BA5C3 /* SBJson4StreamParser.m */; };
@@ -64,7 +65,6 @@
 		C44C1ECF1A32FB3400BDE49B /* iflyMSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C44C1ECE1A32FB3400BDE49B /* iflyMSC.framework */; };
 		C451AC5A1A5CE115001FFF41 /* MyTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C451AC591A5CE115001FFF41 /* MyTableViewCell.xib */; };
 		C451AC5D1A5CF0EA001FFF41 /* MyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C451AC5C1A5CF0EA001FFF41 /* MyTableViewCell.m */; };
-		C45D7A1A1A679F2A00804CDC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C45D7A181A679F2A00804CDC /* LaunchScreen.xib */; };
 		C481B54C1A65219500CCA5DA /* ios_icon-87-87.png in Resources */ = {isa = PBXBuildFile; fileRef = C481B54A1A65219500CCA5DA /* ios_icon-87-87.png */; };
 		C481B54D1A65219500CCA5DA /* ios_icon-58-58.png in Resources */ = {isa = PBXBuildFile; fileRef = C481B54B1A65219500CCA5DA /* ios_icon-58-58.png */; };
 		C4AA4C3C1A5A86FB00E6A1E7 /* ViewControllerThird.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4AA4C3B1A5A86FB00E6A1E7 /* ViewControllerThird.xib */; };
@@ -132,6 +132,7 @@
 		C42837531A66599E00EC1CAB /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = line.png; path = ../../../../../Downloads/line.png; sourceTree = "<group>"; };
 		C42837551A665FAC00EC1CAB /* line-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "line-1.png"; path = "../../../../Downloads/line-1.png"; sourceTree = "<group>"; };
 		C435F2FF1A66B4C60084BC98 /* DidShowCurrent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DidShowCurrent.h; path = ../../../../Downloads/ForJunJie_scroll_2/ForJunJie/DidShowCurrent.h; sourceTree = "<group>"; };
+		C4363D071A68B1990016A414 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		C4413F171A5E389E004BA5C3 /* ISRDataHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISRDataHelper.h; sourceTree = "<group>"; };
 		C4413F181A5E389E004BA5C3 /* ISRDataHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISRDataHelper.m; sourceTree = "<group>"; };
 		C4413F1D1A5E3959004BA5C3 /* SBJson4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJson4.h; path = SBJson/SBJson4.h; sourceTree = "<group>"; };
@@ -169,7 +170,6 @@
 		C451AC591A5CE115001FFF41 /* MyTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyTableViewCell.xib; sourceTree = "<group>"; };
 		C451AC5B1A5CE327001FFF41 /* MyTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyTableViewCell.h; sourceTree = "<group>"; };
 		C451AC5C1A5CF0EA001FFF41 /* MyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTableViewCell.m; sourceTree = "<group>"; };
-		C45D7A191A679F2A00804CDC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ../../AudioNote_xib_bak/AudioNote/Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		C481B54A1A65219500CCA5DA /* ios_icon-87-87.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ios_icon-87-87.png"; path = "Images/ios_icon-87-87.png"; sourceTree = "<group>"; };
 		C481B54B1A65219500CCA5DA /* ios_icon-58-58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ios_icon-58-58.png"; path = "Images/ios_icon-58-58.png"; sourceTree = "<group>"; };
 		C4AA4C3B1A5A86FB00E6A1E7 /* ViewControllerThird.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewControllerThird.xib; sourceTree = "<group>"; };
@@ -321,7 +321,7 @@
 				C451AC541A5CD92D001FFF41 /* DatabaseUtils */,
 				C451AC521A5CD90A001FFF41 /* ProcessPattern */,
 				C44C1EAB1A32FA7500BDE49B /* Images.xcassets */,
-				C45D7A181A679F2A00804CDC /* LaunchScreen.xib */,
+				C4363D071A68B1990016A414 /* LaunchScreen.xib */,
 				C4413F1C1A5E3942004BA5C3 /* SBJson */,
 				C44C1E9E1A32FA7500BDE49B /* Supporting Files */,
 			);
@@ -542,7 +542,7 @@
 				4A78E6AB1A51527E006FF062 /* navigationbar_background_tall.png in Resources */,
 				4A78E6AC1A51527E006FF062 /* navigationbar_background_tall@2x.png in Resources */,
 				4A78E6A61A51527E006FF062 /* first_normal@2x.png in Resources */,
-				C45D7A1A1A679F2A00804CDC /* LaunchScreen.xib in Resources */,
+				C4363D081A68B1990016A414 /* LaunchScreen.xib in Resources */,
 				4A78E6A91A51527E006FF062 /* navigationbar_background.png in Resources */,
 				C4C9956D1A64BA40001B085A /* zhiwen8-345-500.png in Resources */,
 				4A78E6A71A51527E006FF062 /* first_selected.png in Resources */,
@@ -618,17 +618,6 @@
 			targetProxy = C44C1EB51A32FA7500BDE49B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		C45D7A181A679F2A00804CDC /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C45D7A191A679F2A00804CDC /* Base */,
-			);
-			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		C44C1EBC1A32FA7500BDE49B /* Debug */ = {
@@ -714,13 +703,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Lib",
 				);
 				INFOPLIST_FILE = AudioNote/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -729,13 +722,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Lib",
 				);
 				INFOPLIST_FILE = AudioNote/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

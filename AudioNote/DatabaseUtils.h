@@ -22,7 +22,7 @@
 + (void) setUP;
 - (NSInteger) executeSQL: (NSString *) sql;
 //- (NSMutableArray*) selectFrom: (NSString*) from To: (NSString*) to;
-- (NSMutableArray*) selectLimit: (NSInteger) limit Offset: (NSInteger) offset;
+- (NSMutableArray*) selectLimit: (NSInteger) limit Offset: (NSInteger) offset Order: (NSString *) column;
 // 报表使用的数据来源
 - (NSMutableArray*) getReportDataWithType: (NSString *) type;
 - (NSString *) getReportData: (NSString *) type;
