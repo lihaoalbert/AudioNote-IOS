@@ -16,7 +16,7 @@
 #import "ViewControllerFirst.h"
 #import "ViewControllerSecond.h"
 #import "ViewControllerThird.h"
-#import "ViewControllerChart.h"
+//#import "ViewControllerChart.h"
 #define myNSLog NSLog
 #define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
 #define kTopBarHeight 44.0
@@ -43,9 +43,9 @@
     secondController.title                 = @"认真生活每一天";
     ViewControllerThird *thirdController   = [[ViewControllerThird alloc] init];
     thirdController.title                  = @"没有报表";
-    ViewControllerChart *chartController   = [[ViewControllerChart alloc] init];
-    chartController.title                  = @"图表";
-    containerController.viewControllers    = [NSMutableArray arrayWithObjects:firstController, secondController, thirdController, chartController,nil];
+    //ViewControllerChart *chartController   = [[ViewControllerChart alloc] init];
+    //chartController.title                  = @"图表";
+    containerController.viewControllers    = [NSMutableArray arrayWithObjects:firstController, secondController, thirdController,nil];
     
     //for (UIViewController *viewController in containerController.viewControllers) {
     //    [viewController.view setContentHuggingPriority:ScreenWidth forAxis:UILayoutConstraintAxisHorizontal];

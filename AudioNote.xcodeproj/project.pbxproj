@@ -137,7 +137,6 @@
 		C42837551A665FAC00EC1CAB /* line-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "line-1.png"; path = "../../../../Downloads/line-1.png"; sourceTree = "<group>"; };
 		C42F20731A6915C6005B7ECF /* ios_xiao6_icon-72-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios_xiao6_icon-72-72.png"; sourceTree = "<group>"; };
 		C42F20741A6915C6005B7ECF /* ios_xiao6_icon-57-57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios_xiao6_icon-57-57.png"; sourceTree = "<group>"; };
-		C435F2FF1A66B4C60084BC98 /* DidShowCurrent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DidShowCurrent.h; path = ../../../../Downloads/ForJunJie_scroll_2/ForJunJie/DidShowCurrent.h; sourceTree = "<group>"; };
 		C4363D071A68B1990016A414 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		C4363D0B1A68B5E70016A414 /* macphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = macphone.png; path = ../../../../Downloads/macphone.png; sourceTree = "<group>"; };
 		C4413F171A5E389E004BA5C3 /* ISRDataHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISRDataHelper.h; sourceTree = "<group>"; };
@@ -190,6 +189,7 @@
 		C4B282781A61741400441AFB /* NSMutableArray+Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Util.m"; sourceTree = "<group>"; };
 		C4B2827B1A61856A00441AFB /* ViewControllerContainer.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewControllerContainer.xib; sourceTree = "<group>"; };
 		C4B813671A482F80001218E1 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		C4BE05701A70157600F55F94 /* DidShowCurrent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DidShowCurrent.h; sourceTree = "<group>"; };
 		C4C995681A64BA38001B085A /* ios_icon-200-200.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios_icon-200-200.png"; sourceTree = "<group>"; };
 		C4C995691A64BA38001B085A /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		C4C9956C1A64BA40001B085A /* zhiwen8-345-500.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zhiwen8-345-500.png"; sourceTree = "<group>"; };
@@ -448,7 +448,7 @@
 		C4B2827A1A61743300441AFB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				C435F2FF1A66B4C60084BC98 /* DidShowCurrent.h */,
+				C4BE05701A70157600F55F94 /* DidShowCurrent.h */,
 				C4B282771A61741400441AFB /* NSMutableArray+Util.h */,
 				C4B282781A61741400441AFB /* NSMutableArray+Util.m */,
 			);
