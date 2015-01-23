@@ -42,7 +42,7 @@
     ViewControllerSecond *secondController = [[ViewControllerSecond alloc] init];
     secondController.title                 = @"认真生活每一天";
     ViewControllerThird *thirdController   = [[ViewControllerThird alloc] init];
-    thirdController.title                  = @"没有报表";
+    thirdController.title                  = @"还没有做报表";
     //ViewControllerChart *chartController   = [[ViewControllerChart alloc] init];
     //chartController.title                  = @"图表";
     containerController.viewControllers    = [NSMutableArray arrayWithObjects:firstController, secondController, thirdController,nil];

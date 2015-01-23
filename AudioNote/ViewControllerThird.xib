@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6249" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6243"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewControllerThird">
@@ -12,12 +12,12 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" horizontalHuggingPriority="320" verticalHuggingPriority="320" horizontalCompressionResistancePriority="320" verticalCompressionResistancePriority="320" id="56c-JW-Qrw">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+        <view contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" id="56c-JW-Qrw">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" indicatorStyle="black" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="EdR-r1-NmY">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="EdR-r1-NmY">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <color key="separatorColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -26,7 +26,14 @@
                 </tableView>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="EdR-r1-NmY" secondAttribute="centerX" id="0Wp-x9-HzV"/>
+                <constraint firstItem="EdR-r1-NmY" firstAttribute="top" secondItem="56c-JW-Qrw" secondAttribute="top" id="598-6u-IB9"/>
+                <constraint firstAttribute="trailing" secondItem="EdR-r1-NmY" secondAttribute="trailing" id="Ycd-9f-Lin"/>
+                <constraint firstItem="EdR-r1-NmY" firstAttribute="leading" secondItem="56c-JW-Qrw" secondAttribute="leading" id="gcQ-dM-2By"/>
+                <constraint firstAttribute="bottom" secondItem="EdR-r1-NmY" secondAttribute="bottom" id="yCE-Ic-9Xx"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
             <point key="canvasLocation" x="-893" y="-40"/>
         </view>
     </objects>
