@@ -54,7 +54,16 @@
     }
     
     [self.view setContentHuggingPriority:ScreenWidth forAxis:UILayoutConstraintAxisHorizontal];
+
+    // 1. 用一个临时变量保存返回值。
+    CGRect temp = self.view.frame;
+    // 2. 给这个变量赋值。因为变量都是L-Value，可以被赋值
+    temp.size.height = ScreenHeight;
+    temp.size.width = ScreenWidth;
+    // 3. 修改frame的值
+    self.view.frame = temp;
     
+
     NSLog(@"screenWidth: %f, Height:%f", ScreenWidth, ScreenHeight);
     // UIScrollView
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, kTopBarHeight,CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - kTopBarHeight)];
@@ -63,17 +72,19 @@
     self.scrollView.bounces       = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+ 
+
     
     [self.view addSubview:self.scrollView];
     
     // ContainerTopBar
-    self.topBar                  = [[ContainerTopBar alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.frame), kTopBarHeight)];
+    self.topBar = [[ContainerTopBar alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.frame), kTopBarHeight)];
     self.topBar.backgroundColor  = [UIColor clearColor];
     self.topBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     self.topBar.font             = [UIFont systemFontOfSize:12.0];
     self.topBar.textColor        = [UIColor lightGrayColor];
     self.topBar.textAlignment    = NSTextAlignmentCenter;
-    self.topBar.frame            = CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.bounds), kTopBarHeight);
+    self.topBar.frame            = CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.frame), kTopBarHeight);
     [self.view addSubview:self.topBar];}
 
 - (void)setViewControllers:(NSMutableArray *)viewControllers {
@@ -115,6 +126,7 @@
         viewController.view.frame = CGRectMake(x, 0, ScreenWidth, self.pageHeight);
         x += CGRectGetWidth(self.scrollView.frame);
     }
+
     self.scrollView.contentSize = CGSizeMake(x, self.pageWidth);
     
     switch (direction) {
