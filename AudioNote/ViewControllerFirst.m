@@ -401,7 +401,7 @@
             data = [data stringByAppendingFormat:@", \"nTime\":\"%@\"", t_nTime];
             data = [data stringByAppendingString:@"}"];
 
-            NSString *path = [NSString stringWithFormat:@"%@&%@", device, data];
+            //NSString *path = [NSString stringWithFormat:@"%@&%@", device, data];
             //NSString *response = [self.viewCommonUtils httpPost: path];
             //NSLog(@"Response: %@", response);
             // 功能 3.1 END
