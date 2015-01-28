@@ -16,6 +16,7 @@
 #import "ViewControllerSecond.h"
 #import "ViewControllerThird.h"
 
+
 #import "PopupView.h"
 #import "processPattern.h"
 #import "DatabaseUtils.h"
@@ -75,21 +76,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    // setup database
-    [DatabaseUtils setUP];
     
     [self refresh];
     
 }
 
 - (void) refresh {
-    //self.view.backgroundColor = [UIColor redColor];
-    
-    NSLog(@"************************");
-    NSLog(@"TableView1: %f", self.latestView.bounds.size.width);
-    NSLog(@"view1:%f", self.view.bounds.size.width);
-    NSLog(@"************************");
-    
     
     // latest n rows data list view
     self.listDataLimit = 5;

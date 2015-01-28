@@ -92,7 +92,6 @@
     for (UIViewController *viewController in viewControllers) {
         [viewController willMoveToParentViewController:self];
         viewController.view.frame = CGRectMake(0.0, kTopBarHeight, ScreenWidth, self.view.bounds.size.height-kTopBarHeight);
-        NSLog(@"%@, width: %f, height:%f", viewController.nibName, viewController.view.bounds.size.width, viewController.view.bounds.size.height);
         [self.scrollView addSubview:viewController.view];
         [viewController didMoveToParentViewController:self];
     }

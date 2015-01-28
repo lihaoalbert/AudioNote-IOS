@@ -77,11 +77,6 @@
     self.gHighlightedTextColor = [UIColor orangeColor];
     
     
-    //self.listView =  [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-    
-    NSLog(@"TableView2: %f", self.listView.bounds.size.width);
-    NSLog(@"view2:%f", self.view.bounds.size.width);
-    
     // init Utils
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];

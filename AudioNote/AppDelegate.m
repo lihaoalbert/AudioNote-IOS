@@ -16,8 +16,8 @@
 #import "ViewControllerFirst.h"
 #import "ViewControllerSecond.h"
 #import "ViewControllerThird.h"
+#import "DatabaseUtils.h"
 //#import "ViewControllerChart.h"
-#define myNSLog NSLog
 #define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
 #define kTopBarHeight 44.0
 #define ScreenWidth [[UIScreen mainScreen] bounds].size.width
@@ -37,6 +37,12 @@
     ViewControllerContainer *containerController = [[ViewControllerContainer alloc] init];
     self.window.rootViewController         = containerController;
     self.window.backgroundColor            = [UIColor whiteColor];
+    
+    
+    // setup database
+    [DatabaseUtils setUP];
+    
+    
     ViewControllerFirst *firstController   = [[ViewControllerFirst alloc] init];
     firstController.title                  = @"对今天满意吗？";
     ViewControllerSecond *secondController = [[ViewControllerSecond alloc] init];

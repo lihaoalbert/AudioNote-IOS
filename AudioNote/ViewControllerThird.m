@@ -58,11 +58,6 @@
 }
 
 - (void) refresh {
-    //self.view.backgroundColor = [UIColor blueColor];
-    
-    NSLog(@"TableView3: %f", self.listView.bounds.size.width);
-    NSLog(@"view3:%f", self.view.bounds.size.width);
-
     // TableView
     self.listView.delegate   = self;
     self.listView.dataSource = self;
