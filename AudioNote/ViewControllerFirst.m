@@ -35,6 +35,8 @@
 
 @property (nonatomic, strong) PopupView            * popUpView;   // show volumn when voice
 @property (nonatomic)         BOOL                 isCanceled;    // voice status
+@property (nonatomic)         BOOL                 isNetWorkConnected;
+
 
 // iFly recognizer convert audio to text. （功能1）
 @property (nonatomic, nonatomic) NSMutableString    *iFlyRecognizerResult;
@@ -95,15 +97,23 @@
     //[self.databaseUtils executeSQL: @"delete from voice_record"];
     self.isCanceled      = YES;
     
+    // plist file config data read
+    NSString* plist = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
+    NSMutableDictionary* dict = [[NSMutableDictionary alloc] initWithContentsOfFile:plist];
+    dict = [dict objectForKey:@"IFly"];
+    NSString *iflyAppId = [dict objectForKey:@"appid"];
+
+    
     // config iflyRecognizer
-    NSString *initString = [[NSString alloc] initWithFormat:@"appid=%@", @"5437b538"];
+    [IFlySetting setLogFile:LVL_NONE]; //未来查看科大讯飞日志时使用: LVL_ALL
+    [IFlySetting showLogcat:NO];
+    
+    NSString *initString = [[NSString alloc] initWithFormat:@"appid=%@", iflyAppId];
     [IFlySpeechUtility createUtility:initString];
     // 创建识别
     self.iFlySpeechRecognizer = [self.viewCommonUtils CreateRecognizer:self Domain:@"iat"];
     self.uploader = [[IFlyDataUploader alloc] init];
     
-    [IFlySetting setLogFile:LVL_NONE]; //未来查看科大讯飞日志时使用: LVL_ALL
-    [IFlySetting showLogcat:NO];
     NSLog(@"IFly Version: %@", [IFlySetting getVersion]);
     
     
@@ -120,7 +130,6 @@
     self.latestView.opaque = NO;
     self.parentViewController.view.backgroundColor = [UIColor colorWithRed:0.0 green:0.2 blue:0.5 alpha:0.7];
     //[self.latestView setEditing:YES animated:YES];
-    
     
     
     self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
@@ -175,13 +184,18 @@
     self.popUpView = [[PopupView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/4, self.view.frame.size.height/2, self.view.frame.size.width/2, self.view.frame.size.height/2)];
     
     self.popUpView.ParentView = self.view;
-    [self.popUpView setText: @"音量:0"];
+    //[self.popUpView setText: @"音量:0"];
     //[self.view addSubview:self.popUpView];
     
     self.gBackground = [UIColor blackColor];
     self.gTextcolor  = [UIColor whiteColor];
     self.gHighlightedTextColor  = [UIColor orangeColor];
     
+    // 无网络时，禁用[语音录入]按钮
+    self.isNetWorkConnected = [self isConnectionAvailable];
+    if(!self.isNetWorkConnected) {
+        self.voiceBtn.enabled = NO;
+    }
     
     [self.latestView reloadData];
 }
@@ -382,10 +396,10 @@
             ////////////////////////////////
             NSString *device  = [NSString stringWithFormat:@"device=name:%@", [[UIDevice currentDevice] name]];
             device = [device stringByAppendingFormat:@",model:%@", [[UIDevice currentDevice] model]];
-            device = [device stringByAppendingFormat:@",localizedModel:%@", [[UIDevice currentDevice] localizedModel]];
-            device = [device stringByAppendingFormat:@",systemName:%@", [[UIDevice currentDevice] systemName]];
-            device = [device stringByAppendingFormat:@",identifierForVendor:%@", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
-            device = [device stringByAppendingFormat:@",IFlyVersion:%@", [IFlySetting getVersion]];
+            //device = [device stringByAppendingFormat:@",localizedModel:%@", [[UIDevice currentDevice] localizedModel]];
+            //device = [device stringByAppendingFormat:@",systemName:%@", [[UIDevice currentDevice] systemName]];
+            //device = [device stringByAppendingFormat:@",identifierForVendor:%@", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
+            //device = [device stringByAppendingFormat:@",IFlyVersion:%@", [IFlySetting getVersion]];
             NSString *data = [NSString stringWithFormat:@"data={\"input\":\"%@\"", self.iFlyRecognizerResult.copy];
             data = [data stringByAppendingFormat:@", \"szRemain\":\"%@\"", t_szRemain];
             data = [data stringByAppendingFormat:@", \"szType\":\"%@\"", t_szType];
@@ -393,9 +407,10 @@
             data = [data stringByAppendingFormat:@", \"nTime\":\"%@\"", t_nTime];
             data = [data stringByAppendingString:@"}"];
 
-            //NSString *path = [NSString stringWithFormat:@"%@&%@", device, data];
-            //NSString *response = [self.viewCommonUtils httpPost: path];
-            //NSLog(@"Response: %@", response);
+            NSString *path = [NSString stringWithFormat:@"%@&%@", device, data];
+            if(self.isNetWorkConnected) {
+                [self.viewCommonUtils httpPost: path];
+            }
             // 功能 3.1 END
             
             
@@ -500,6 +515,31 @@
 - (void)didShowCurrent {
     [self refresh];
     NSLog(@"switch to first view.");
+}
+
+-(BOOL) isConnectionAvailable {
+    
+    BOOL isExistenceNetwork = NO;
+    NSString *netWorkType = @"无";
+    Reachability *reach = [Reachability reachabilityWithHostName:@"www.apple.com"];
+    switch ([reach currentReachabilityStatus]) {
+        case NotReachable:
+            break;
+        case ReachableViaWiFi:
+            isExistenceNetwork = YES;
+            netWorkType = @"WIFI";
+            break;
+        case ReachableViaWWAN:
+            isExistenceNetwork = YES;
+            netWorkType = @"3G";
+            break;
+    }
+    
+    NSString *popText = [NSString stringWithFormat:@"网络: %@", netWorkType];
+    [self.popUpView setText: popText];
+    [self.view addSubview:self.popUpView];
+    
+    return isExistenceNetwork;
 }
 
 

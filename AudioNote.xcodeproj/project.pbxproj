@@ -30,6 +30,7 @@
 		4A78E6B81A51527E006FF062 /* third_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A78E6A41A51527E006FF062 /* third_selected@2x.png */; };
 		4A78E6BC1A51555D006FF062 /* ViewControllerSecond.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A78E6BA1A51555D006FF062 /* ViewControllerSecond.m */; };
 		4A78E6BD1A51555D006FF062 /* ViewControllerSecond.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A78E6BB1A51555D006FF062 /* ViewControllerSecond.xib */; };
+		C40F7EB71A9A1886004E06C2 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C40F7EB61A9A1886004E06C2 /* Reachability.m */; };
 		C417E5F41A5BC5720085CBBF /* ViewCommonUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C417E5F31A5BC5720085CBBF /* ViewCommonUtils.m */; };
 		C4205C6C1A5FD94B001A3DB2 /* PopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = C4205C6B1A5FD94B001A3DB2 /* PopupView.m */; };
 		C4363D081A68B1990016A414 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4363D071A68B1990016A414 /* LaunchScreen.xib */; };
@@ -143,6 +144,8 @@
 		4A78E6B91A51555D006FF062 /* ViewControllerSecond.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewControllerSecond.h; sourceTree = "<group>"; };
 		4A78E6BA1A51555D006FF062 /* ViewControllerSecond.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewControllerSecond.m; sourceTree = "<group>"; };
 		4A78E6BB1A51555D006FF062 /* ViewControllerSecond.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewControllerSecond.xib; sourceTree = "<group>"; };
+		C40F7EB51A9A1886004E06C2 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		C40F7EB61A9A1886004E06C2 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		C417E5F21A5BC1C90085CBBF /* ViewCommonUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewCommonUtils.h; sourceTree = "<group>"; };
 		C417E5F31A5BC5720085CBBF /* ViewCommonUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewCommonUtils.m; sourceTree = "<group>"; };
 		C4205C6A1A5FD94B001A3DB2 /* PopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupView.h; sourceTree = "<group>"; };
@@ -514,8 +517,6 @@
 		C451AC561A5CD957001FFF41 /* MVC */ = {
 			isa = PBXGroup;
 			children = (
-				C4EE682F1A691F0C00EEB947 /* ViewControllerChart.h */,
-				C4EE68301A691F0C00EEB947 /* ViewControllerChart.m */,
 				C4B282731A616FF600441AFB /* ViewControllerContainer.h */,
 				C4B282711A616FED00441AFB /* ViewControllerContainer.m */,
 				C4B2827B1A61856A00441AFB /* ViewControllerContainer.xib */,
@@ -528,6 +529,8 @@
 				C4AA4C3F1A5A870F00E6A1E7 /* ViewControllerThird.h */,
 				C4AA4C3D1A5A870800E6A1E7 /* ViewControllerThird.m */,
 				C4AA4C3B1A5A86FB00E6A1E7 /* ViewControllerThird.xib */,
+				C4EE682F1A691F0C00EEB947 /* ViewControllerChart.h */,
+				C4EE68301A691F0C00EEB947 /* ViewControllerChart.m */,
 			);
 			name = MVC;
 			sourceTree = "<group>";
@@ -535,6 +538,8 @@
 		C4B2827A1A61743300441AFB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				C40F7EB51A9A1886004E06C2 /* Reachability.h */,
+				C40F7EB61A9A1886004E06C2 /* Reachability.m */,
 				C4BE05701A70157600F55F94 /* DidShowCurrent.h */,
 				C4B282771A61741400441AFB /* NSMutableArray+Util.h */,
 				C4B282781A61741400441AFB /* NSMutableArray+Util.m */,
@@ -735,6 +740,7 @@
 				C4413F191A5E389E004BA5C3 /* ISRDataHelper.m in Sources */,
 				C44C1EA11A32FA7500BDE49B /* main.m in Sources */,
 				C4413F2C1A5E3959004BA5C3 /* SBJson4Parser.m in Sources */,
+				C40F7EB71A9A1886004E06C2 /* Reachability.m in Sources */,
 				C4EE682E1A691EA100EEB947 /* DatabaseUtils.m in Sources */,
 				C4413F2F1A5E3959004BA5C3 /* SBJson4StreamTokeniser.m in Sources */,
 				C4EE68361A691F3900EEB947 /* GraphicView.m in Sources */,
@@ -845,8 +851,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Shanghai Shengyin Software Technology Co., Ltd.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai Shengyin Software Technology Co., Ltd.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -856,7 +862,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "54243b61-fd2a-45af-b673-a819ae813a1d";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -865,8 +871,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Shanghai Shengyin Software Technology Co., Ltd.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai Shengyin Software Technology Co., Ltd.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -877,7 +883,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "54243b61-fd2a-45af-b673-a819ae813a1d";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

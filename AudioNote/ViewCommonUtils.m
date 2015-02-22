@@ -97,16 +97,18 @@
 
 }
 
-- (NSString *) httpPost: (NSString *) str {
-    str = [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSLog(@"Path: %@", str);
+- (NSString *) httpPost: (NSString *) path {
+    path = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSLog(@"POST URL Path: %@", path);
     NSURL *url = [NSURL URLWithString:api_base_url];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
     [request setHTTPMethod:@"POST"];
-    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [path dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:data];
     NSData *received = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
     NSString *response = [[NSString alloc]initWithData:received encoding:NSUTF8StringEncoding];
+    
+    NSLog(@"POST Response: %@", response);
     return response;
 }
 

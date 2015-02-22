@@ -27,8 +27,8 @@
         self.layer.cornerRadius = 5.0f;
         _textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 100, 10)];
         _textLabel.numberOfLines = 0;
-        _textLabel.font = [UIFont systemFontOfSize:17];
-        _textLabel.textColor = [UIColor whiteColor];
+        _textLabel.font = [UIFont systemFontOfSize:16];
+        _textLabel.textColor = [UIColor grayColor];
         _textLabel.textAlignment = ALIGN_CENTER;
         _textLabel.backgroundColor = [UIColor clearColor];
         _textLabel.textAlignment = ALIGN_CENTER;

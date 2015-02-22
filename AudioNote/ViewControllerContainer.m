@@ -64,7 +64,7 @@
     self.view.frame = temp;
     
 
-    NSLog(@"screenWidth: %f, Height:%f", ScreenWidth, ScreenHeight);
+    //NSLog(@"screenWidth: %f, Height:%f", ScreenWidth, ScreenHeight);
     // UIScrollView
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, kTopBarHeight,CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - kTopBarHeight)];
     self.scrollView.delegate      = self;

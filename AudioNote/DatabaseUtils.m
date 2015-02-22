@@ -17,7 +17,7 @@
         NSArray *paths               = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         self.databaseFilePath        = [documentsDirectory stringByAppendingPathComponent:kDatabaseName];
-        NSLog(@"%@", self.databaseFilePath);
+        //NSLog(@"%@", self.databaseFilePath);
     }
     return self;
 }
@@ -54,7 +54,7 @@
 
 - (NSInteger) executeSQL: (NSString *) sql {
     sqlite3 *database;
-    NSLog(@"executeSQL: %@", sql);
+    //NSLog(@"executeSQL: %@", sql);
     int result = sqlite3_open([self.databaseFilePath UTF8String], &database);
     if (result != SQLITE_OK) {
         NSLog(@"open database failed - line number: %i.", __LINE__);

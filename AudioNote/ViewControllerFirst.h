@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+
+
+//https://github.com/tonymillion/Reachability
+#import "Reachability.h"
+
 #import "DidShowCurrent.h"
 
 // ifly frameworks
@@ -27,6 +32,7 @@
 #import "iflyMSC/IFlySpeechConstant.h"
 */
 #import "iflyMSC/IFlySetting.h"
+
 @interface ViewControllerFirst : UIViewController<DidShowCurrent>
 
 @end
