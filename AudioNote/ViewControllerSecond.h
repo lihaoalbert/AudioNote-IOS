@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "DidShowCurrent.h"
+#import "PullRefreshTableViewController.h"
 
-@interface ViewControllerSecond : UIViewController<DidShowCurrent>
+
+@interface ViewControllerSecond : PullRefreshTableViewController<DidShowCurrent>
 
 @end

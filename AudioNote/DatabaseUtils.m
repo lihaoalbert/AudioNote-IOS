@@ -193,7 +193,7 @@
     ////////////////////////////////
     // Select Data into NSMutableDictionary
     ////////////////////////////////
-    NSString *query = [NSString stringWithFormat:@"select id, input,description,category,nMoney,nTime,begin,duration,create_time,modify_time, nDate from voice_record order by %@ desc ", column];
+    NSString *query = [NSString stringWithFormat:@"select id, input,description,category,nMoney,nTime,begin,duration,create_time,modify_time, nDate from voice_record order by %@ asc ", column];
     query = [query stringByAppendingFormat:@" limit %lu offset %lu", limit, offset];
     int _id, _nMoney, _nTime, _duration;
     NSString *_input, *_description, *_category, *_nDate;

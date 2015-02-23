@@ -19,10 +19,16 @@
 #import "ViewCommonUtils.h"
 
 
+#define ScreenWidth [[UIScreen mainScreen] bounds].size.width
+#define ScreenHeight [[UIScreen mainScreen] bounds].size.height
+
+
 @interface ViewControllerSecond () <UITableViewDelegate, UITableViewDataSource>
-@property (strong, nonatomic) IBOutlet UITableView    *listView;
+//@property (strong, nonatomic) IBOutlet UITableView  *listView;
 @property (nonatomic, nonatomic) NSMutableArray     *listData;
 @property (nonatomic, nonatomic) NSArray            *listDataDate;
+@property (nonatomic, nonatomic) NSInteger          listDataOffset;
+@property (nonatomic, nonatomic) NSInteger          listDataLimit;
 @property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
 @property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
 @property (weak, nonatomic) UIColor                 *gBackground;
@@ -32,8 +38,10 @@
 
 @implementation ViewControllerSecond
 
-@synthesize listView;
+//@synthesize listView;
 @synthesize listData;
+@synthesize listDataDate;
+@synthesize listDataOffset;
 @synthesize databaseUtils;
 @synthesize viewCommonUtils;
 
@@ -41,15 +49,17 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self refresh];
+    [self refreshView];
 }
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     
     self.listData        = nil;
-    self.listView        = nil;
+    //self.listView        = nil;
     self.listDataDate    = nil;
+    self.listDataOffset  = 0;
+    self.listDataLimit   = 8;
     self.databaseUtils   = nil;
     self.viewCommonUtils = nil;
     self.gBackground    = nil;
@@ -63,13 +73,20 @@
 }
 
 
-- (void) refresh {
+- (void) refreshView {
     //self.view.backgroundColor = [UIColor greenColor];
     
-    // TableView
-    self.listView.delegate   = self;
-    self.listView.dataSource = self;
-    //[self.listView setEditing:YES animated:YES];
+    //self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-200.0f) style:UITableViewStyleGrouped];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = [UIColor blackColor];
+    
+    // 1. 用一个临时变量保存返回值。
+    //CGRect temp = self.tableView.frame;
+    // 2. 给这个变量赋值。因为变量都是L-Value，可以被赋值
+    //temp.size.height = [[UIScreen mainScreen] bounds].size.height;
+    //temp.size.width  = [[UIScreen mainScreen] bounds].size.width;
+    // 3. 修改frame的值
+    //self.tableView.frame = temp;
     
     self.gBackground = [UIColor blackColor];
     self.gTextcolor  = [UIColor whiteColor];
@@ -80,8 +97,9 @@
     // init Utils
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
-    
-    self.listData = [self.databaseUtils selectLimit: 1000000 Offset: 0 Order: @"id" Format:@""];
+    self.listDataOffset = 0;
+    self.listDataLimit  = 8;
+    self.listData = [self.databaseUtils selectLimit: self.listDataLimit Offset: self.listDataOffset Order: @"id" Format:@""];
     NSLog(@"listData Count: %lu", (unsigned long)[self.listData count]);
     
     NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithCapacity:0];
@@ -94,7 +112,7 @@
     
     
     
-    [self.listView reloadData];
+    [self.tableView reloadData];
 }
 
 
@@ -229,8 +247,34 @@
 #pragma mark - <CurrentShow>
 
 - (void)didShowCurrent {
-    [self refresh];
+    [self refreshView];
     NSLog(@"switch second view.");
+}
+
+
+- (void)refresh {
+    [self performSelector:@selector(addItem) withObject:nil afterDelay:2.0];
+}
+
+- (void)addItem {
+    
+    NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
+    
+    self.listDataOffset = self.listDataOffset + self.listDataLimit;
+    mutableArray = [self.databaseUtils selectLimit: self.listDataLimit Offset: self.listDataOffset Order: @"id" Format:@""];
+    if(mutableArray.count > 0) {
+        for(NSInteger i=0; i<mutableArray.count; i++)
+            [self.listData addObject:[mutableArray objectAtIndex:i]];
+        
+        [self.tableView reloadData];
+        //TODO 向下滑动后，tableView置底，下面代码无效
+        [self.tableView scrollRectToVisible:CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height-ScreenHeight) animated:NO];
+    } else {
+        //没有更多内容了
+        self.hasMore = NO;
+    }
+    
+    [self stopLoading];
 }
 
 
