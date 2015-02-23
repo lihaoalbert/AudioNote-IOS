@@ -203,10 +203,14 @@
         
     }
     
-    [cell.cellMoney sizeToFit];
-    [cell.cellTime sizeToFit];
+    //[cell.cellMoney sizeToFit];
+    cell.cellMoney.textAlignment = NSTextAlignmentRight;
+    cell.cellTime.textAlignment = NSTextAlignmentRight;
+    CGRect rect = cell.cellTime.frame;
+    rect.size.width = 40;
+    cell.cellTime.frame = rect;
     
-    UIImage *image = [UIImage imageNamed:@"line-1"];
+    UIImage *image = [UIImage imageNamed:@"timeline"];
     cell.cellDivider.image  = image;
     cell.cellDivider.center = self.view.center;
  
@@ -236,6 +240,9 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextAlignment:NSTextAlignmentCenter];
+    //TODO title background: black
+    
+    //[[UITableView appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setBackgroundColor:[UIColor blackColor]];
     return [self.listDataDate objectAtIndex:section];;
 }
 
