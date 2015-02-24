@@ -206,9 +206,7 @@
     //[cell.cellMoney sizeToFit];
     cell.cellMoney.textAlignment = NSTextAlignmentRight;
     cell.cellTime.textAlignment = NSTextAlignmentRight;
-    CGRect rect = cell.cellTime.frame;
-    rect.size.width = 40;
-    cell.cellTime.frame = rect;
+ 
     
     UIImage *image = [UIImage imageNamed:@"timeline"];
     cell.cellDivider.image  = image;
@@ -239,10 +237,13 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextAlignment:NSTextAlignmentCenter];
-    //TODO title background: black
     
-    //[[UITableView appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setBackgroundColor:[UIColor blackColor]];
+    UIView *headerView = [UIView appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil];
+    headerView.backgroundColor = [UIColor blackColor];
+
+    UILabel *headerLabel = [UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil];
+    headerLabel.textAlignment = NSTextAlignmentCenter;
+    
     return [self.listDataDate objectAtIndex:section];;
 }
 
