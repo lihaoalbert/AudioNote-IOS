@@ -22,6 +22,12 @@
 #import "iflyMSC/IFlySpeechRecognizer.h"
 #import "iflyMSC/IFlySpeechConstant.h"
 #import "iflyMSC/IFlyResourceUtil.h"
+#import "iflyMSC/IFlySetting.h"
+
+#import "sys/utsname.h"
+
+//https://github.com/tonymillion/Reachability
+#import "Reachability.h"
 
 
 @interface ViewCommonUtils : NSObject
@@ -34,11 +40,16 @@
  <Param name=domain> domain:iat,search,video,poi,music,asr;iat,普通文本听写; search,热词搜索;video,视频音乐搜索;asr: 关键词识别;</Param>
  */
 - (id) CreateRecognizer:(id)delegate Domain:(NSString*) domain;
-- (NSString *) httpGet: (NSString *) path;
-- (NSString *) httpPost: (NSString *) str;
++ (NSString *) httpGet: (NSString *) path;
++ (NSString *) httpPost: (NSString *) str;
++ (void ) generateUID;
 - (NSDictionary *) dealWithMoney: (NSString *) nMoney;
 - (NSDictionary *) dealWithHour: (NSString *) nTime;
 - (NSString *) moneyformat: (int) num;
+
++ (BOOL) isConnectionAvailable;
++ (NSString*) devicePlatform;
+
 @end
 
 

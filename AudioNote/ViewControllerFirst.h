@@ -10,8 +10,6 @@
 #import <AVFoundation/AVFoundation.h>
 
 
-//https://github.com/tonymillion/Reachability
-#import "Reachability.h"
 
 #import "DidShowCurrent.h"
 

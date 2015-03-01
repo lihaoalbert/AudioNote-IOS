@@ -49,6 +49,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+
     [self refreshView];
 }
 - (void)viewDidUnload
@@ -59,7 +60,7 @@
     //self.listView        = nil;
     self.listDataDate    = nil;
     self.listDataOffset  = 0;
-    self.listDataLimit   = 8;
+    self.listDataLimit   = 10;
     self.databaseUtils   = nil;
     self.viewCommonUtils = nil;
     self.gBackground    = nil;
@@ -97,9 +98,17 @@
     // init Utils
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
+    
     self.listDataOffset = 0;
-    self.listDataLimit  = 8;
-    self.listData = [self.databaseUtils selectLimit: self.listDataLimit Offset: self.listDataOffset Order: @"id" Format:@""];
+    self.listDataLimit  = 10;
+    self.listData = [self.databaseUtils selectLimit: self.listDataLimit Offset: 0 Order: @"id" Format:@""];
+    /*
+    if(self.listDataOffset > 0)
+        self.listData = [self.databaseUtils selectLimit: self.listDataOffset Offset: 0 Order: @"id" Format:@""];
+    else
+        self.listData = [self.databaseUtils selectLimit: self.listDataLimit Offset: self.listDataOffset Order: @"id" Format:@""];
+     */
+    
     NSLog(@"listData Count: %lu", (unsigned long)[self.listData count]);
     
     NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithCapacity:0];

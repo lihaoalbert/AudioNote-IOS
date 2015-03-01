@@ -85,7 +85,8 @@
     self.topBar.textColor        = [UIColor lightGrayColor];
     self.topBar.textAlignment    = NSTextAlignmentCenter;
     self.topBar.frame            = CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.frame), kTopBarHeight);
-    [self.view addSubview:self.topBar];}
+    [self.view addSubview:self.topBar];
+}
 
 - (void)setViewControllers:(NSMutableArray *)viewControllers {
     _viewControllers = [NSMutableArray arrayWithArray:viewControllers];

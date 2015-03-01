@@ -17,6 +17,8 @@
 #import "ViewControllerSecond.h"
 #import "ViewControllerThird.h"
 #import "DatabaseUtils.h"
+#import "ViewCommonUtils.h"
+
 //#import "ViewControllerChart.h"
 #define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
 #define kTopBarHeight 44.0
@@ -42,6 +44,11 @@
     // setup database
     [DatabaseUtils setUP];
     
+    // config device
+
+    if([ViewCommonUtils isConnectionAvailable]) {
+        [ViewCommonUtils generateUID];
+    }
     
     ViewControllerFirst *firstController   = [[ViewControllerFirst alloc] init];
     firstController.title                  = @"对今天满意吗？";

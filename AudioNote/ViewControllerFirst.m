@@ -22,6 +22,7 @@
 #import "DatabaseUtils.h"
 #import "ViewCommonUtils.h"
 #import "ISRDataHelper.h"
+
 #define kTopBarHeight 44.0
 #define ScreenWidth [[UIScreen mainScreen] bounds].size.width
 #define ScreenHeight [[UIScreen mainScreen] bounds].size.height
@@ -42,8 +43,7 @@
 @property (nonatomic, nonatomic) NSMutableString    *iFlyRecognizerResult;
 @property (nonatomic, nonatomic) NSDate             *iFlyRecognizerStartDate;
 @property (nonatomic, nonatomic) NSDateFormatter    *gDateFormatter;
-// show iFlyRecognizerResult changing dynamically.
-@property (weak, nonatomic) IBOutlet UILabel        *iFlyRecognizerShow;
+
 
 // latest record list ui
 @property (weak, nonatomic) IBOutlet UITableView    *latestView;
@@ -66,7 +66,6 @@
 @synthesize iFlySpeechRecognizer;
 @synthesize iFlyRecognizerResult;
 @synthesize iFlyRecognizerStartDate;
-@synthesize iFlyRecognizerShow;
 @synthesize latestView;
 @synthesize latestDataList;
 @synthesize gDateFormatter;
@@ -78,7 +77,19 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+
     
+
+    // 将上述数据全部存储到 NSUserDefaults 中
+    //NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    //[userDefaults setObject:@"hello world" forKey:@"myString"];
+    // 这里建议同步存储到磁盘中，但是不是必须的
+    //[userDefaults synchronize];
+    
+    
+    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+    NSString *myString = [userDefaultes stringForKey:@"myString"];
+    NSLog(@"myString: %@", myString);
     [self refresh];
     
 }
@@ -90,6 +101,8 @@
     self.latestView.delegate   = self;
     self.latestView.dataSource = self;
     
+  
+
     
     // init Utils
     self.databaseUtils   = [[DatabaseUtils alloc] init];
@@ -114,7 +127,7 @@
     self.iFlySpeechRecognizer = [self.viewCommonUtils CreateRecognizer:self Domain:@"iat"];
     self.uploader = [[IFlyDataUploader alloc] init];
     
-    NSLog(@"IFly Version: %@", [IFlySetting getVersion]);
+    //NSLog(@"IFly Version: %@", [IFlySetting getVersion]);
     
     
     // recognizer result
@@ -192,10 +205,9 @@
     self.gHighlightedTextColor  = [UIColor orangeColor];
     
     // 无网络时，禁用[语音录入]按钮
-    self.isNetWorkConnected = [self isConnectionAvailable];
-    if(!self.isNetWorkConnected) {
-        self.voiceBtn.enabled = NO;
-    }
+    self.isNetWorkConnected = [ViewCommonUtils isConnectionAvailable];
+    self.voiceBtn.enabled = self.isNetWorkConnected;
+    
     
     [self.latestView reloadData];
 }
@@ -205,7 +217,6 @@
     [self.iFlySpeechRecognizer cancel];
     [self.iFlySpeechRecognizer setDelegate: nil];
     self.iFlyRecognizerResult = nil;
-    self.iFlyRecognizerShow = nil;
     self.latestView = nil;
     self.latestDataList = nil;
     self.gDateFormatter = nil;
@@ -233,7 +244,6 @@
     bool ret = [self.iFlySpeechRecognizer startListening];
     if (ret) {
         // clear text when start recognizer tart
-        self.iFlyRecognizerShow.text = @"";
         self.iFlyRecognizerStartDate = [NSDate date];
     } else {
         [self.popUpView setText: @"启动识别服务失败，请稍后重试"];//可能是上次请求未结束，暂不支持多路并发
@@ -394,12 +404,22 @@
             ////////////////////////////////
             // 3.1 写入数据库同时，post到服务器一份，作为改善算法的参考。
             ////////////////////////////////
-            NSString *device  = [NSString stringWithFormat:@"device=name:%@", [[UIDevice currentDevice] name]];
-            device = [device stringByAppendingFormat:@",model:%@", [[UIDevice currentDevice] model]];
-            //device = [device stringByAppendingFormat:@",localizedModel:%@", [[UIDevice currentDevice] localizedModel]];
-            //device = [device stringByAppendingFormat:@",systemName:%@", [[UIDevice currentDevice] systemName]];
-            //device = [device stringByAppendingFormat:@",identifierForVendor:%@", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
-            //device = [device stringByAppendingFormat:@",IFlyVersion:%@", [IFlySetting getVersion]];
+            
+            
+            NSString *device  = [NSString stringWithFormat:@"device={\"name\":\"%@\"", [[UIDevice currentDevice] name]];
+            device = [device stringByAppendingFormat:@",\"model\":\"%@\"", [[UIDevice currentDevice] model]];
+            device = [device stringByAppendingFormat:@",\"localizedModel\":\"%@\"", [[UIDevice currentDevice] localizedModel]];
+            device = [device stringByAppendingFormat:@",\"systemName\":\"%@\"", [[UIDevice currentDevice] systemName]];
+            device = [device stringByAppendingFormat:@",\"identifierForVendor\":\"%@\"", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
+            device = [device stringByAppendingFormat:@",\"systemVersion\":\"%@\"", [[UIDevice currentDevice] systemVersion]];
+            device = [device stringByAppendingFormat:@",\"IFlyVersion\":\"%@\"", [IFlySetting getVersion]];
+            device = [device stringByAppendingFormat:@",\"platform\":\"%@\"", [ViewCommonUtils devicePlatform]];
+            device = [device stringByAppendingString:@"}"];
+            
+            
+            
+            
+            
             NSString *data = [NSString stringWithFormat:@"data={\"input\":\"%@\"", self.iFlyRecognizerResult.copy];
             data = [data stringByAppendingFormat:@", \"szRemain\":\"%@\"", t_szRemain];
             data = [data stringByAppendingFormat:@", \"szType\":\"%@\"", t_szType];
@@ -407,9 +427,10 @@
             data = [data stringByAppendingFormat:@", \"nTime\":\"%@\"", t_nTime];
             data = [data stringByAppendingString:@"}"];
 
+            NSLog(@"%@", device);
             NSString *path = [NSString stringWithFormat:@"%@&%@", device, data];
             if(self.isNetWorkConnected) {
-                [self.viewCommonUtils httpPost: path];
+                //[self.viewCommonUtils httpPost: path];
             }
             // 功能 3.1 END
             
@@ -516,31 +537,5 @@
     [self refresh];
     NSLog(@"switch to first view.");
 }
-
--(BOOL) isConnectionAvailable {
-    
-    BOOL isExistenceNetwork = NO;
-    NSString *netWorkType = @"无";
-    Reachability *reach = [Reachability reachabilityWithHostName:@"www.apple.com"];
-    switch ([reach currentReachabilityStatus]) {
-        case NotReachable:
-            break;
-        case ReachableViaWiFi:
-            isExistenceNetwork = YES;
-            netWorkType = @"WIFI";
-            break;
-        case ReachableViaWWAN:
-            isExistenceNetwork = YES;
-            netWorkType = @"3G";
-            break;
-    }
-    
-    NSString *popText = [NSString stringWithFormat:@"网络: %@", netWorkType];
-    [self.popUpView setText: popText];
-    [self.view addSubview:self.popUpView];
-    
-    return isExistenceNetwork;
-}
-
 
 @end
