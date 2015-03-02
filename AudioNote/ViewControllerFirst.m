@@ -76,20 +76,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
 
-    
-
-    // 将上述数据全部存储到 NSUserDefaults 中
-    //NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    //[userDefaults setObject:@"hello world" forKey:@"myString"];
-    // 这里建议同步存储到磁盘中，但是不是必须的
-    //[userDefaults synchronize];
-    
-    
-    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
-    NSString *myString = [userDefaultes stringForKey:@"myString"];
-    NSLog(@"myString: %@", myString);
     [self refresh];
     
 }
@@ -100,8 +87,6 @@
     self.listDataLimit = 5;
     self.latestView.delegate   = self;
     self.latestView.dataSource = self;
-    
-  
 
     
     // init Utils
@@ -205,8 +190,14 @@
     self.gHighlightedTextColor  = [UIColor orangeColor];
     
     // 无网络时，禁用[语音录入]按钮
-    self.isNetWorkConnected = [ViewCommonUtils isConnectionAvailable];
+    self.isNetWorkConnected = [ViewCommonUtils isNetworkAvailable];
     self.voiceBtn.enabled = self.isNetWorkConnected;
+    
+    
+    
+    NSString *popText = [NSString stringWithFormat:@"网络: %@", [ViewCommonUtils networkType]];
+    [self.popUpView setText: popText];
+    [self.view addSubview:self.popUpView];
     
     
     [self.latestView reloadData];
@@ -404,22 +395,6 @@
             ////////////////////////////////
             // 3.1 写入数据库同时，post到服务器一份，作为改善算法的参考。
             ////////////////////////////////
-            
-            
-            NSString *device  = [NSString stringWithFormat:@"device={\"name\":\"%@\"", [[UIDevice currentDevice] name]];
-            device = [device stringByAppendingFormat:@",\"model\":\"%@\"", [[UIDevice currentDevice] model]];
-            device = [device stringByAppendingFormat:@",\"localizedModel\":\"%@\"", [[UIDevice currentDevice] localizedModel]];
-            device = [device stringByAppendingFormat:@",\"systemName\":\"%@\"", [[UIDevice currentDevice] systemName]];
-            device = [device stringByAppendingFormat:@",\"identifierForVendor\":\"%@\"", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
-            device = [device stringByAppendingFormat:@",\"systemVersion\":\"%@\"", [[UIDevice currentDevice] systemVersion]];
-            device = [device stringByAppendingFormat:@",\"IFlyVersion\":\"%@\"", [IFlySetting getVersion]];
-            device = [device stringByAppendingFormat:@",\"platform\":\"%@\"", [ViewCommonUtils devicePlatform]];
-            device = [device stringByAppendingString:@"}"];
-            
-            
-            
-            
-            
             NSString *data = [NSString stringWithFormat:@"data={\"input\":\"%@\"", self.iFlyRecognizerResult.copy];
             data = [data stringByAppendingFormat:@", \"szRemain\":\"%@\"", t_szRemain];
             data = [data stringByAppendingFormat:@", \"szType\":\"%@\"", t_szType];
@@ -427,10 +402,8 @@
             data = [data stringByAppendingFormat:@", \"nTime\":\"%@\"", t_nTime];
             data = [data stringByAppendingString:@"}"];
 
-            NSLog(@"%@", device);
-            NSString *path = [NSString stringWithFormat:@"%@&%@", device, data];
             if(self.isNetWorkConnected) {
-                //[self.viewCommonUtils httpPost: path];
+                [ViewCommonUtils httpPostDeviceData: data];
             }
             // 功能 3.1 END
             

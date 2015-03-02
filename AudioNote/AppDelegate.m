@@ -45,8 +45,7 @@
     [DatabaseUtils setUP];
     
     // config device
-
-    if([ViewCommonUtils isConnectionAvailable]) {
+    if([ViewCommonUtils isNetworkAvailable]) {
         [ViewCommonUtils generateUID];
     }
     

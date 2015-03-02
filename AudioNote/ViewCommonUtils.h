@@ -41,13 +41,16 @@
  */
 - (id) CreateRecognizer:(id)delegate Domain:(NSString*) domain;
 + (NSString *) httpGet: (NSString *) path;
-+ (NSString *) httpPost: (NSString *) str;
-+ (void ) generateUID;
++ (NSString *) httpPost: (NSURL *) url Data: (NSString *) data;
++ (NSString *) httpPostDevice: (NSString *) data;
++ (NSString *) httpPostDeviceData: (NSString *) data;
++ (NSString *) generateUID;
 - (NSDictionary *) dealWithMoney: (NSString *) nMoney;
 - (NSDictionary *) dealWithHour: (NSString *) nTime;
 - (NSString *) moneyformat: (int) num;
 
-+ (BOOL) isConnectionAvailable;
++ (BOOL) isNetworkAvailable;
++ (NSString *) networkType;
 + (NSString*) devicePlatform;
 
 @end

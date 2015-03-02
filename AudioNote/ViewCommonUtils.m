@@ -11,7 +11,8 @@
 
 @implementation ViewCommonUtils
 #define myNSLog 
-#define api_base_url @"http://xiao6yuji.com/api/device"
+#define api_device_url @"http://xiao6yuji.com/api/device"
+#define api_device_data_url @"http://xiao6yuji.com/api/device/data"
 #define RMB_WAN 10000
 #define TIME_HOUR 60
 
@@ -86,7 +87,7 @@
 }
 
 + (NSString *) httpGet: (NSString *) path {
-    NSString *str         = [api_base_url stringByAppendingFormat:@"?%@", path];
+    NSString *str         = [api_device_url stringByAppendingFormat:@"?%@", path];
     str = [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSLog(@"URL: %@", str);
     NSURL *url            = [NSURL URLWithString:str];
@@ -97,19 +98,36 @@
 
 }
 
-+ (NSString *) httpPost: (NSString *) path {
-    path = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSLog(@"POST URL Path: %@", path);
-    NSURL *url = [NSURL URLWithString:api_base_url];
++ (NSString *) httpPost: (NSURL *) url Data: (NSString *) _data {
+    _data = [_data stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSLog(@"POST URL Data: %@", _data);
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
     [request setHTTPMethod:@"POST"];
-    NSData *data = [path dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [_data dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:data];
     NSData *received = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
     NSString *response = [[NSString alloc]initWithData:received encoding:NSUTF8StringEncoding];
     
     NSLog(@"POST Response: %@", response);
     return response;
+}
+
++ (NSString *) httpPostDevice: (NSString *) _data {
+    NSURL *url = [NSURL URLWithString:api_device_url];
+    return [ViewCommonUtils httpPost: url Data:_data];
+}
+
++ (NSString *) httpPostDeviceData: (NSString *) _data {
+    NSURL *url = [NSURL URLWithString:api_device_data_url];
+    
+    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+    NSString *_uid = [userDefaultes stringForKey:@"uid"];
+    if([_uid length] <= 0)
+        _uid = [ViewCommonUtils generateUID];
+    
+    _data = [_data stringByAppendingFormat:@"&uid=%@", _uid];
+    NSLog(@"data: %@", _data);
+    return [ViewCommonUtils httpPost: url Data:_data];
 }
 
 // 100000 元 => 10 万元
@@ -142,7 +160,7 @@
     return [numberFormatter stringFromNumber:[NSNumber numberWithInt: num]];
 }
 
-+ (BOOL) isConnectionAvailable {
++ (BOOL) isNetworkAvailable {
     
     BOOL isExistenceNetwork = NO;
     NSString *netWorkType = @"无";
@@ -160,11 +178,27 @@
             break;
     }
     
-    //NSString *popText = [NSString stringWithFormat:@"网络: %@", netWorkType];
-    //[self.popUpView setText: popText];
-    //[self.view addSubview:self.popUpView];
-    
     return isExistenceNetwork;
+}
++ (NSString *) networkType {
+    
+    BOOL isExistenceNetwork = NO;
+    NSString *_netWorkType = @"无";
+    Reachability *reach = [Reachability reachabilityWithHostName:@"www.apple.com"];
+    switch ([reach currentReachabilityStatus]) {
+        case NotReachable:
+            break;
+        case ReachableViaWiFi:
+            isExistenceNetwork = YES;
+            _netWorkType = @"wifi";
+            break;
+        case ReachableViaWWAN:
+            isExistenceNetwork = YES;
+            _netWorkType = @"3g";
+            break;
+    }
+    
+    return _netWorkType;
 }
 
 + (NSString*)devicePlatform {
@@ -215,7 +249,8 @@
     NSLog(@"NOTE:  Machine hardware platform: %@", deviceString);
     return deviceString;
 }
-+ (void) generateUID {
+
++ (NSString *) generateUID {
     // name/os/id/osVersion are necessary.
     NSString *device  = [NSString stringWithFormat:@"device={\"name\":\"%@\"", [[UIDevice currentDevice] name]];
     device = [device stringByAppendingFormat:@",\"model\":\"%@\"", [[UIDevice currentDevice] model]];
@@ -226,7 +261,26 @@
     device = [device stringByAppendingFormat:@",\"IFlyVersion\":\"%@\"", [IFlySetting getVersion]];
     device = [device stringByAppendingFormat:@",\"platform\":\"%@\"", [ViewCommonUtils devicePlatform]];
     device = [device stringByAppendingString:@"}"];
-    NSString * response = [ViewCommonUtils httpPost: device];
-    NSLog(@"UID Response: %@", response);
+    NSString * response = [ViewCommonUtils httpPostDevice: device];
+    
+    NSMutableDictionary *mutableDictionary2 = [[NSMutableDictionary alloc] init];
+
+    // JSON NSString convert to NSMutableDictionary
+    
+    NSError *error;
+    mutableDictionary2 = [NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&error];
+    //NSString *idstr = [mutableDictionary2 objectForKey:@"id"];
+    NSString *_code = [mutableDictionary2 objectForKey:@"code"];
+    NSString *_uid  = [mutableDictionary2 objectForKey:@"info"];
+    NSLog(@"code: %@, uid: %@", _code, _uid);
+
+    
+    // 将上述数据全部存储到 NSUserDefaults 中
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:_uid forKey:@"uid"];
+    // 这里建议同步存储到磁盘中，但是不是必须的
+    [userDefaults synchronize];
+    
+    return _uid;
 }
 @end
