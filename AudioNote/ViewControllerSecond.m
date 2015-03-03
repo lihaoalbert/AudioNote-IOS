@@ -17,6 +17,7 @@
 
 #import "DatabaseUtils.h"
 #import "ViewCommonUtils.h"
+#import "PopupView.h"
 
 
 #define ScreenWidth [[UIScreen mainScreen] bounds].size.width
@@ -25,9 +26,10 @@
 
 @interface ViewControllerSecond () <UITableViewDelegate, UITableViewDataSource>
 //@property (strong, nonatomic) IBOutlet UITableView  *listView;
+@property (nonatomic, strong) PopupView            * popUpView;
+
 @property (nonatomic, nonatomic) NSMutableArray     *listData;
 @property (nonatomic, nonatomic) NSArray            *listDataDate;
-@property (nonatomic, nonatomic) NSInteger          listDataOffset;
 @property (nonatomic, nonatomic) NSInteger          listDataLimit;
 @property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
 @property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
@@ -41,7 +43,6 @@
 //@synthesize listView;
 @synthesize listData;
 @synthesize listDataDate;
-@synthesize listDataOffset;
 @synthesize databaseUtils;
 @synthesize viewCommonUtils;
 
@@ -57,9 +58,7 @@
     [super viewDidUnload];
     
     self.listData        = nil;
-    //self.listView        = nil;
     self.listDataDate    = nil;
-    self.listDataOffset  = 0;
     self.listDataLimit   = 10;
     self.databaseUtils   = nil;
     self.viewCommonUtils = nil;
@@ -70,7 +69,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
@@ -81,13 +79,6 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = [UIColor blackColor];
     
-    // 1. 用一个临时变量保存返回值。
-    //CGRect temp = self.tableView.frame;
-    // 2. 给这个变量赋值。因为变量都是L-Value，可以被赋值
-    //temp.size.height = [[UIScreen mainScreen] bounds].size.height;
-    //temp.size.width  = [[UIScreen mainScreen] bounds].size.width;
-    // 3. 修改frame的值
-    //self.tableView.frame = temp;
     
     self.gBackground = [UIColor blackColor];
     self.gTextcolor  = [UIColor whiteColor];
@@ -99,27 +90,15 @@
     self.databaseUtils   = [[DatabaseUtils alloc] init];
     self.viewCommonUtils = [[ViewCommonUtils alloc] init];
     
-    self.listDataOffset = 0;
+    
     self.listDataLimit  = 10;
     self.listData = [self.databaseUtils selectLimit: self.listDataLimit Offset: 0 Order: @"id" Format:@""];
-    /*
-    if(self.listDataOffset > 0)
-        self.listData = [self.databaseUtils selectLimit: self.listDataOffset Offset: 0 Order: @"id" Format:@""];
-    else
-        self.listData = [self.databaseUtils selectLimit: self.listDataLimit Offset: self.listDataOffset Order: @"id" Format:@""];
-     */
-    
+    self.listDataDate = [self getListDataDate:self.listData];
     NSLog(@"listData Count: %lu", (unsigned long)[self.listData count]);
     
-    NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithCapacity:0];
-    for (NSMutableDictionary *dict in self.listData) {
-        NSString *simple_create_time = dict[@"simple_create_time"];
-        [dicts setObject:simple_create_time forKey:simple_create_time];
-    }
-    self.listDataDate = [[dicts allValues] sortedArrayUsingSelector:@selector(compare:)];
-    self.listDataDate = [[self.listDataDate reverseObjectEnumerator] allObjects];
+    self.popUpView = [[PopupView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/4, self.view.frame.size.height/4, self.view.frame.size.width*3/4, self.view.frame.size.height*3/4)];
     
-    
+    self.popUpView.ParentView = self.view;
     
     [self.tableView reloadData];
 }
@@ -242,6 +221,12 @@
     [cell.cellTimeDesc setFont:[UIFont systemFontOfSize:12.0]];
     [cell.cellTimeUnit setFont:[UIFont systemFontOfSize:12.0]];
     
+    
+    UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleTableViewCellLongPress:)];
+    [cell addGestureRecognizer:gesture];
+    
+    
+    
     return cell;
 }
 
@@ -269,6 +254,8 @@
 }
 
 
+#pragma mark - <PullReflash>
+
 - (void)refresh {
     [self performSelector:@selector(addItem) withObject:nil afterDelay:2.0];
 }
@@ -277,22 +264,72 @@
     
     NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
     
-    self.listDataOffset = self.listDataOffset + self.listDataLimit;
-    mutableArray = [self.databaseUtils selectLimit: self.listDataLimit Offset: self.listDataOffset Order: @"id" Format:@""];
+    mutableArray = [self.databaseUtils selectLimit: self.listDataLimit Offset: self.listData.count Order: @"id" Format:@""];
+
     if(mutableArray.count > 0) {
         for(NSInteger i=0; i<mutableArray.count; i++)
             [self.listData addObject:[mutableArray objectAtIndex:i]];
         
+        self.listDataDate = [self getListDataDate:self.listData];
+        
         [self.tableView reloadData];
         //TODO 向下滑动后，tableView置底，下面代码无效
-        [self.tableView scrollRectToVisible:CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height-ScreenHeight) animated:NO];
+        //[self.tableView scrollRectToVisible:CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height-ScreenHeight) animated:NO];
     } else {
         //没有更多内容了
         self.hasMore = NO;
     }
+        NSLog(@"Offset: %li, Limit: %li, Data: %lu", (long)self.listDataLimit, (unsigned long)mutableArray.count, (long)self.listData.count);
     
     [self stopLoading];
 }
 
+
+#pragma mark - <LongPress>
+
+- (void) handleTableViewCellLongPress:(UILongPressGestureRecognizer *)gesture{
+    if (gesture.state != UIGestureRecognizerStateBegan)
+        return;
+    
+    UITableViewCell *cell = (UITableViewCell *)gesture.view;
+    
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    
+    NSUInteger section = [indexPath section];
+    NSUInteger row     = [indexPath row];
+    NSString *key      = [self.listDataDate objectAtIndex:section];
+    
+    NSMutableArray *rows = [NSMutableArray arrayWithCapacity:0];
+    NSMutableDictionary *dict;
+    for(NSInteger i = 0; i < [self.listData count]; i ++) {
+        dict = [self.listData objectAtIndex: i];
+        if([key isEqualToString: dict[@"simple_create_time"]]) {
+            [rows addObject: dict];
+            NSLog(@"simple date: %@", dict[@"simple_create_time"]);
+            NSLog(@"description: %@", dict[@"input"]);
+        }
+    }
+    
+    NSLog(@"row: %lu", (unsigned long)row);
+    dict = [rows objectAtIndex: row];
+    
+    NSString *desc = [NSString stringWithFormat:@"%@", [dict objectForKey: @"input"]];
+    
+    NSLog(@"desc: %@", desc);
+    [self.popUpView setText: desc];
+    [self.view addSubview:self.popUpView];
+}
+
+- (NSArray *)getListDataDate: (NSMutableArray *)_listData {
+    NSMutableDictionary *dicts = [NSMutableDictionary dictionaryWithCapacity:0];
+    for (NSMutableDictionary *dict in _listData) {
+        NSString *simple_create_time = dict[@"simple_create_time"];
+        [dicts setObject:simple_create_time forKey:simple_create_time];
+    }
+    NSArray *_listDataDate;
+    _listDataDate = [[dicts allValues] sortedArrayUsingSelector:@selector(compare:)];
+    _listDataDate = [[_listDataDate reverseObjectEnumerator] allObjects];
+    return _listDataDate;
+}
 
 @end

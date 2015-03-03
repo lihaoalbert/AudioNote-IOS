@@ -247,6 +247,9 @@
 
 // Stop Voice Record
 -(void)stopVoiceRecord {
+    // 按住麦克风说话， 松手后，应多录 半秒， 常发生手松的比较快，最后一个字没录上.
+    [NSThread sleepForTimeInterval:0.5];
+    
     [self.iFlySpeechRecognizer stopListening];
     self.isCanceled = YES;
     [self.popUpView removeFromSuperview];
