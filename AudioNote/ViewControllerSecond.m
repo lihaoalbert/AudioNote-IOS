@@ -157,6 +157,7 @@
         cell.cellDivider.tag    = 1; //该cell类型 1: 金额, 2: 时间, 3:日志
         dictUtils = [self.viewCommonUtils dealWithMoney:nMoney];
         cell.cellMoney.text     = dictUtils[@"nMoney"];
+        //cell.cellMoneyDesc.backgroundColor = [UIColor orangeColor];
         cell.cellMoneyUnit.text = dictUtils[@"unit"];
         cell.cellMoneyDesc.text = [dict objectForKey: @"description"];
         cell.cellTagLeft.text   = tag;
@@ -277,7 +278,6 @@
             [self.listData addObject:[mutableArray objectAtIndex:i]];
         
         self.listDataDate = [self getListDataDate:self.listData];
-        
         [self.tableView reloadData];
         //TODO 向下滑动后，tableView置底，下面代码无效
         //[self.tableView scrollRectToVisible:CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height-ScreenHeight) animated:NO];
@@ -298,66 +298,17 @@
         return;
     
     MyTableViewCell *myCell = (MyTableViewCell *)gesture.view;
-    CGFloat width = myCell.frame.size.width;
-    CGFloat move  = width*3/8;
-    CGRect rect   = myCell.cellDivider.frame;
     switch(myCell.cellDivider.tag) {
         case 1:  // 金额
-            rect.origin.x = rect.origin.x+move;
-            myCell.cellDivider.frame = rect;
-            
-            rect = myCell.cellMoney.frame;
-            rect.origin.x = rect.origin.x+move;
-            myCell.cellMoney.frame = rect;
-            
-            rect = myCell.cellTagLeft.frame;
-            rect.origin.x = rect.origin.x+move;
-            myCell.cellTagLeft.frame = rect;
-            
-            rect = myCell.cellMoneyUnit.frame;
-            rect.origin.x = rect.origin.x+move;
-            myCell.cellMoneyUnit.frame = rect;
-            
-            rect = myCell.cellMoneyDesc.frame;
-            //rect.size.width = rect.size.width + move;
-            rect.origin.x = rect.origin.x + move;
-            myCell.cellMoneyDesc.frame = rect;
+            [ViewCommonUtils myCellMoney: myCell];
             break;
         case 2:  // 时间
             [ViewCommonUtils myCellTime: myCell];
             break;
         default: // 日志
+            [ViewCommonUtils myCellTime: myCell];
             break;
     };
-
-    /*
-    UITableViewCell *cell = (UITableViewCell *)gesture.view;
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    
-    NSUInteger section = [indexPath section];
-    NSUInteger row     = [indexPath row];
-    NSString  *key     = [self.listDataDate objectAtIndex:section];
-    
-    NSMutableArray *rows = [NSMutableArray arrayWithCapacity:0];
-    NSMutableDictionary *dict;
-    for(NSInteger i = 0; i < [self.listData count]; i ++) {
-        dict = [self.listData objectAtIndex: i];
-        if([key isEqualToString: dict[@"simple_create_time"]]) {
-            [rows addObject: dict];
-            NSLog(@"simple date: %@", dict[@"simple_create_time"]);
-            NSLog(@"description: %@", dict[@"input"]);
-        }
-    }
-    
-    NSLog(@"row: %lu", (unsigned long)row);
-    dict = [rows objectAtIndex: row];
-    
-    NSString *desc = [NSString stringWithFormat:@"%@", [dict objectForKey: @"input"]];
-    
-    NSLog(@"desc: %@", desc);
-    [self.popUpView setText: desc];
-    [self.view addSubview:self.popUpView];
-     */
 }
 
 - (NSArray *)getListDataDate: (NSMutableArray *)_listData {

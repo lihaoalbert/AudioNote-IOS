@@ -54,6 +54,7 @@
 + (NSString *) networkType;
 + (NSString*) devicePlatform;
 + (void) myCellTime: (MyTableViewCell *) myCell;
++ (void) myCellMoney: (MyTableViewCell *) myCell;
 
 @end
 

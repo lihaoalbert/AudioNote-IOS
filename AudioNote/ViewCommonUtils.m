@@ -295,14 +295,13 @@
         state = @"moved";
     }
 
-
     if([state isEqualToString:@"no"]) {
         rect1.origin.x = rect1.origin.x-move;
         rect2.origin.x = rect2.origin.x-move;
         rect3.origin.x = rect3.origin.x-move;
         rect4.origin.x = rect4.origin.x-move;
         rect5.origin.x = rect5.origin.x-move;
-        rect5.size.width = rect5.size.width + move;
+        rect5.size.width = width*7/8;
         myCell.cellTime.tag = 1;
     } else {
         rect1.origin.x = rect1.origin.x+move;
@@ -310,17 +309,60 @@
         rect3.origin.x = rect3.origin.x+move;
         rect4.origin.x = rect4.origin.x+move;
         rect5.origin.x = rect5.origin.x+move;
-        rect5.size.width = rect5.size.width - move;
+        rect5.size.width = width*3/8;
         myCell.cellTime.tag = 0;
-        
     }
+    // myCell.cellTimeDesc.backgroundColor = [UIColor orangeColor];
 
     myCell.cellDivider.frame  = rect1;
     myCell.cellTime.frame     = rect2;
     myCell.cellTagRight.frame = rect3;
     myCell.cellTimeUnit.frame = rect4;
     myCell.cellTimeDesc.frame = rect5;
- 
-    
 }
+
++ (void) myCellMoney: (MyTableViewCell *) myCell {
+    CGFloat width = myCell.frame.size.width;
+    CGFloat move  = width*3/8;
+    CGRect rect1  = myCell.cellDivider.frame;
+    CGRect rect2  = myCell.cellMoney.frame;
+    CGRect rect3  = myCell.cellTagLeft.frame;
+    CGRect rect4  = myCell.cellMoneyUnit.frame;
+    CGRect rect5  = myCell.cellMoneyDesc.frame;
+    NSString *state = @"no";
+    if([[NSNumber numberWithFloat:myCell.cellMoney.tag] isEqualToNumber: [NSNumber numberWithInt:1]]) {
+        state = @"moved";
+    }
+    
+    
+    if([state isEqualToString:@"no"]) {
+        rect1.origin.x = rect1.origin.x+move;
+        rect2.origin.x = rect2.origin.x+move;
+        rect3.origin.x = rect3.origin.x+move;
+        rect4.origin.x = rect4.origin.x+move;
+        //rect5.origin.x = rect5.origin.x+move;
+        rect5.size.width = width*7/8;
+        
+        myCell.cellMoneyDesc.textAlignment = NSTextAlignmentLeft;
+        myCell.cellMoney.tag = 1;
+    } else {
+        rect1.origin.x = rect1.origin.x-move;
+        rect2.origin.x = rect2.origin.x-move;
+        rect3.origin.x = rect3.origin.x-move;
+        rect4.origin.x = rect4.origin.x-move;
+        //rect5.origin.x = rect5.origin.x-move;
+        rect5.size.width = width*3/8;
+        
+        myCell.cellMoneyDesc.textAlignment = NSTextAlignmentRight;
+        myCell.cellMoney.tag = 0;
+    }
+    // myCell.cellMoneyDesc.backgroundColor = [UIColor orangeColor];
+    
+    myCell.cellDivider.frame  = rect1;
+    myCell.cellMoney.frame    = rect2;
+    myCell.cellTagLeft.frame  = rect3;
+    myCell.cellMoneyUnit.frame = rect4;
+    myCell.cellMoneyDesc.frame = rect5;
+}
+
 @end
