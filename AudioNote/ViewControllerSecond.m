@@ -154,37 +154,43 @@
     
     if (![nMoney isEqualToString: @"0"]) {
         
+        cell.cellDivider.tag    = 1; //该cell类型 1: 金额, 2: 时间, 3:日志
         dictUtils = [self.viewCommonUtils dealWithMoney:nMoney];
         cell.cellMoney.text     = dictUtils[@"nMoney"];
         cell.cellMoneyUnit.text = dictUtils[@"unit"];
         cell.cellMoneyDesc.text = [dict objectForKey: @"description"];
         cell.cellTagLeft.text   = tag;
         cell.cellTime.text      = @"";
+        cell.cellTime.tag       = 0; //平移状态, 0:未动， 1:平移
         cell.cellTimeUnit.text  = @"";
         cell.cellTimeDesc.text  = @"";
         cell.cellTagRight.text  = @"";
         
     } else if (![nTime isEqualToString:@"0"]) {
         
+        cell.cellDivider.tag    = 2;
         dictUtils = [self.viewCommonUtils dealWithHour:nTime];
         cell.cellMoney.text     = @"";
+        cell.cellMoney.tag      = 0; //平移状态, 0:未动， 1:平移
         cell.cellMoneyUnit.text = @"";
         cell.cellMoneyDesc.text = @"";
         cell.cellTagLeft.text   = @"";
         
         cell.cellTime.text     = dictUtils[@"nTime"];
         cell.cellTimeUnit.text = dictUtils[@"unit"];
-        cell.cellTimeDesc.text =[dict objectForKey: @"description"];
+        cell.cellTimeDesc.text = [dict objectForKey: @"description"];
         cell.cellTagRight.text = tag;
 
     } else {
         
+        cell.cellDivider.tag    = 3;
         cell.cellMoney.text     = @"";
         cell.cellMoneyUnit.text = @"";
         cell.cellMoneyDesc.text = @"";
         cell.cellTagLeft.text   = @"";
         
         cell.cellTime.text     = @"";
+        cell.cellTime.tag      = 0; //平移状态, 0:未动， 1:平移
         cell.cellTimeUnit.text = @"";
         cell.cellTimeDesc.text = [dict objectForKey: @"input"];
         cell.cellTagRight.text = @"日志";
@@ -291,13 +297,46 @@
     if (gesture.state != UIGestureRecognizerStateBegan)
         return;
     
+    MyTableViewCell *myCell = (MyTableViewCell *)gesture.view;
+    CGFloat width = myCell.frame.size.width;
+    CGFloat move  = width*3/8;
+    CGRect rect   = myCell.cellDivider.frame;
+    switch(myCell.cellDivider.tag) {
+        case 1:  // 金额
+            rect.origin.x = rect.origin.x+move;
+            myCell.cellDivider.frame = rect;
+            
+            rect = myCell.cellMoney.frame;
+            rect.origin.x = rect.origin.x+move;
+            myCell.cellMoney.frame = rect;
+            
+            rect = myCell.cellTagLeft.frame;
+            rect.origin.x = rect.origin.x+move;
+            myCell.cellTagLeft.frame = rect;
+            
+            rect = myCell.cellMoneyUnit.frame;
+            rect.origin.x = rect.origin.x+move;
+            myCell.cellMoneyUnit.frame = rect;
+            
+            rect = myCell.cellMoneyDesc.frame;
+            //rect.size.width = rect.size.width + move;
+            rect.origin.x = rect.origin.x + move;
+            myCell.cellMoneyDesc.frame = rect;
+            break;
+        case 2:  // 时间
+            [ViewCommonUtils myCellTime: myCell];
+            break;
+        default: // 日志
+            break;
+    };
+
+    /*
     UITableViewCell *cell = (UITableViewCell *)gesture.view;
-    
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     
     NSUInteger section = [indexPath section];
     NSUInteger row     = [indexPath row];
-    NSString *key      = [self.listDataDate objectAtIndex:section];
+    NSString  *key     = [self.listDataDate objectAtIndex:section];
     
     NSMutableArray *rows = [NSMutableArray arrayWithCapacity:0];
     NSMutableDictionary *dict;
@@ -318,6 +357,7 @@
     NSLog(@"desc: %@", desc);
     [self.popUpView setText: desc];
     [self.view addSubview:self.popUpView];
+     */
 }
 
 - (NSArray *)getListDataDate: (NSMutableArray *)_listData {
@@ -331,5 +371,13 @@
     _listDataDate = [[_listDataDate reverseObjectEnumerator] allObjects];
     return _listDataDate;
 }
+
+/*
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    // [super setSelected:selected animated:animated];
+    if (selected) {
+    } else {
+    }
+}*/
 
 @end

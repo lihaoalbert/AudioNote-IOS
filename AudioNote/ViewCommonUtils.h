@@ -12,6 +12,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import "DatabaseUtils.h"
+#import "MyTableViewCell.h"
 
 #import "iflyMSC/IFlySpeechRecognizerDelegate.h"
 
@@ -52,6 +53,7 @@
 + (BOOL) isNetworkAvailable;
 + (NSString *) networkType;
 + (NSString*) devicePlatform;
++ (void) myCellTime: (MyTableViewCell *) myCell;
 
 @end
 
