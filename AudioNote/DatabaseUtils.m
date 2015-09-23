@@ -13,7 +13,7 @@
 #define myNSLog
 
 - (id) init {
-    if (self = [super init]) {
+    if(self = [super init]) {
         NSArray *paths               = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         self.databaseFilePath        = [documentsDirectory stringByAppendingPathComponent:kDatabaseName];
@@ -75,10 +75,12 @@
     // Get the ID just execute
     ////////////////////////////////
     NSInteger lastRowId = sqlite3_last_insert_rowid(database);
-    if (lastRowId > 0)
+    if (lastRowId > 0) {
         return lastRowId;
-    else
+    }
+    else {
         NSLog(@"lastRowId#%li < 0.", lastRowId);
+    }
     
     return -__LINE__;
 } // end of executeSQL()

@@ -303,7 +303,8 @@
         rect5.origin.x = rect5.origin.x-move;
         rect5.size.width = width*7/8;
         myCell.cellTime.tag = 1;
-    } else {
+    }
+    else {
         rect1.origin.x = rect1.origin.x+move;
         rect2.origin.x = rect2.origin.x+move;
         rect3.origin.x = rect3.origin.x+move;
@@ -345,7 +346,8 @@
         
         myCell.cellMoneyDesc.textAlignment = NSTextAlignmentLeft;
         myCell.cellMoney.tag = 1;
-    } else {
+    }
+    else {
         rect1.origin.x = rect1.origin.x-move;
         rect2.origin.x = rect2.origin.x-move;
         rect3.origin.x = rect3.origin.x-move;
