@@ -12,18 +12,8 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import "DatabaseUtils.h"
-#import "MyTableViewCell.h"
 
-#import "iflyMSC/IFlySpeechRecognizerDelegate.h"
 
-#import "iflyMSC/IFlyContact.h"
-#import "iflyMSC/IFlyDataUploader.h"
-#import "iflyMSC/IFlyUserWords.h"
-#import "iflyMSC/IFlySpeechUtility.h"
-#import "iflyMSC/IFlySpeechRecognizer.h"
-#import "iflyMSC/IFlySpeechConstant.h"
-#import "iflyMSC/IFlyResourceUtil.h"
-#import "iflyMSC/IFlySetting.h"
 
 #import "sys/utsname.h"
 
@@ -33,14 +23,8 @@
 
 @interface ViewCommonUtils : NSObject
 
-- (NSMutableArray*) getDataListWith: (DatabaseUtils*) databaseUtils Limit: (NSInteger) limit Offset: (NSInteger) offset;
 
-/*
- * @ 创建识别对象
- <Param name=delegate> object which implement IFlySpeechRecognizerDelegate</Param>
- <Param name=domain> domain:iat,search,video,poi,music,asr;iat,普通文本听写; search,热词搜索;video,视频音乐搜索;asr: 关键词识别;</Param>
- */
-- (id) CreateRecognizer:(id)delegate Domain:(NSString*) domain;
+
 + (NSString *) httpGet: (NSString *) path;
 + (NSString *) httpPost: (NSURL *) url Data: (NSString *) data;
 + (NSString *) httpPostDevice: (NSString *) data;
@@ -53,9 +37,6 @@
 + (BOOL) isNetworkAvailable;
 + (NSString *) networkType;
 + (NSString*) devicePlatform;
-+ (void) myCellTime: (MyTableViewCell *) myCell;
-+ (void) myCellMoney: (MyTableViewCell *) myCell;
-
 @end
 
 

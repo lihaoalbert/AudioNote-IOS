@@ -16,7 +16,7 @@
 #import "MyTableViewCell.h"
 
 #import "DatabaseUtils.h"
-#import "ViewCommonUtils.h"
+#import "ViewUtils.h"
 
 
 #define ScreenWidth [[UIScreen mainScreen] bounds].size.width
@@ -30,7 +30,6 @@
 @property (nonatomic, nonatomic) NSArray            *listDataDate;
 @property (nonatomic, nonatomic) NSInteger          listDataLimit;
 @property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
-@property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
 @property (weak, nonatomic) UIColor                 *gBackground;
 @property (weak, nonatomic) UIColor                 *gTextcolor;
 @property (weak, nonatomic) UIColor                 *gHighlightedTextColor;
@@ -42,7 +41,6 @@
 @synthesize listData;
 @synthesize listDataDate;
 @synthesize databaseUtils;
-@synthesize viewCommonUtils;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -59,7 +57,6 @@
     self.listDataDate    = nil;
     self.listDataLimit   = 10;
     self.databaseUtils   = nil;
-    self.viewCommonUtils = nil;
     self.gBackground    = nil;
     self.gTextcolor     = nil;
     self.gHighlightedTextColor     = nil;
@@ -86,7 +83,6 @@
     
     // init Utils
     self.databaseUtils   = [[DatabaseUtils alloc] init];
-    self.viewCommonUtils = [[ViewCommonUtils alloc] init];
     
     
     self.listDataLimit  = 10;
@@ -150,7 +146,7 @@
     if (![nMoney isEqualToString: @"0"]) {
         
         cell.cellDivider.tag    = 1; //该cell类型 1: 金额, 2: 时间, 3:日志
-        dictUtils = [self.viewCommonUtils dealWithMoney:nMoney];
+        dictUtils = [ViewUtils dealWithMoney:nMoney];
         cell.cellMoney.text     = dictUtils[@"nMoney"];
         //cell.cellMoneyDesc.backgroundColor = [UIColor orangeColor];
         cell.cellMoneyUnit.text = dictUtils[@"unit"];
@@ -165,7 +161,7 @@
     } else if (![nTime isEqualToString:@"0"]) {
         
         cell.cellDivider.tag    = 2;
-        dictUtils = [self.viewCommonUtils dealWithHour:nTime];
+        dictUtils = [ViewUtils dealWithHour:nTime];
         cell.cellMoney.text     = @"";
         cell.cellMoney.tag      = 0; //平移状态, 0:未动， 1:平移
         cell.cellMoneyUnit.text = @"";
@@ -295,13 +291,13 @@
     MyTableViewCell *myCell = (MyTableViewCell *)gesture.view;
     switch(myCell.cellDivider.tag) {
         case 1:  // 金额
-            [ViewCommonUtils myCellMoney: myCell];
+            [ViewUtils myCellMoney: myCell];
             break;
         case 2:  // 时间
-            [ViewCommonUtils myCellTime: myCell];
+            [ViewUtils myCellTime: myCell];
             break;
         default: // 日志
-            [ViewCommonUtils myCellTime: myCell];
+            [ViewUtils myCellTime: myCell];
             break;
     };
 }

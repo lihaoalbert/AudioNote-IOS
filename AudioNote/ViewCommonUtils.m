@@ -9,6 +9,8 @@
 
 #import "ViewCommonUtils.h"
 
+#import "sys/utsname.h"
+
 @implementation ViewCommonUtils
 #define myNSLog 
 #define api_device_url @"http://xiao6yuji.com/api/device"
@@ -16,73 +18,6 @@
 #define RMB_WAN 10000
 #define TIME_HOUR 60
 
-// voice record list with format
-- (NSMutableArray*) getDataListWith: (DatabaseUtils*) databaseUtils Limit: (NSInteger) limit Offset: (NSInteger) offset {
-    NSMutableArray *latestDataList = [NSMutableArray arrayWithCapacity:0];
-    
-    
-    NSMutableArray *dataArray = [databaseUtils selectLimit: limit Offset: offset Order: @"id" Format: @""];
-    for (NSDictionary  *dict in dataArray) {
-        NSString *detail  = @"";
-        NSString *pos     = @"right";
-        NSString *nTime   = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];
-        NSString *nMoney  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
-        NSDictionary *dictUtils;
-        ViewCommonUtils *viewCommonUtils = [[ViewCommonUtils alloc] init];
-        
-        if (![nMoney isEqualToString:@"0"]) {
-            pos    = @"left";
-            dictUtils = [viewCommonUtils dealWithMoney:nMoney];
-            detail = [detail stringByAppendingString:dictUtils[@"nMoney"]];
-            detail = [detail stringByAppendingFormat:@" %@ - ", dictUtils[@"unit"]];
-        } else if (![nTime isEqualToString:@"0"]) {
-            dictUtils = [viewCommonUtils dealWithHour:nTime];
-            detail = [detail stringByAppendingString:dictUtils[@"nTime"]];
-            detail = [detail stringByAppendingFormat:@" %@ - ", dictUtils[@"unit"]];
-        } else {
-            detail = dict[@"input"];
-        }
-        detail = [detail stringByAppendingString:dict[@"description"]];
-        NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
-        
-        [mutableDictionary setObject:detail forKey:@"detail"];
-        [mutableDictionary setObject:[dict objectForKey:@"category"] forKey: @"category"];
-        [mutableDictionary setObject:[dict objectForKey:@"id"]   forKey:@"id"];
-        [mutableDictionary setObject:pos forKey:@"pos"];
-        [mutableDictionary setObject:@"no" forKey:@"moved"];
-        [latestDataList addObject:mutableDictionary];
-    }
-    return latestDataList;
-}
-
-
-/**
- 创建识别对象
- domain:识别的服务类型
- iat,search,video,poi,music,asr;iat,普通文本听写; search,热词搜索;video,视频音乐搜索;asr: 关键词识别
- */
-- (id) CreateRecognizer:(id)delegate Domain:(NSString*) domain {
-    IFlySpeechRecognizer * iflySpeechRecognizer = nil;
-    
-    // 创建识别对象
-    iflySpeechRecognizer = [IFlySpeechRecognizer sharedInstance];
-    //请不要删除这句,createRecognizer是单例方法，需要重新设置代理
-    iflySpeechRecognizer.delegate = delegate;
-    
-    [iflySpeechRecognizer setParameter:domain forKey:[IFlySpeechConstant IFLY_DOMAIN]];
-    //设置采样率
-    // [iflySpeechRecognizer setParameter:@"16000" forKey:[IFlySpeechConstant SAMPLE_RATE]];
-    //设置录音保存文件
-    // [iflySpeechRecognizer setParameter:@"asr.pcm" forKey:[IFlySpeechConstant ASR_AUDIO_PATH]];
-    //设置为非语义模式
-    // [iflySpeechRecognizer setParameter:@"0" forKey:[IFlySpeechConstant ASR_SCH]];
-    //设置返回结果的数据格式，可设置为json，xml，plain，默认为json。
-    [iflySpeechRecognizer setParameter:@"json" forKey:[IFlySpeechConstant RESULT_TYPE]];
-    //设置为麦克风输入模式
-    [iflySpeechRecognizer setParameter:IFLY_AUDIO_SOURCE_MIC forKey:@"audio_source"];
-    
-    return iflySpeechRecognizer;
-}
 
 + (NSString *) httpGet: (NSString *) path {
     NSString *str         = [api_device_url stringByAppendingFormat:@"?%@", path];
@@ -129,7 +64,7 @@
 }
 
 // 100000 元 => 10 万元
-- (NSDictionary *) dealWithMoney: (NSString *) nMoney {
+- (NSDictionary *)dealWithMoney:(NSString *)nMoney {
     NSString *unit = @"元";
     NSInteger iMoney = [nMoney intValue];
     
@@ -141,7 +76,7 @@
 }
 
 // 90 分钟 => 1.5 小时
-- (NSDictionary *) dealWithHour: (NSString *) nTime {
+- (NSDictionary *)dealWithHour:(NSString *)nTime {
     NSString *unit = @"分钟";
     NSInteger iTime = [nTime intValue];
     
@@ -152,7 +87,7 @@
     return [NSDictionary dictionaryWithObjectsAndKeys:nTime,@"nTime",unit,@"unit", nil];
 }
 
-- (NSString *) moneyformat: (int) num {
+- (NSString *)moneyformat:(int)num {
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setPositiveFormat:@"###,##0"];
     return [numberFormatter stringFromNumber:[NSNumber numberWithInt: num]];
@@ -256,7 +191,7 @@
     device = [device stringByAppendingFormat:@",\"os\":\"%@\"", [[UIDevice currentDevice] systemName]];
     device = [device stringByAppendingFormat:@",\"id\":\"%@\"", [[[UIDevice currentDevice] identifierForVendor] UUIDString]];
     device = [device stringByAppendingFormat:@",\"osVersion\":\"%@\"", [[UIDevice currentDevice] systemVersion]];
-    device = [device stringByAppendingFormat:@",\"IFlyVersion\":\"%@\"", [IFlySetting getVersion]];
+    //device = [device stringByAppendingFormat:@",\"IFlyVersion\":\"%@\"", [IFlySetting getVersion]];
     device = [device stringByAppendingFormat:@",\"platform\":\"%@\"", [ViewCommonUtils devicePlatform]];
     device = [device stringByAppendingString:@"}"];
     NSString * response = [ViewCommonUtils httpPostDevice: device];
@@ -282,89 +217,6 @@
     return _uid;
 }
 
-+ (void) myCellTime: (MyTableViewCell *) myCell {
-    CGFloat width = myCell.frame.size.width;
-    CGFloat move  = width*3/8;
-    CGRect rect1  = myCell.cellDivider.frame;
-    CGRect rect2  = myCell.cellTime.frame;
-    CGRect rect3  = myCell.cellTagRight.frame;
-    CGRect rect4  = myCell.cellTimeUnit.frame;
-    CGRect rect5  = myCell.cellTimeDesc.frame;
-    NSString *state = @"no";
-    if([[NSNumber numberWithFloat:myCell.cellTime.tag] isEqualToNumber: [NSNumber numberWithInt:1]]) {
-        state = @"moved";
-    }
 
-    if([state isEqualToString:@"no"]) {
-        rect1.origin.x = rect1.origin.x-move;
-        rect2.origin.x = rect2.origin.x-move;
-        rect3.origin.x = rect3.origin.x-move;
-        rect4.origin.x = rect4.origin.x-move;
-        rect5.origin.x = rect5.origin.x-move;
-        rect5.size.width = width*7/8;
-        myCell.cellTime.tag = 1;
-    }
-    else {
-        rect1.origin.x = rect1.origin.x+move;
-        rect2.origin.x = rect2.origin.x+move;
-        rect3.origin.x = rect3.origin.x+move;
-        rect4.origin.x = rect4.origin.x+move;
-        rect5.origin.x = rect5.origin.x+move;
-        rect5.size.width = width*3/8;
-        myCell.cellTime.tag = 0;
-    }
-    // myCell.cellTimeDesc.backgroundColor = [UIColor orangeColor];
-
-    myCell.cellDivider.frame  = rect1;
-    myCell.cellTime.frame     = rect2;
-    myCell.cellTagRight.frame = rect3;
-    myCell.cellTimeUnit.frame = rect4;
-    myCell.cellTimeDesc.frame = rect5;
-}
-
-+ (void) myCellMoney: (MyTableViewCell *) myCell {
-    CGFloat width = myCell.frame.size.width;
-    CGFloat move  = width*3/8;
-    CGRect rect1  = myCell.cellDivider.frame;
-    CGRect rect2  = myCell.cellMoney.frame;
-    CGRect rect3  = myCell.cellTagLeft.frame;
-    CGRect rect4  = myCell.cellMoneyUnit.frame;
-    CGRect rect5  = myCell.cellMoneyDesc.frame;
-    NSString *state = @"no";
-    if([[NSNumber numberWithFloat:myCell.cellMoney.tag] isEqualToNumber: [NSNumber numberWithInt:1]]) {
-        state = @"moved";
-    }
-    
-    
-    if([state isEqualToString:@"no"]) {
-        rect1.origin.x = rect1.origin.x+move;
-        rect2.origin.x = rect2.origin.x+move;
-        rect3.origin.x = rect3.origin.x+move;
-        rect4.origin.x = rect4.origin.x+move;
-        //rect5.origin.x = rect5.origin.x+move;
-        rect5.size.width = width*7/8;
-        
-        myCell.cellMoneyDesc.textAlignment = NSTextAlignmentLeft;
-        myCell.cellMoney.tag = 1;
-    }
-    else {
-        rect1.origin.x = rect1.origin.x-move;
-        rect2.origin.x = rect2.origin.x-move;
-        rect3.origin.x = rect3.origin.x-move;
-        rect4.origin.x = rect4.origin.x-move;
-        //rect5.origin.x = rect5.origin.x-move;
-        rect5.size.width = width*3/8;
-        
-        myCell.cellMoneyDesc.textAlignment = NSTextAlignmentRight;
-        myCell.cellMoney.tag = 0;
-    }
-    // myCell.cellMoneyDesc.backgroundColor = [UIColor orangeColor];
-    
-    myCell.cellDivider.frame  = rect1;
-    myCell.cellMoney.frame    = rect2;
-    myCell.cellTagLeft.frame  = rect3;
-    myCell.cellMoneyUnit.frame = rect4;
-    myCell.cellMoneyDesc.frame = rect5;
-}
 
 @end

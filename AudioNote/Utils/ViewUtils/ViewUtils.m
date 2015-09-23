@@ -7,6 +7,8 @@
 //
 
 #import "ViewUtils.h"
+#define RMB_WAN 10000
+#define TIME_HOUR 60
 
 @implementation ViewUtils
 
@@ -81,5 +83,120 @@
     [textLabel sizeToFit];
     CGRect rect = textLabel.frame;;
     return rect.size;
+}
+
++ (void)myCellTime:(MyTableViewCell *)myCell {
+    CGFloat width = myCell.frame.size.width;
+    CGFloat move  = width*3/8;
+    CGRect rect1  = myCell.cellDivider.frame;
+    CGRect rect2  = myCell.cellTime.frame;
+    CGRect rect3  = myCell.cellTagRight.frame;
+    CGRect rect4  = myCell.cellTimeUnit.frame;
+    CGRect rect5  = myCell.cellTimeDesc.frame;
+    NSString *state = @"no";
+    if([[NSNumber numberWithFloat:myCell.cellTime.tag] isEqualToNumber: [NSNumber numberWithInt:1]]) {
+        state = @"moved";
+    }
+    
+    if([state isEqualToString:@"no"]) {
+        rect1.origin.x = rect1.origin.x-move;
+        rect2.origin.x = rect2.origin.x-move;
+        rect3.origin.x = rect3.origin.x-move;
+        rect4.origin.x = rect4.origin.x-move;
+        rect5.origin.x = rect5.origin.x-move;
+        rect5.size.width = width*7/8;
+        myCell.cellTime.tag = 1;
+    }
+    else {
+        rect1.origin.x = rect1.origin.x+move;
+        rect2.origin.x = rect2.origin.x+move;
+        rect3.origin.x = rect3.origin.x+move;
+        rect4.origin.x = rect4.origin.x+move;
+        rect5.origin.x = rect5.origin.x+move;
+        rect5.size.width = width*3/8;
+        myCell.cellTime.tag = 0;
+    }
+    // myCell.cellTimeDesc.backgroundColor = [UIColor orangeColor];
+    
+    myCell.cellDivider.frame  = rect1;
+    myCell.cellTime.frame     = rect2;
+    myCell.cellTagRight.frame = rect3;
+    myCell.cellTimeUnit.frame = rect4;
+    myCell.cellTimeDesc.frame = rect5;
+}
+
++ (void)myCellMoney:(MyTableViewCell *)myCell {
+    CGFloat width = myCell.frame.size.width;
+    CGFloat move  = width*3/8;
+    CGRect rect1  = myCell.cellDivider.frame;
+    CGRect rect2  = myCell.cellMoney.frame;
+    CGRect rect3  = myCell.cellTagLeft.frame;
+    CGRect rect4  = myCell.cellMoneyUnit.frame;
+    CGRect rect5  = myCell.cellMoneyDesc.frame;
+    NSString *state = @"no";
+    if([[NSNumber numberWithFloat:myCell.cellMoney.tag] isEqualToNumber: [NSNumber numberWithInt:1]]) {
+        state = @"moved";
+    }
+    
+    
+    if([state isEqualToString:@"no"]) {
+        rect1.origin.x = rect1.origin.x+move;
+        rect2.origin.x = rect2.origin.x+move;
+        rect3.origin.x = rect3.origin.x+move;
+        rect4.origin.x = rect4.origin.x+move;
+        //rect5.origin.x = rect5.origin.x+move;
+        rect5.size.width = width*7/8;
+        
+        myCell.cellMoneyDesc.textAlignment = NSTextAlignmentLeft;
+        myCell.cellMoney.tag = 1;
+    }
+    else {
+        rect1.origin.x = rect1.origin.x-move;
+        rect2.origin.x = rect2.origin.x-move;
+        rect3.origin.x = rect3.origin.x-move;
+        rect4.origin.x = rect4.origin.x-move;
+        //rect5.origin.x = rect5.origin.x-move;
+        rect5.size.width = width*3/8;
+        
+        myCell.cellMoneyDesc.textAlignment = NSTextAlignmentRight;
+        myCell.cellMoney.tag = 0;
+    }
+    // myCell.cellMoneyDesc.backgroundColor = [UIColor orangeColor];
+    
+    myCell.cellDivider.frame  = rect1;
+    myCell.cellMoney.frame    = rect2;
+    myCell.cellTagLeft.frame  = rect3;
+    myCell.cellMoneyUnit.frame = rect4;
+    myCell.cellMoneyDesc.frame = rect5;
+}
+
+// 100000 元 => 10 万元
++ (NSDictionary *)dealWithMoney:(NSString *)nMoney {
+    NSString *unit = @"元";
+    NSInteger iMoney = [nMoney intValue];
+    
+    if (iMoney > RMB_WAN) {
+        nMoney = [NSString stringWithFormat:@"%.1f", roundf(iMoney * 10 / RMB_WAN ) / 10];
+        unit   = @"万元";
+    }
+    return [NSDictionary dictionaryWithObjectsAndKeys:nMoney,@"nMoney",unit,@"unit", nil];
+}
+
+// 90 分钟 => 1.5 小时
++ (NSDictionary *)dealWithHour:(NSString *)nTime {
+    NSString *unit = @"分钟";
+    NSInteger iTime = [nTime intValue];
+    
+    if (iTime > TIME_HOUR) {
+        nTime = [NSString stringWithFormat:@"%.1f", roundf(iTime * 10 / TIME_HOUR ) / 10];
+        unit   = @"小时";
+    }
+    return [NSDictionary dictionaryWithObjectsAndKeys:nTime,@"nTime",unit,@"unit", nil];
+}
+
++ (NSString *)moneyformat:(int)num {
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setPositiveFormat:@"###,##0"];
+    return [numberFormatter stringFromNumber:[NSNumber numberWithInt: num]];
 }
 @end

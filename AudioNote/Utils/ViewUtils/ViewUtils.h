@@ -14,6 +14,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <MBProgressHUD.h>
+#import "MyTableViewCell.h"
 
 @interface ViewUtils : NSObject
 
@@ -73,6 +74,18 @@
  *  @param text 提示文字
  */
 + (void)showPopupView:(UIView *)view Info:(NSString*)text;
+
+
++ (void) myCellTime: (MyTableViewCell *) myCell;
++ (void) myCellMoney: (MyTableViewCell *) myCell;
+
++ (NSDictionary *)dealWithMoney:(NSString *)nMoney;
+
+// 90 分钟 => 1.5 小时
++ (NSDictionary *)dealWithHour:(NSString *)nTime;
+
++ (NSString *)moneyformat:(int)num;
+
 @end
 
 #endif

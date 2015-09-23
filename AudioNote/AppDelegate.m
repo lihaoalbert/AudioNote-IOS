@@ -17,7 +17,8 @@
 #import "ViewControllerSecond.h"
 #import "ViewControllerThird.h"
 #import "DatabaseUtils.h"
-#import "ViewCommonUtils.h"
+#import "HttpUtils.h"
+#import "DataHelper.h"
 
 //#import "ViewControllerChart.h"
 #define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
@@ -45,8 +46,8 @@
     [DatabaseUtils setUP];
     
     // config device
-    if([ViewCommonUtils isNetworkAvailable]) {
-        [ViewCommonUtils generateUID];
+    if([HttpUtils isNetworkAvailable]) {
+        [DataHelper generateUID];
     }
     
     ViewControllerFirst *firstController   = [[ViewControllerFirst alloc] init];

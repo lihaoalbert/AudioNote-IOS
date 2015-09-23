@@ -9,319 +9,155 @@
 #import <Foundation/Foundation.h>
 #import "DataHelper.h"
 
-#import "User.h"
-#import "Slide.h"
-#import "HttpResponse.h"
-#import "FileUtils.h"
-#import "DateUtils.h"
-#import "HttpUtils.h"
+#import "sys/utsname.h"
+
+#import "DatabaseUtils.h"
 #import "ViewUtils.h"
-#import "ApiHelper.h"
-#import "CacheHelper.h"
-#import "ExtendNSLogFunctionality.h"
+#import "HttpUtils.h"
+#import "HttpResponse.h"
+
+#define api_device_url @"http://xiao6yuji.com/api/device"
+#define api_device_data_url @"http://xiao6yuji.com/api/device/data"
+
+//#define api_device_url @"http://localhost:3000/api/device"
+//#define api_device_data_url @"http://localhost:3000/api/device/data"
 
 @interface DataHelper()
-@property (nonatomic, strong) NSMutableArray *visitData;
-
 @end
+
 @implementation DataHelper
 
-- (DataHelper *)init {
-    if(self = [super init]) {
-        _visitData = [[NSMutableArray alloc] init];
-    }
-    return self;
+
++ (NSString*)devicePlatform {
+    // 需要#import "sys/utsname.h"
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    NSString *deviceString = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+    if ([deviceString isEqualToString:@"iPhone1,1"])    return @"iPhone 1G";
+    if ([deviceString isEqualToString:@"iPhone1,2"])    return @"iPhone 3G";
+    if ([deviceString isEqualToString:@"iPhone2,1"])    return @"iPhone 3GS";
+    if ([deviceString isEqualToString:@"iPhone3,1"])    return @"iPhone 4";
+    if ([deviceString isEqualToString:@"iPhone3,2"])    return @"Verizon iPhone 4";
+    if ([deviceString isEqualToString:@"iPhone3,3"])    return @"Verizon iPhone 4";
+    if ([deviceString isEqualToString:@"iPhone4,1"])    return @"iPhone 4S";
+    if ([deviceString isEqualToString:@"iPhone5,1"])    return @"iPhone 5 (GSM)";
+    if ([deviceString isEqualToString:@"iPhone5,2"])    return @"iPhone 5 (GSM+CDMA)";
+    if ([deviceString isEqualToString:@"iPhone5,3"])    return @"iPhone 5c (GSM)";
+    if ([deviceString isEqualToString:@"iPhone5,4"])    return @"iPhone 5c (GSM+CDMA)";
+    if ([deviceString isEqualToString:@"iPhone6,1"])    return @"iPhone 5s (GSM)";
+    if ([deviceString isEqualToString:@"iPhone6,2"])    return @"iPhone 5s (GSM+CDMA)";
+    if ([deviceString isEqualToString:@"iPhone7,1"])    return @"iPhone 6 Plus";
+    if ([deviceString isEqualToString:@"iPhone7,2"])    return @"iPhone 6";
+    if ([deviceString isEqualToString:@"iPod1,1"])      return @"iPod Touch 1G";
+    if ([deviceString isEqualToString:@"iPod2,1"])      return @"iPod Touch 2G";
+    if ([deviceString isEqualToString:@"iPod3,1"])      return @"iPod Touch 3G";
+    if ([deviceString isEqualToString:@"iPod4,1"])      return @"iPod Touch 4G";
+    if ([deviceString isEqualToString:@"iPod5,1"])      return @"iPod Touch 5G";
+    if ([deviceString isEqualToString:@"iPad1,1"])      return @"iPad";
+    if ([deviceString isEqualToString:@"iPad2,1"])      return @"iPad 2 (WiFi)";
+    if ([deviceString isEqualToString:@"iPad2,2"])      return @"iPad 2 (GSM)";
+    if ([deviceString isEqualToString:@"iPad2,3"])      return @"iPad 2 (CDMA)";
+    if ([deviceString isEqualToString:@"iPad2,4"])      return @"iPad 2 (WiFi)";
+    if ([deviceString isEqualToString:@"iPad2,5"])      return @"iPad Mini (WiFi)";
+    if ([deviceString isEqualToString:@"iPad2,6"])      return @"iPad Mini (GSM)";
+    if ([deviceString isEqualToString:@"iPad2,7"])      return @"iPad Mini (GSM+CDMA)";
+    if ([deviceString isEqualToString:@"iPad3,1"])      return @"iPad 3 (WiFi)";
+    if ([deviceString isEqualToString:@"iPad3,2"])      return @"iPad 3 (GSM+CDMA)";
+    if ([deviceString isEqualToString:@"iPad3,3"])      return @"iPad 3 (GSM)";
+    if ([deviceString isEqualToString:@"iPad3,4"])      return @"iPad 4 (WiFi)";
+    if ([deviceString isEqualToString:@"iPad3,5"])      return @"iPad 4 (GSM)";
+    if ([deviceString isEqualToString:@"iPad3,6"])      return @"iPad 4 (GSM+CDMA)";
+    if ([deviceString isEqualToString:@"iPad4,1"])      return @"iPad Air (WiFi)";
+    if ([deviceString isEqualToString:@"iPad4,2"])      return @"iPad Air (Cellular)";
+    if ([deviceString isEqualToString:@"iPad4,4"])      return @"iPad mini 2G (WiFi)";
+    if ([deviceString isEqualToString:@"iPad4,5"])      return @"iPad mini 2G (Cellular)";
+    if ([deviceString isEqualToString:@"i386"])         return @"Simulator";
+    if ([deviceString isEqualToString:@"x86_64"])       return @"Simulator";
+    NSLog(@"NOTE:  Machine hardware platform: %@", deviceString);
+    return deviceString;
 }
 
-/**
- *  获取通知公告数据
- *
- *  @return 通知公告数据列表
- */
-+ (NSMutableDictionary *)notifications {
-    NSMutableDictionary *data = [NSMutableDictionary dictionary];
++ (NSString *)generateUID {
+    // name/os/id/osVersion are necessary.
+   NSDictionary *params = @{@"device": @{
+                                   @"name": [[UIDevice currentDevice] name],
+                                   @"model": [[UIDevice currentDevice] model],
+                                   @"localizedModel": [[UIDevice currentDevice] localizedModel],
+                                   @"os": [[UIDevice currentDevice] systemName],
+                                   @"id": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
+                                   @"osVersion": [[UIDevice currentDevice] systemVersion],
+                                   @"platform": [self devicePlatform]
+                        }
+                 };
+    HttpResponse *response = [self httpPostDevice: [NSMutableDictionary dictionaryWithDictionary:params]];
     
-    if([HttpUtils isNetworkAvailable]) {
-        NSString *currentDate = [DateUtils dateToStr:[NSDate date] Format:DATE_SIMPLE_FORMAT];
-        HttpResponse *httpResponse = [ApiHelper notifications:currentDate DeptID:[User deptID]];
+    //NSString *idstr = [mutableDictionary2 objectForKey:@"id"];
+    NSString *_code = response.data[@"code"];
+    NSString *_uid  = response.data[@"info"];
+    NSLog(@"code: %@, uid: %@", _code, _uid);
         
-        if([httpResponse isValid]) {
-            [CacheHelper writeNotifications:httpResponse.data];
-        }
+    // 将上述数据全部存储到 NSUserDefaults 中
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:_uid forKey:@"uid"];
+    // 这里建议同步存储到磁盘中，但是不是必须的
+    [userDefaults synchronize];
+    
+    return _uid;
+}
+
++ (NSMutableArray*) getDataListWith:(DatabaseUtils*)databaseUtils
+                              Limit: (NSInteger)limit
+                             Offset: (NSInteger)offset {
+    NSMutableArray *latestDataList = [NSMutableArray arrayWithCapacity:0];
+    
+    NSMutableArray *dataArray = [databaseUtils selectLimit: limit Offset: offset Order: @"id" Format: @""];
+    for(NSDictionary *dict in dataArray) {
+        NSString *detail  = @"";
+        NSString *pos     = @"right";
+        NSString *nTime   = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nTime"]];
+        NSString *nMoney  = [NSString stringWithFormat:@"%@", [dict objectForKey: @"nMoney"]];
+        NSDictionary *dictUtils;
         
-        data = httpResponse.data;
-    }
-    else {
-        data = [CacheHelper readNotifications];
-    }
-    
-    
-    return data;
-}
-
-/**
- *  获取目录信息: 分类数据+文档数据;
- *  分类在前，文档在后；各自默认按名称升序排序；
- *
- *  @param deptID        部门ID
- *  @param categoryID    分类ID
- *  @param localOrServer local or sever
- *
- *  @return 数据列表
- */
-+ (NSArray*)loadContentData:(UIView *)view
-                 CategoryID:(NSString *)categoryID
-                       Type:(NSString *)localOrServer
-                        Key:(NSString *)sortKey
-                      Order:(BOOL)isAsceding {
-    NSString *deptID             = [User deptID];
-    NSMutableArray *categoryList = [[NSMutableArray alloc] init];
-    NSMutableArray *slideList    = [[NSMutableArray alloc] init];
-
-    if([localOrServer isEqualToString:LOCAL_OR_SERVER_LOCAL]) {
-        categoryList = [CacheHelper readContents:CONTENT_CATEGORY ID:categoryID];
-        slideList    = [CacheHelper readContents:CONTENT_SLIDE ID:categoryID];
-    } else if([localOrServer isEqualToString:LOCAL_OR_SERVER_SREVER]) {
-        categoryList = [self loadContentDataFromServer:CONTENT_CATEGORY DeptID:deptID CategoryID:categoryID View:view];
-        slideList    = [self loadContentDataFromServer:CONTENT_SLIDE DeptID:deptID CategoryID:categoryID View:view];
-    }
-    // mark sure array not nil
-    if(!categoryList) {
-        categoryList = [[NSMutableArray alloc] init];
-    }
-    if(!slideList) {
-        slideList = [[NSMutableArray alloc] init];
-    }
-    
-    NSString *sID             = [[NSString alloc] init];
-    NSNumber *nID             = [[NSNumber alloc] init];
-    // order
-    NSInteger i = 0;
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    if([categoryList count] > 0) {
-        for(i = 0; i < [categoryList count]; i++) {
-            dict = [NSMutableDictionary dictionaryWithDictionary:categoryList[i]];
-            sID  = dict[CONTENT_FIELD_ID];
-            nID  = [NSNumber numberWithInteger:[sID intValue]];
-            dict[CONTENT_SORT_KEY]   = nID;
-            // warning: 服务器返回的分类列表数据中，未设置type
-            dict[CONTENT_FIELD_TYPE] = CONTENT_CATEGORY;
-            categoryList[i]          = dict;
+        if (![nMoney isEqualToString:@"0"]) {
+            pos    = @"left";
+            dictUtils = [ViewUtils dealWithMoney:nMoney];
+            detail = [detail stringByAppendingString:dictUtils[@"nMoney"]];
+            detail = [detail stringByAppendingFormat:@" %@ - ", dictUtils[@"unit"]];
         }
-        categoryList = [self sortArray:categoryList Key:CONTENT_SORT_KEY Ascending:isAsceding];
-    }
-    if([slideList count] > 0) {
-        for(i = 0; i < [slideList count]; i++) {
-            dict = [NSMutableDictionary dictionaryWithDictionary:slideList[i]];
-            sID  = dict[CONTENT_FIELD_ID];
-            nID  = [NSNumber numberWithInteger:[sID intValue]];
-            dict[CONTENT_SORT_KEY]   = nID;
-            slideList[i]             = dict;
+        else if (![nTime isEqualToString:@"0"]) {
+            dictUtils = [ViewUtils dealWithHour:nTime];
+            detail = [detail stringByAppendingString:dictUtils[@"nTime"]];
+            detail = [detail stringByAppendingFormat:@" %@ - ", dictUtils[@"unit"]];
         }
-        slideList = [self sortArray:slideList Key:CONTENT_FIELD_CREATEDATE Ascending:NO];
-    }
-    
-    return @[categoryList, slideList];
-}
-
-+ (NSMutableArray*)loadContentDataFromServer:(NSString *)type
-                                      DeptID:(NSString *)deptID
-                                  CategoryID:(NSString *)categoryID
-                                        View:(UIView *)view {
-    NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
-
-    HttpResponse *httpResponse = [[HttpResponse alloc] init];
-    if([type isEqualToString:CONTENT_CATEGORY]) {
-        httpResponse = [ApiHelper categories:categoryID DeptID:deptID];
-    } else if([type isEqualToString:CONTENT_SLIDE]) {
-        httpResponse = [ApiHelper slides:categoryID DeptID:deptID];
-    }
-    
-    if([httpResponse isValid]) {
-        NSMutableDictionary *responseJSON = httpResponse.data;
+        else {
+            detail = dict[@"input"];
+        }
+        detail = [detail stringByAppendingString:dict[@"description"]];
+        NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
         
-        if(responseJSON[CONTENT_FIELD_DATA]) {
-            mutableArray = [NSMutableArray arrayWithArray:responseJSON[CONTENT_FIELD_DATA]];
-        }
-        
-        // update local slide when downloaded
-        if([type isEqualToString:CONTENT_SLIDE] && [mutableArray count] > 0) {
-            Slide *slide;
-            for(NSMutableDictionary *dict in mutableArray) {
-                slide = [[Slide alloc]initSlide:dict isFavorite:NO];
-                //[slide toCached];
-                if([slide isDownloaded:NO]) { [slide save]; }
-            }
-        }
-        // local cache
-        [CacheHelper writeContents:responseJSON Type:type ID:categoryID];
-    } else {
-        [ViewUtils showPopupView:view Info:[httpResponse.errors componentsJoinedByString:@"\n"]];
+        [mutableDictionary setObject:detail forKey:@"detail"];
+        [mutableDictionary setObject:[dict objectForKey:@"category"] forKey: @"category"];
+        [mutableDictionary setObject:[dict objectForKey:@"id"]   forKey:@"id"];
+        [mutableDictionary setObject:pos forKey:@"pos"];
+        [mutableDictionary setObject:@"no" forKey:@"moved"];
+        [latestDataList addObject:mutableDictionary];
     }
+    return latestDataList;
+}
 
-    return mutableArray;
++ (HttpResponse *)httpPostDevice:(NSMutableDictionary *)params {
+    return [HttpUtils httpPost:api_device_url Params:params];
+}
+
++ (HttpResponse *)httpPostDeviceData:(NSMutableDictionary *)params {
+    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+    NSString *_uid = [userDefaultes stringForKey:@"uid"];
+    if(_uid && [_uid length] > 0) {
+        params[@"uid"] = _uid;//[ViewCommonUtils generateUID]
+    }
+    
+    return [HttpUtils httpPost:api_device_data_url Params:params];
 }
 
 
-/**
- *  给元素为字典的数组排序；
- *  需求: 分类、文档顺序排放，然后各自按ID/名称/更新日期排序
- *
- *  @param mutableArray mutableArray
- *  @param key          数组元素的key
- *  @param asceding     是否升序
- *
- *  @return 排序过的数组
- */
-+ (NSMutableArray *)sortArray:(NSMutableArray *)mutableArray
-                          Key:(NSString *)key
-                    Ascending:(BOOL)asceding {
-    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:key ascending:asceding];
-    NSArray *array = [mutableArray sortedArrayUsingDescriptors:[NSArray arrayWithObjects:descriptor,nil]];
-    return [NSMutableArray arrayWithArray:array];
-}
-
-/**
- *  同步用户行为操作
- *
- *  @param unSyncRecords 未同步数据
- */
-+ (NSMutableArray *)actionLog:(NSMutableArray *)unSyncRecords {
-    NSMutableArray *IDS = [[NSMutableArray alloc] init];
-    if([unSyncRecords count] == 0) {
-        return IDS;
-    }
-
-    NSString *ID;
-    HttpResponse *httpResponse;
-    for(NSMutableDictionary *dict in unSyncRecords) {
-        ID = dict[@"id"]; [dict removeObjectForKey:@"id"];
-        @try {
-            httpResponse = [ApiHelper actionLog:dict];
-            if([httpResponse isSuccessfullyPostActionLog]) {
-                [IDS addObject:ID];
-            }
-        } @catch (NSException *exception) {
-            NSLog(@"sync action log(%@) faild for %@#%@\n %@", dict, exception.name, exception.reason);
-        } @finally {
-        }
-    }
-    
-    return IDS;
-}
-
-+ (NSMutableDictionary *)slideList:(BOOL)isNetworkAvailable {
-    NSMutableDictionary *data = [NSMutableDictionary dictionary];
-    NSString *deptID = [User deptID];
-    
-    if(isNetworkAvailable) {
-        HttpResponse *httpResponse = [ApiHelper slideList:deptID];
-        
-        if([httpResponse isValid]) {
-            [CacheHelper writeSlideList:httpResponse.data deptID:deptID];
-        }
-        
-        data = httpResponse.data;
-    }
-    else {
-        data = [CacheHelper slideList:deptID];
-    }
-    
-    return data;
-}
-
-#pragma mark - assistant methods
-+ (NSString *)dictToParams:(NSMutableDictionary *)dict {
-    NSMutableArray *paramArray = [[NSMutableArray alloc] init];
-    for(NSString *key in dict) {
-        [paramArray addObject:[NSString stringWithFormat:@"%@=%@", key, dict[key]]];
-    }
-    return [paramArray componentsJoinedByString:@"&"];
-}
-//+ (NSString *)postActionLog:(NSMutableDictionary *) params {
-//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-//    NSString *url = [ApiUtils apiUrl:ACTION_LOGGER_URL_PATH];
-//    [manager POST:url parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        NSLog(@"JSON: %@", responseObject);
-//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//        NSLog(@"Error: %@", error);
-//    }];
-//    
-//    return @"";
-//}
-
-#pragma mark - funny methods
-+ (void)traverseVisitContent:(UILabel *)label
-                  categoryID:(NSString *)categoryID {
-    HttpResponse *httpResponse;
-    
-    httpResponse = [ApiHelper slides:categoryID DeptID:[User deptID]];
-    [CacheHelper writeContents:httpResponse.data Type:CONTENT_SLIDE ID:categoryID];
-    
-    httpResponse = [ApiHelper categories:categoryID DeptID:[User deptID]];
-    [CacheHelper writeContents:httpResponse.data Type:CONTENT_CATEGORY ID:categoryID];
-
-    NSMutableDictionary *responseJSON = httpResponse.data;
-    NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
-    if(responseJSON[CONTENT_FIELD_DATA]) {
-        mutableArray = [NSMutableArray arrayWithArray:responseJSON[CONTENT_FIELD_DATA]];
-        for(NSMutableDictionary *dict in mutableArray) {
-            label.text = [NSString stringWithFormat:@"%@ 缓存中...", dict[CONTENT_FIELD_NAME]];
-            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate date]];
-            
-            [DataHelper traverseVisitContent:label categoryID:dict[CONTENT_FIELD_ID]];
-            
-            label.text = [NSString stringWithFormat:@"%@ 缓存完成", dict[CONTENT_FIELD_NAME]];
-            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate date]];
-        }
-    }
-}
-
-- (void)traverseVisitContent:(NSString *)categoryID Depth:(NSInteger)depth {
-    HttpResponse *httpResponse;
-    NSDate *date = [NSDate date];
-    NSInteger categoryCount = 0, slideCount = 0;
-    
-    httpResponse = [ApiHelper slides:categoryID DeptID:[User deptID]];
-    [CacheHelper writeContents:httpResponse.data Type:CONTENT_SLIDE ID:categoryID];
-    slideCount = [httpResponse.data[CONTENT_FIELD_DATA] count];
-    
-    httpResponse = [ApiHelper categories:categoryID DeptID:[User deptID]];
-    [CacheHelper writeContents:httpResponse.data Type:CONTENT_CATEGORY ID:categoryID];
-    categoryCount = [httpResponse.data[CONTENT_FIELD_DATA] count];
-    
-    NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:date];
-    NSLog(@"depth:%i, categoryID:%@, slides: %i, categories: %i, duration: %i(ms)", depth, categoryID, slideCount, categoryCount, (int)(interval*1000));
-    [self.visitData addObject:@[[NSNumber numberWithInteger:depth], categoryID, [NSNumber numberWithInteger:slideCount], [NSNumber numberWithInteger:categoryCount], [NSNumber numberWithDouble:interval]]];
-    
-    NSMutableDictionary *responseJSON = httpResponse.data;
-    NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
-    if(responseJSON[CONTENT_FIELD_DATA]) {
-        mutableArray = [NSMutableArray arrayWithArray:responseJSON[CONTENT_FIELD_DATA]];
-        for(NSMutableDictionary *dict in mutableArray) {
-            [self traverseVisitContent:dict[CONTENT_FIELD_ID] Depth:depth+1];
-        }
-    }
-}
-
-- (void)traverseVisitReport {
-    NSInteger maxDepth=0, maxSlides=0, maxCategories=0, slideCount=0, categoryCount=0;
-    double duration = 0.0;
-    for(NSArray *array in self.visitData) {
-        if([array[0] intValue] > maxDepth)      maxDepth      = [array[0] intValue];
-        if([array[2] intValue] > maxSlides)     maxSlides     = [array[2] intValue];
-        if([array[3] intValue] > maxCategories) maxCategories = [array[3] intValue];
-        
-        
-        slideCount    += [array[2] intValue];
-        categoryCount += [array[3] intValue];
-        duration      += [array[4] doubleValue];
-    }
-    User *user = [[User alloc] init];
-    NSLog(@"name: %@, deptID:%@, employeeID: %@", user.name, user.deptID, user.employeeID);
-    NSLog(@"maxDepth: %i, maxSlides: %i, maxCategories: %i", maxDepth, maxSlides, maxCategories);
-    NSLog(@"slideCount: %i, categoryCount: %i", slideCount, categoryCount);
-    NSLog(@"averageVisit: %i (max)", (int)(duration/categoryCount*1000));
-    NSLog(@"self:%i, caculate: %i, isValid: %i", [self.visitData count], categoryCount, [self.visitData count] == categoryCount);
-}
 @end

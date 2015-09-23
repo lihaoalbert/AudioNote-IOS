@@ -17,11 +17,13 @@
 #import "ViewControllerThird.h"
 
 
+#import "HttpUtils.h"
 #import "ViewUtils.h"
 #import "processPattern.h"
 #import "DatabaseUtils.h"
-#import "ViewCommonUtils.h"
+#import "DataHelper.h"
 #import "ISRDataHelper.h"
+#import "HttpResponse.h"
 
 #define kTopBarHeight 44.0
 #define ScreenWidth [[UIScreen mainScreen] bounds].size.width
@@ -50,7 +52,6 @@
 @property (nonatomic, nonatomic) NSMutableArray     *latestDataList;
 @property (nonatomic, nonatomic) NSInteger          listDataLimit;
 @property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
-@property (nonatomic, nonatomic) ViewCommonUtils    *viewCommonUtils;
 
 // begin voice record
 @property (weak, nonatomic) IBOutlet UIButton       *voiceBtn;
@@ -91,7 +92,6 @@
     
     // init Utils
     self.databaseUtils   = [[DatabaseUtils alloc] init];
-    self.viewCommonUtils = [[ViewCommonUtils alloc] init];
     //[self.databaseUtils executeSQL: @"delete from voice_record"];
     self.isCanceled      = YES;
     
@@ -109,7 +109,7 @@
     NSString *initString = [[NSString alloc] initWithFormat:@"appid=%@", iflyAppId];
     [IFlySpeechUtility createUtility:initString];
     // 创建识别
-    self.iFlySpeechRecognizer = [self.viewCommonUtils CreateRecognizer:self Domain:@"iat"];
+    self.iFlySpeechRecognizer = [ISRDataHelper CreateRecognizer:self Domain:@"iat"];
     self.uploader = [[IFlyDataUploader alloc] init];
     
     //NSLog(@"IFly Version: %@", [IFlySetting getVersion]);
@@ -130,7 +130,7 @@
     //[self.latestView setEditing:YES animated:YES];
     
     
-    self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
+    self.latestDataList = [DataHelper getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
     
     if([self.latestDataList count] == 0) {
         NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
@@ -183,12 +183,12 @@
     self.gHighlightedTextColor  = [UIColor orangeColor];
     
     // 无网络时，禁用[语音录入]按钮
-    self.isNetWorkConnected = [ViewCommonUtils isNetworkAvailable];
+    self.isNetWorkConnected = [HttpUtils isNetworkAvailable];
     self.voiceBtn.enabled = self.isNetWorkConnected;
     
     
     
-    NSString *popText = [NSString stringWithFormat:@"网络: %@", [ViewCommonUtils networkType]];
+    NSString *popText = [NSString stringWithFormat:@"网络: %@", [HttpUtils networkType]];
     [ViewUtils showPopupView:self.view Info:popText];
     
     [self.latestView reloadData];
@@ -224,7 +224,7 @@
     //设置为录音模式
     [self.iFlySpeechRecognizer setParameter:IFLY_AUDIO_SOURCE_MIC forKey:@"audio_source"];
     bool ret = [self.iFlySpeechRecognizer startListening];
-    if (ret) {
+    if(ret) {
         // clear text when start recognizer tart
         self.iFlyRecognizerStartDate = [NSDate date];
         
@@ -396,14 +396,16 @@
             data = [data stringByAppendingFormat:@", \"nMoney\":\"%@\"", t_nMoney];
             data = [data stringByAppendingFormat:@", \"nTime\":\"%@\"", t_nTime];
             data = [data stringByAppendingString:@"}"];
+            NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"data": @{@"input": self.iFlyRecognizerResult.copy, @"szRemain": t_szRemain, @"szType": t_szType, @"nMoney": t_nMoney, @"nTime":t_nTime}}];
 
             if(self.isNetWorkConnected) {
-                [ViewCommonUtils httpPostDeviceData: data];
+                HttpResponse *httpResponse = [DataHelper httpPostDeviceData:params];
+                
             }
             // 功能 3.1 END
             
             
-            self.latestDataList = [self.viewCommonUtils getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
+            self.latestDataList = [DataHelper getDataListWith: self.databaseUtils Limit: self.listDataLimit Offset: 0];
             [self.latestView reloadData];
         }
         

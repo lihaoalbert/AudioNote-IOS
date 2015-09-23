@@ -9,6 +9,6 @@
 #ifndef AudioNote_const_h
 #define AudioNote_const_h
 
-#define BASE_URL @""
+#define BASE_URL @"http://xiao6yuji.com"
 
 #endif

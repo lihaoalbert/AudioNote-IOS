@@ -293,7 +293,7 @@
 
 
 
-- (NSMutableArray *) getReportData: (NSString *) type {
+- (NSMutableArray *)getReportData:(NSString *)type {
     sqlite3 *database;
     sqlite3_stmt *statement;
     NSString *data = [[NSString alloc] init];
@@ -371,7 +371,7 @@
 
 }
 
--(NSMutableArray*) getReportDataWithType: (NSString *) type {
+-(NSMutableArray*)getReportDataWithType: (NSString *) type {
     sqlite3 *database;
     sqlite3_stmt *statement;
     NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
@@ -418,6 +418,7 @@
     sqlite3_close(database);
     return mutableArray;
 }  // end of reportWithType()
+
 
 @end
 
