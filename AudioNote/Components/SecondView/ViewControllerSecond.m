@@ -45,8 +45,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
 
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [[UIView appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setBackgroundColor:[UIColor blackColor]];
+    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextAlignment:NSTextAlignmentCenter];
+    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextColor:[UIColor orangeColor]];
+    
     [self refreshView];
 }
 - (void)viewDidUnload
@@ -229,12 +237,6 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    
-    UIView *headerView = [UIView appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil];
-    headerView.backgroundColor = [UIColor blackColor];
-
-    UILabel *headerLabel = [UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil];
-    headerLabel.textAlignment = NSTextAlignmentCenter;
     
     return [self.listDataDate objectAtIndex:section];;
 }

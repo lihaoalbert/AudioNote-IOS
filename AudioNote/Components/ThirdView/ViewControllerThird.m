@@ -35,12 +35,30 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    // TableView
+    self.listView.delegate   = self;
+    self.listView.dataSource = self;
+    
+    
+    //[self.listView setEditing:YES animated:YES];
+    self.databaseUtils = [[DatabaseUtils alloc] init];
+    
+    
+    self.gBackground            = [UIColor blackColor];
+    self.gTextcolor             = [UIColor whiteColor];
+    self.gHighlightedTextColor = [UIColor orangeColor];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextAlignment:NSTextAlignmentCenter];
+    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextColor:[UIColor orangeColor]];
+    
     [self refresh];
 }
 
-
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
     self.listView      = nil;
     self.listDict      = nil;
@@ -58,19 +76,6 @@
 }
 
 - (void) refresh {
-    // TableView
-    self.listView.delegate   = self;
-    self.listView.dataSource = self;
-    
-    //[self.listView setEditing:YES animated:YES];
-    self.databaseUtils = [[DatabaseUtils alloc] init];
-    
-    
-    self.gBackground            = [UIColor blackColor];
-    self.gTextcolor             = [UIColor whiteColor];
-    self.gHighlightedTextColor = [UIColor orangeColor];
-    
-
     NSArray *tagDatas      = (NSArray *)[self.databaseUtils getReportDataWithType: @"Year"];
     NSArray *todayData     = (NSArray *)[self.databaseUtils getReportData: @"today"];
     NSArray *thisWeekData  = (NSArray *)[self.databaseUtils getReportData: @"latest_7_days"];
@@ -133,8 +138,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextAlignment:NSTextAlignmentCenter];
-    [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextColor:[UIColor orangeColor]];
+    
     return [self.listDictKeys objectAtIndex:section];
 }
 

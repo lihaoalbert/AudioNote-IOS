@@ -35,6 +35,7 @@
 @property (nonatomic, strong) NSMutableDictionary *dict;
 
 // local fields
+@property (nonatomic, strong) NSMutableArray *errors;
 @property (nonatomic, strong) NSString *dbVersion;
 @property (nonatomic, strong) NSString *fileSystemSize;
 @property (nonatomic, strong) NSString *fileSystemFreeSize;
@@ -43,13 +44,10 @@
 
 
 // instance methods
-- (BOOL)isUpgrade;
-- (void)reload;
-- (void)updateTimestamp;
-- (void)save;
 - (NSString *)simpleDescription;
 + (NSString *)machine;
 + (NSString *)machineHuman;
+- (BOOL)isUpgrade;
 
 // class methods
 + (NSString *)pgy_app_id;

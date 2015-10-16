@@ -90,10 +90,12 @@
 
 - (void)setViewControllers:(NSMutableArray *)viewControllers {
     _viewControllers = [NSMutableArray arrayWithArray:viewControllers];
+    
     for (UIViewController *viewController in viewControllers) {
         [viewController willMoveToParentViewController:self];
         viewController.view.frame = CGRectMake(0.0, kTopBarHeight, ScreenWidth, self.view.bounds.size.height-kTopBarHeight);
         [self.scrollView addSubview:viewController.view];
+        
         [viewController didMoveToParentViewController:self];
     }
     
@@ -102,6 +104,9 @@
     
     [self layoutSubViewsWithDirection:kMoveDirectionRight];
 }
+
+
+
 
 /*
 - (void)layoutSubViews {

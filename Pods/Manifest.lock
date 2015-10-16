@@ -41,7 +41,7 @@ DEPENDENCIES:
   - MBProgressHUD (~> 0.9.1)
   - MMMaterialDesignSpinner (~> 0.2.0)
   - Reachability (~> 3.2)
-  - SBJson
+  - SBJson (~> 4.0.2)
   - SCLAlertView-Objective-C (~> 0.7.4)
 
 SPEC CHECKSUMS:
@@ -55,4 +55,4 @@ SPEC CHECKSUMS:
   SBJson: c18691cc18375b14664ff0fec841f8c4faef1934
   SCLAlertView-Objective-C: 062808b4664add2d38d44b7867267985a02267ad
 
-COCOAPODS: 0.39.0.beta.4
+COCOAPODS: 0.38.2

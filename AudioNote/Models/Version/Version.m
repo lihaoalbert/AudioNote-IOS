@@ -19,9 +19,11 @@
 
 - (Version *)init {
     if(self = [super init]) {
+        _errors = [NSMutableArray array];
+        
         NSDictionary *localVersionInfo =[[NSBundle mainBundle] infoDictionary];
         _current   = localVersionInfo[@"CFBundleShortVersionString"];
-        _appName   = localVersionInfo[@"CFBundleExecutable"];
+        _appName   = localVersionInfo[@"CFBundleDisplayName"];
         _lang      = localVersionInfo[@"CFBundleDevelopmentRegion"];
         _suport    = localVersionInfo[@"MinimumOSVersion"];
         _sdkName   = localVersionInfo[@"DTSDKName"];
@@ -33,48 +35,15 @@
         _fileSystemSize     = [fattributes objectForKey:NSFileSystemSize];
         _fileSystemFreeSize = [fattributes objectForKey:NSFileSystemFreeSize];
         
-        [self reload];
-        [self updateTimestamp];
+
     }
     return self;
-}
-
-- (void)updateTimestamp {
-    NSString *timestamp = [DateUtils dateToStr:[NSDate date] Format:DATE_FORMAT];;
-    if(!self.localCreatedDate) { _localCreatedDate = timestamp; }
-    _localUpdatedDate = timestamp;
 }
 
 - (BOOL)isUpgrade {
     return self.latest && ![self.latest isEqualToString:self.current];
 }
 
-- (void)reload {
-    NSString *configPath = [[FileUtils basePath] stringByAppendingPathComponent:UPGRADE_CONFIG_FILENAME];
-    NSMutableDictionary *configDict = [FileUtils readConfigFile:configPath];
-    _latest    = configDict[VERSION_LATEST];
-    _insertURL = configDict[VERSION_INSERTURL];
-    _changeLog = configDict[VERSION_CHANGELOG];
-}
-
-- (void)save {
-    NSString *configPath = [[FileUtils basePath] stringByAppendingPathComponent:UPGRADE_CONFIG_FILENAME];
-    NSMutableDictionary *configDict = [FileUtils readConfigFile:configPath];
-    configDict[VERSION_CHANGELOG]   = self.changeLog;
-    configDict[VERSION_LATEST]      = self.latest;
-    configDict[VERSION_INSERTURL]   = self.insertURL;
-    configDict[SLIDE_DESC_LOCAL_CREATEAT] = self.localCreatedDate;
-    configDict[SLIDE_DESC_LOCAL_UPDATEAT] = self.localUpdatedDate;
-    
-    [FileUtils writeJSON:configDict Into:configPath];
-}
-
-- (void)setLatest:(NSString *)latest {
-    if(![self.latest isEqualToString:latest]) {
-        _latest = latest;
-        [self save];
-    }
-}
 
 - (NSString *)simpleDescription {
     return [NSString stringWithFormat:@"<#%@ version: %@, dbVersion:%@, machine: %@(%@), sdkName: %@, lang: %@>", self.appName,self.current,self.dbVersion, [Version machine], [Version machineHuman], self.sdkName,self.lang];
@@ -132,9 +101,17 @@
     else if ([device isEqualToString:@"iPhone1,2"]) human = @"iPhone 3G";
     else if ([device isEqualToString:@"iPhone2,1"]) human = @"iPhone 3GS";
     else if ([device isEqualToString:@"iPhone3,1"]) human = @"iPhone 4";
+    else if ([device isEqualToString:@"iPhone3,2"]) human = @"Verizon iPhone 4";
     else if ([device isEqualToString:@"iPhone4,1"]) human = @"iPhone 4S";
     else if ([device isEqualToString:@"iPhone5,2"]) human = @"iPhone 5";
-    else if ([device isEqualToString:@"iPhone3,2"]) human = @"Verizon iPhone 4";
+    else if ([device isEqualToString:@"iPhone5,1"]) human =  @"iPhone 5 (A1428)";
+    else if ([device isEqualToString:@"iPhone5,2"]) human =  @"iPhone 5 (A1429/A1442)";
+    else if ([device isEqualToString:@"iPhone5,3"]) human =  @"iPhone 5c (A1456/A1532)";
+    else if ([device isEqualToString:@"iPhone5,4"]) human =  @"iPhone 5c (A1507/A1516/A1526/A1529)";
+    else if ([device isEqualToString:@"iPhone6,1"]) human =  @"iPhone 5s (A1453/A1533)";
+    else if ([device isEqualToString:@"iPhone6,2"]) human =  @"iPhone 5s (A1457/A1518/A1528/A1530)";
+    else if ([device isEqualToString:@"iPhone7,1"]) human =  @"iPhone 6 Plus (A1522/A1524)";
+    else if ([device isEqualToString:@"iPhone7,2"]) human =  @"iPhone 6 (A1549/A1586)";
     
     else if ([device isEqualToString:@"iPod1,1"]) human = @"iPod Touch 1G";
     else if ([device isEqualToString:@"iPod2,1"]) human = @"iPod Touch 2G";
@@ -145,6 +122,6 @@
 }
 
 + (NSString *)pgy_app_id {
-    return PGY_APP_ID;
+    return PGYER_APP_ID;
 }
 @end

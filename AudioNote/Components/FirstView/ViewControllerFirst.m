@@ -15,6 +15,7 @@
 #import "ViewControllerFirst.h"
 #import "ViewControllerSecond.h"
 #import "ViewControllerThird.h"
+#import "SettingsViewController.h"
 
 
 #import "HttpUtils.h"
@@ -37,21 +38,21 @@
 @property (nonatomic, strong) IFlyDataUploader     * uploader;
 
 @property (nonatomic, strong) MBProgressHUD        *progressHUD;
-@property (nonatomic)         BOOL                 isCanceled;    // voice status
-@property (nonatomic)         BOOL                 isNetWorkConnected;
+@property (assign, nonatomic) BOOL                 isCanceled;    // voice status
+@property (assign, nonatomic) BOOL                 isNetWorkConnected;
 
 
 // iFly recognizer convert audio to text. （功能1）
-@property (nonatomic, nonatomic) NSMutableString    *iFlyRecognizerResult;
-@property (nonatomic, nonatomic) NSDate             *iFlyRecognizerStartDate;
-@property (nonatomic, nonatomic) NSDateFormatter    *gDateFormatter;
+@property (strong, nonatomic) NSMutableString    *iFlyRecognizerResult;
+@property (strong, nonatomic) NSDate             *iFlyRecognizerStartDate;
+@property (strong, nonatomic) NSDateFormatter    *gDateFormatter;
 
 
 // latest record list ui
-@property (weak, nonatomic) IBOutlet UITableView    *latestView;
-@property (nonatomic, nonatomic) NSMutableArray     *latestDataList;
-@property (nonatomic, nonatomic) NSInteger          listDataLimit;
-@property (nonatomic, nonatomic) DatabaseUtils      *databaseUtils;
+@property (weak, nonatomic) IBOutlet UITableView *latestView;
+@property (strong, nonatomic) NSMutableArray     *latestDataList;
+@property (assign, nonatomic) NSInteger          listDataLimit;
+@property (strong, nonatomic) DatabaseUtils      *databaseUtils;
 
 // begin voice record
 @property (weak, nonatomic) IBOutlet UIButton       *voiceBtn;
@@ -78,12 +79,27 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 
-    [self refresh];
+    self.latestDataList = [NSMutableArray array];
     
+    
+    UIPinchGestureRecognizer *gesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinches:)];
+    [self.latestView addGestureRecognizer:gesture];
+    
+    [self refresh];
 }
 
+-(void)handlePinches:(UIPinchGestureRecognizer *)paramSender{
+    if(paramSender.state == UIGestureRecognizerStateBegan){
+        NSLog(@"first page: pinch gesture.");
+        
+        SettingsViewController *settingsVC = [[SettingsViewController alloc] init];
+        UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:settingsVC];
+        [self.view.window.rootViewController presentViewController:navVC animated:YES completion:nil];
+    }
+}
+
+
 - (void) refresh {
-    
     // latest n rows data list view
     self.listDataLimit = 5;
     self.latestView.delegate   = self;
@@ -120,7 +136,6 @@
     // global date foramt
     self.gDateFormatter = [[NSDateFormatter alloc] init];
     [self.gDateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    
     
     
     //self.latestView = [self.latestView initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 100)];
@@ -172,11 +187,11 @@
     [self.voiceBtn addTarget:self action:@selector(startVoiceRecord) forControlEvents:UIControlEventTouchDown];
     [self.voiceBtn addTarget:self action:@selector(stopVoiceRecord) forControlEvents:UIControlEventTouchUpInside];
     
-    CGFloat b_width = self.view.bounds.size.width;
-    CGFloat b_height = self.view.bounds.size.height;
-    NSLog(@"view width: %f, height: %f", b_width, b_height);
-    NSLog(@"screen width: %f, height: %f", ScreenWidth, ScreenHeight);
-    self.voiceBtn.frame = CGRectMake(b_width/8, b_height/2, b_width*3/4, b_height/2);
+//    CGFloat b_width = self.view.bounds.size.width;
+//    CGFloat b_height = self.view.bounds.size.height;
+//    NSLog(@"view width: %f, height: %f", b_width, b_height);
+//    NSLog(@"screen width: %f, height: %f", ScreenWidth, ScreenHeight);
+//    self.voiceBtn.frame = CGRectMake(b_width/8, b_height/2, b_width*3/4, b_height/2);
 
     self.gBackground = [UIColor blackColor];
     self.gTextcolor  = [UIColor whiteColor];
@@ -185,8 +200,6 @@
     // 无网络时，禁用[语音录入]按钮
     self.isNetWorkConnected = [HttpUtils isNetworkAvailable];
     self.voiceBtn.enabled = self.isNetWorkConnected;
-    
-    
     
     NSString *popText = [NSString stringWithFormat:@"网络: %@", [HttpUtils networkType]];
     [ViewUtils showPopupView:self.view Info:popText];
@@ -220,7 +233,7 @@
 #pragma mark - Switch Voice Record
 
 -(void)startVoiceRecord {
-    self.isCanceled = NO;
+    _isCanceled = NO;
     //设置为录音模式
     [self.iFlySpeechRecognizer setParameter:IFLY_AUDIO_SOURCE_MIC forKey:@"audio_source"];
     bool ret = [self.iFlySpeechRecognizer startListening];
@@ -242,7 +255,7 @@
     [NSThread sleepForTimeInterval:0.5];
     
     [self.iFlySpeechRecognizer stopListening];
-    self.isCanceled = YES;
+    _isCanceled = YES;
     
     [_progressHUD hide:YES];
 }
@@ -258,7 +271,7 @@
  * @see
  */
 - (void) onVolumeChanged: (int)volume {
-    if (self.isCanceled) {
+    if (_isCanceled) {
         [_progressHUD hide:YES];
         
         return;
@@ -329,6 +342,7 @@
     if(isLast == YES) {
         if([self.iFlyRecognizerResult length] == 0) {
             [ViewUtils showPopupView:self.view Info:@"未创建"];
+            [_progressHUD hide:YES];
         }
         else {
             // caculate duration
@@ -428,11 +442,10 @@
     return [self.latestDataList count];
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellID = @"cellID";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-    if (cell == nil) {
+    if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
     }
     cell.backgroundColor                 = self.gBackground;
@@ -465,8 +478,9 @@
 #pragma mark - <UIAlertView>
 
 - (void) handleTableViewCellLongPress:(UILongPressGestureRecognizer *)gesture{
-    if (gesture.state != UIGestureRecognizerStateBegan)
+    if (gesture.state != UIGestureRecognizerStateBegan) {
         return;
+    }
     
     UITableViewCell *cell = (UITableViewCell *)gesture.view;
 
