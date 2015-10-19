@@ -17,6 +17,9 @@
 #define PYGER_PUBLIC_URL @"http://www.pgyer.com/xiao6say"
 #define PGYER_INFO_URL   @"http://www.pgyer.com/apiv1/app/getAppKeyByShortcut"
 
+#define DB_DIRNAME       @"db"
+#define DB_FILENAME      @"xiao6say.db"
+
 typedef NS_ENUM(NSInteger, SettingsIndex) {
     SettingsAppInfo = 0,
     SettingsFileInfo = 1,

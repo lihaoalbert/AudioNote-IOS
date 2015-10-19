@@ -98,11 +98,14 @@
 		C4A90D051BCFA96E00B1FB3B /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4A90D031BCFA96E00B1FB3B /* DetailViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		C4A90D0D1BCFAA3700B1FB3B /* Version+Pgyer.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A90D081BCFAA3700B1FB3B /* Version+Pgyer.m */; settings = {ASSET_TAGS = (); }; };
 		C4A90D0F1BCFAA3700B1FB3B /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A90D0C1BCFAA3700B1FB3B /* Version.m */; settings = {ASSET_TAGS = (); }; };
-		C4A90D131BCFABA500B1FB3B /* UpgradeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A90D111BCFABA500B1FB3B /* UpgradeViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C4A90D141BCFABA500B1FB3B /* UpgradeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4A90D121BCFABA500B1FB3B /* UpgradeViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		C4B813681A482F80001218E1 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C4B813671A482F80001218E1 /* libsqlite3.dylib */; };
 		C4C9956A1A64BA38001B085A /* ios_icon-200-200.png in Resources */ = {isa = PBXBuildFile; fileRef = C4C995681A64BA38001B085A /* ios_icon-200-200.png */; };
 		C4C9956B1A64BA38001B085A /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C4C995691A64BA38001B085A /* icon@2x.png */; };
+		C4D88C021BD39D7500EF9BB0 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4D88C011BD39D7500EF9BB0 /* MessageUI.framework */; };
+		C4D88C071BD39DF300EF9BB0 /* UpgradeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D88C051BD39DF300EF9BB0 /* UpgradeViewController.m */; settings = {ASSET_TAGS = (); }; };
+		C4D88C081BD39DF300EF9BB0 /* UpgradeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4D88C061BD39DF300EF9BB0 /* UpgradeViewController.xib */; settings = {ASSET_TAGS = (); }; };
+		C4D88C0D1BD39E3E00EF9BB0 /* ExportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D88C0B1BD39E3E00EF9BB0 /* ExportViewController.m */; settings = {ASSET_TAGS = (); }; };
+		C4D88C0E1BD39E3E00EF9BB0 /* ExportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4D88C0C1BD39E3E00EF9BB0 /* ExportViewController.xib */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -255,13 +258,17 @@
 		C4A90D081BCFAA3700B1FB3B /* Version+Pgyer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Version+Pgyer.m"; sourceTree = "<group>"; };
 		C4A90D0B1BCFAA3700B1FB3B /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		C4A90D0C1BCFAA3700B1FB3B /* Version.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Version.m; sourceTree = "<group>"; };
-		C4A90D101BCFABA500B1FB3B /* UpgradeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UpgradeViewController.h; path = UpgradeViewController/UpgradeViewController.h; sourceTree = "<group>"; };
-		C4A90D111BCFABA500B1FB3B /* UpgradeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UpgradeViewController.m; path = UpgradeViewController/UpgradeViewController.m; sourceTree = "<group>"; };
-		C4A90D121BCFABA500B1FB3B /* UpgradeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = UpgradeViewController.xib; path = UpgradeViewController/UpgradeViewController.xib; sourceTree = "<group>"; };
 		C4B813671A482F80001218E1 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		C4C995681A64BA38001B085A /* ios_icon-200-200.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios_icon-200-200.png"; sourceTree = "<group>"; };
 		C4C995691A64BA38001B085A /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		C4C9956C1A64BA40001B085A /* zhiwen8-345-500.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zhiwen8-345-500.png"; sourceTree = "<group>"; };
+		C4D88C011BD39D7500EF9BB0 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		C4D88C041BD39DF300EF9BB0 /* UpgradeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpgradeViewController.h; sourceTree = "<group>"; };
+		C4D88C051BD39DF300EF9BB0 /* UpgradeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpgradeViewController.m; sourceTree = "<group>"; };
+		C4D88C061BD39DF300EF9BB0 /* UpgradeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UpgradeViewController.xib; sourceTree = "<group>"; };
+		C4D88C0A1BD39E3E00EF9BB0 /* ExportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExportViewController.h; sourceTree = "<group>"; };
+		C4D88C0B1BD39E3E00EF9BB0 /* ExportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExportViewController.m; sourceTree = "<group>"; };
+		C4D88C0C1BD39E3E00EF9BB0 /* ExportViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExportViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,6 +276,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4D88C021BD39D7500EF9BB0 /* MessageUI.framework in Frameworks */,
 				C4B813681A482F80001218E1 /* libsqlite3.dylib in Frameworks */,
 				C44C1ECF1A32FB3400BDE49B /* iflyMSC.framework in Frameworks */,
 				C44C1ECD1A32FACB00BDE49B /* libz.dylib in Frameworks */,
@@ -590,6 +598,7 @@
 		C44C1ED01A32FB3C00BDE49B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C4D88C011BD39D7500EF9BB0 /* MessageUI.framework */,
 				C4B813671A482F80001218E1 /* libsqlite3.dylib */,
 				C44C1ECE1A32FB3400BDE49B /* iflyMSC.framework */,
 				C44C1ECC1A32FACB00BDE49B /* libz.dylib */,
@@ -665,13 +674,12 @@
 		C4A6636C1BCF4D1B0002F3C3 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				C4D88C091BD39E1F00EF9BB0 /* ExportData */,
+				C4D88C031BD39DF300EF9BB0 /* UpgradeViewController */,
 				C4A90D001BCFA96E00B1FB3B /* DetailViewController */,
 				C4A6636D1BCF4F080002F3C3 /* SettingsViewController.h */,
 				C4A6636E1BCF4F080002F3C3 /* SettingsViewController.m */,
 				C4A663701BCF4F260002F3C3 /* SettingsViewController.xib */,
-				C4A90D101BCFABA500B1FB3B /* UpgradeViewController.h */,
-				C4A90D111BCFABA500B1FB3B /* UpgradeViewController.m */,
-				C4A90D121BCFABA500B1FB3B /* UpgradeViewController.xib */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -712,6 +720,26 @@
 				C44983F41BB2EAA800BEA3F8 /* ViewUtils */,
 			);
 			name = Utils;
+			sourceTree = "<group>";
+		};
+		C4D88C031BD39DF300EF9BB0 /* UpgradeViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C4D88C041BD39DF300EF9BB0 /* UpgradeViewController.h */,
+				C4D88C051BD39DF300EF9BB0 /* UpgradeViewController.m */,
+				C4D88C061BD39DF300EF9BB0 /* UpgradeViewController.xib */,
+			);
+			path = UpgradeViewController;
+			sourceTree = "<group>";
+		};
+		C4D88C091BD39E1F00EF9BB0 /* ExportData */ = {
+			isa = PBXGroup;
+			children = (
+				C4D88C0A1BD39E3E00EF9BB0 /* ExportViewController.h */,
+				C4D88C0B1BD39E3E00EF9BB0 /* ExportViewController.m */,
+				C4D88C0C1BD39E3E00EF9BB0 /* ExportViewController.xib */,
+			);
+			path = ExportData;
 			sourceTree = "<group>";
 		};
 		EFC5AEF8610E52707B336C1F /* Pods */ = {
@@ -816,6 +844,7 @@
 				C45258141A77ED7A00102BBE /* icon-76.png in Resources */,
 				C452581A1A77ED7A00102BBE /* icon@2x.png in Resources */,
 				4A78E6B41A51527E006FF062 /* tabbar_selected_background@2x.png in Resources */,
+				C4D88C081BD39DF300EF9BB0 /* UpgradeViewController.xib in Resources */,
 				C452580B1A77ED7A00102BBE /* icon-29@2x.png in Resources */,
 				C45258211A77ED7A00102BBE /* navigationbar_background.png in Resources */,
 				4A78E6B31A51527E006FF062 /* tabbar_selected_background.png in Resources */,
@@ -827,6 +856,7 @@
 				C452581F1A77ED7A00102BBE /* navigationbar_background_tall.png in Resources */,
 				C4A90D051BCFA96E00B1FB3B /* DetailViewController.xib in Resources */,
 				C4A663711BCF4F260002F3C3 /* SettingsViewController.xib in Resources */,
+				C4D88C0E1BD39E3E00EF9BB0 /* ExportViewController.xib in Resources */,
 				C45258071A77ED7A00102BBE /* first_normal@2x.png in Resources */,
 				4A78E6B61A51527E006FF062 /* third_normal@2x.png in Resources */,
 				C4C9956B1A64BA38001B085A /* icon@2x.png in Resources */,
@@ -839,7 +869,6 @@
 				C45258061A77ED7A00102BBE /* first_normal.png in Resources */,
 				C4363D081A68B1990016A414 /* LaunchScreen.xib in Resources */,
 				4A78E6A91A51527E006FF062 /* navigationbar_background.png in Resources */,
-				C4A90D141BCFABA500B1FB3B /* UpgradeViewController.xib in Resources */,
 				C45258111A77ED7A00102BBE /* icon-72.png in Resources */,
 				4A78E6A71A51527E006FF062 /* first_selected.png in Resources */,
 				4A78E6AA1A51527E006FF062 /* navigationbar_background@2x.png in Resources */,
@@ -928,11 +957,11 @@
 				C4A663661BCDEF6D0002F3C3 /* PullRefreshTableViewController.m in Sources */,
 				C44983DA1BB2539200BEA3F8 /* ViewControllerContainer.m in Sources */,
 				C44C1EA11A32FA7500BDE49B /* main.m in Sources */,
+				C4D88C0D1BD39E3E00EF9BB0 /* ExportViewController.m in Sources */,
 				C44983E01BB2539200BEA3F8 /* ViewControllerThird.m in Sources */,
 				C4A90D0D1BCFAA3700B1FB3B /* Version+Pgyer.m in Sources */,
 				C44983DC1BB2539200BEA3F8 /* ViewControllerFirst.m in Sources */,
 				C44983FA1BB2EAA800BEA3F8 /* FileUtils.m in Sources */,
-				C4A90D131BCFABA500B1FB3B /* UpgradeViewController.m in Sources */,
 				C44984011BB2EB6600BEA3F8 /* ExtendNSLogFunctionality.m in Sources */,
 				C449841E1BB2EBD100BEA3F8 /* HttpResponse.m in Sources */,
 				C44983FE1BB2EAA800BEA3F8 /* ViewUtils.m in Sources */,
@@ -941,6 +970,7 @@
 				C4A663461BCDEDA00002F3C3 /* DatabaseUtils.m in Sources */,
 				C4A663691BCDEF6D0002F3C3 /* MyTableViewCell.m in Sources */,
 				C4A6636F1BCF4F080002F3C3 /* SettingsViewController.m in Sources */,
+				C4D88C071BD39DF300EF9BB0 /* UpgradeViewController.m in Sources */,
 				C44983FD1BB2EAA800BEA3F8 /* DateUtils.m in Sources */,
 				C4A6635A1BCDEF170002F3C3 /* NSMutableArray+Util.m in Sources */,
 			);

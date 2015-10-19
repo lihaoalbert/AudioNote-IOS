@@ -10,14 +10,17 @@
 #define AudioNote_Database_Utils_h
 
 #import <Foundation/Foundation.h>
-#import <sqlite3.h>
+//#import <sqlite3.h>
+#import <FMDB.h>
 
 #define kDatabaseName @"voice_record.sqlite3"
 
 
 @interface DatabaseUtils : NSObject
 
-@property NSString        *databaseFilePath;
+@property NSString *dbVersion;
+@property NSString *dbName;
+@property NSString *dbPath;
 
 + (void) setUP;
 - (NSInteger) executeSQL: (NSString *) sql;

@@ -7,6 +7,8 @@
 //
 
 #import "DatabaseUtils.h"
+#import "const.h"
+#import "FileUtils.h"
 
 @implementation DatabaseUtils
 
@@ -14,10 +16,7 @@
 
 - (id) init {
     if(self = [super init]) {
-        NSArray *paths               = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        self.databaseFilePath        = [documentsDirectory stringByAppendingPathComponent:kDatabaseName];
-        //NSLog(@"%@", self.databaseFilePath);
+        _dbPath = [FileUtils dirPath:DB_DIRNAME FileName:DB_FILENAME];
     }
     return self;
 }
@@ -53,36 +52,27 @@
     [databaseUtils executeSQL: table_voice_record];
 }
 
-- (NSInteger) executeSQL: (NSString *) sql {
-    sqlite3 *database;
-    //NSLog(@"executeSQL: %@", sql);
-    int result = sqlite3_open([self.databaseFilePath UTF8String], &database);
-    if (result != SQLITE_OK) {
-        NSLog(@"open database failed - line number: %i.", __LINE__);
-        return -__LINE__;
-    }
- 
-    char *errorMsg;
-    if (sqlite3_exec(database, [sql UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
-        sqlite3_close(database);
-        NSLog(@"execute sql failed.");
-        NSLog(@"%@", sql);
-        NSLog(@"errorMsg.");
-        NSLog(@"%s", errorMsg);
-        return -__LINE__;
-    }
-
-    ////////////////////////////////
-    // Get the ID just execute
-    ////////////////////////////////
-    sqlite3_int64 lastRowId = sqlite3_last_insert_rowid(database);
-    if (lastRowId > 0) {
-        return (NSInteger)lastRowId;
+/**
+ *  需要的取值方式未定义或过于复杂时，直接执行SQL语句
+ *  若是SELECT则返回搜索到的行ID
+ *  若是DELECT/INSERT可忽略返回值
+ *
+ *  @param sql SQL语句，请参考SQLite语法
+ *
+ *  @return 返回搜索到数据行的ID,执行失败返回该代码行
+ */
+- (NSInteger)executeSQL:(NSString *)sql {
+    FMDatabase *db = [FMDatabase databaseWithPath:self.dbPath];
+    if ([db open]) {
+        BOOL isExecuteSuccessfully = [db executeStatements:sql];
+        if(!isExecuteSuccessfully) {
+            NSLog(@"Executed faile with SQL below:\n%@", sql);
+        }
+        [db close];
     }
     else {
-        NSLog(@"lastRowId#%li < 0.", (long)lastRowId);
+        NSLog(@"Cannot open DB at the path: %@", self.dbPath);
     }
-    
     return -__LINE__;
 } // end of executeSQL()
 
@@ -96,21 +86,16 @@
                             To: (NSString *) to
                          Order: (NSString *) column
                         Format: (NSString *) format {
-    sqlite3 *database;
-    sqlite3_stmt *statement;
-    NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
-    
-    if (sqlite3_open([self.databaseFilePath UTF8String], &database) != SQLITE_OK) {
-        NSLog(@"Sqlite3 DataBase Open Failed.");
-        NSLog(@"Abort Line Number: %i", __LINE__);
-        return mutableArray;
-    }
+
+    NSMutableArray *mutableArray = [NSMutableArray array];
     
     //create_time >= '%s 00:00:00' AND create_time <= '%s 23:59:59'
-    if(from.length == 10)
+    if(from.length == 10) {
         from = [NSString stringWithFormat:@"%@ 00:00:00", from];
-    if(to.length == 10)
+    }
+    if(to.length == 10) {
         to = [NSString stringWithFormat:@"%@ 23:59:59", to];
+    }
     
     ////////////////////////////////
     // Select Data into NSData
@@ -122,59 +107,62 @@
     int _id, _nMoney, _nTime, _duration;
     NSString *_input, *_description, *_category;
     NSString *_begin, *_create_time, *_modify_time;
-    if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
-        while (sqlite3_step(statement) == SQLITE_ROW) {
-            _id          = sqlite3_column_int(statement, 0);
-            _input       = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 1)encoding:NSUTF8StringEncoding];
-            _description = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 2)encoding:NSUTF8StringEncoding];
-            _category    = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 3)encoding:NSUTF8StringEncoding];
-            _nMoney      = sqlite3_column_int(statement, 4);
-            _nTime       = sqlite3_column_int(statement, 5);
-            _begin       = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 6)encoding:NSUTF8StringEncoding];
-            _duration    = sqlite3_column_int(statement, 7);
-            _create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 8)encoding:NSUTF8StringEncoding];
-            _modify_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 9)encoding:NSUTF8StringEncoding];
-            //NSLog(@"_id = %i\n_input = %@ \n_description = %@ \n_category = %@\n_nMoney = %i\n _nTime = %i\n _begin       = %@\n_duration = %i\n_create_time = %@\n_modify_time = %@\n===================\n", _id, _input, _description, _category, _nMoney, _nTime, _begin, _duration, _create_time, _modify_time);
-            
-            
-            NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
-            [mutableDictionary setObject:[NSNumber numberWithInteger:_id]  forKey:@"id"];
-            [mutableDictionary setObject:_input forKey:@"input"];
-            [mutableDictionary setObject:_description forKey:@"description"];
-            [mutableDictionary setObject:_category forKey:@"category"];
-            [mutableDictionary setObject:[NSNumber numberWithInteger:_nMoney]  forKey:@"nMoney"];
-            [mutableDictionary setObject:[NSNumber numberWithInteger:_nTime]  forKey:@"nTime"];
-            [mutableDictionary setObject:_begin forKey:@"begin"];
-            [mutableDictionary setObject:[NSNumber numberWithInteger:_duration]  forKey:@"duration"];
-            [mutableDictionary setObject:_create_time forKey:@"create_time"];
-            [mutableDictionary setObject:_modify_time forKey:@"modify_time"];
-            
-            
-            if([format isEqualToString: @"json"]) {
-                ////////////////////////////
-                // Transform mutableDictionary to json NSString
-                ////////////////////////////
-                NSError *error;
-                NSData *jsonData;
-                NSString *jsonStr;
-                
-                if ([NSJSONSerialization isValidJSONObject:mutableDictionary]) {
-                    // NSMutableDictionary convert to JSON Data
-                    jsonData = [NSJSONSerialization dataWithJSONObject:mutableDictionary options:NSJSONWritingPrettyPrinted error:&error];
-                    // JSON Data convert to NSString
-                    jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-                    //NSLog(@"NSMutableDictionary to JSON String: %@", jsonStr);
-                }
-                
-                // put josnString to NSMutableArray
-                [mutableArray addObject:jsonStr];
-            } else {
-                [mutableArray addObject: mutableDictionary];
-            }
-        }
-        sqlite3_finalize(statement);
+    
+    FMDatabase *db = [FMDatabase databaseWithPath:_dbPath];
+    if (![db open]) {
+        return mutableArray;
     }
-    sqlite3_close(database);
+    FMResultSet *s = [db executeQuery:query];
+    while([s next]) {
+        _id          = [s intForColumnIndex:0];
+        _input       = [s stringForColumnIndex:1];
+        _description = [s stringForColumnIndex:2];
+        _category    = [s stringForColumnIndex:3];
+        _nMoney      = [s intForColumnIndex:4];
+        _nTime       = [s intForColumnIndex:5];
+        _begin       = [s stringForColumnIndex:6];
+        _duration    = [s intForColumnIndex:7];
+        _create_time = [s stringForColumnIndex:8];
+        _modify_time = [s stringForColumnIndex:9];
+        //NSLog(@"_id = %i\n_input = %@ \n_description = %@ \n_category = %@\n_nMoney = %i\n _nTime = %i\n _begin       = %@\n_duration = %i\n_create_time = %@\n_modify_time = %@\n===================\n", _id, _input, _description, _category, _nMoney, _nTime, _begin, _duration, _create_time, _modify_time);
+        
+        
+        NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:_id]  forKey:@"id"];
+        [mutableDictionary setObject:_input forKey:@"input"];
+        [mutableDictionary setObject:_description forKey:@"description"];
+        [mutableDictionary setObject:_category forKey:@"category"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:_nMoney]  forKey:@"nMoney"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:_nTime]  forKey:@"nTime"];
+        [mutableDictionary setObject:_begin forKey:@"begin"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:_duration]  forKey:@"duration"];
+        [mutableDictionary setObject:_create_time forKey:@"create_time"];
+        [mutableDictionary setObject:_modify_time forKey:@"modify_time"];
+        
+        
+        if([format isEqualToString: @"json"]) {
+            ////////////////////////////
+            // Transform mutableDictionary to json NSString
+            ////////////////////////////
+            NSError *error;
+            NSData *jsonData;
+            NSString *jsonStr;
+            
+            if ([NSJSONSerialization isValidJSONObject:mutableDictionary]) {
+                // NSMutableDictionary convert to JSON Data
+                jsonData = [NSJSONSerialization dataWithJSONObject:mutableDictionary options:NSJSONWritingPrettyPrinted error:&error];
+                // JSON Data convert to NSString
+                jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                //NSLog(@"NSMutableDictionary to JSON String: %@", jsonStr);
+            }
+            
+            // put josnString to NSMutableArray
+            [mutableArray addObject:jsonStr];
+        } else {
+            [mutableArray addObject: mutableDictionary];
+        }
+    }
+    [db close];
     return mutableArray;
 }  // end of selectFrom: To: Order: Format:()
 
@@ -183,13 +171,10 @@
                          Offset: (NSInteger) offset
                           Order: (NSString *) column
                          Format: (NSString *) format{
-    sqlite3 *database;
-    sqlite3_stmt *statement;
-    NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
+    NSMutableArray *mutableArray = [NSMutableArray array];
     
-    if (sqlite3_open([self.databaseFilePath UTF8String], &database) != SQLITE_OK) {
-        NSLog(@"Sqlite3 DataBase Open Failed.");
-        NSLog(@"Abort Line Number: %i", __LINE__);
+    FMDatabase *db = [FMDatabase databaseWithPath:_dbPath];
+    if (![db open]) {
         return mutableArray;
     }
     
@@ -201,78 +186,78 @@
     int _id, _nMoney, _nTime, _duration;
     NSString *_input, *_description, *_category, *_nDate;
     NSString *_begin, *_create_time, *_modify_time, *_simple_create_time;
-    if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
-        while (sqlite3_step(statement) == SQLITE_ROW) {
-            _id          = sqlite3_column_int(statement, 0);
-            _input       = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 1)encoding:NSUTF8StringEncoding];
-            _description = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 2)encoding:NSUTF8StringEncoding];
-            _category    = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 3)encoding:NSUTF8StringEncoding];
-            _nMoney      = sqlite3_column_int(statement, 4);
-            _nTime       = sqlite3_column_int(statement, 5);
-            _begin       = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 6)encoding:NSUTF8StringEncoding];
-            _duration    = sqlite3_column_int(statement, 7);
-            _create_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 8)encoding:NSUTF8StringEncoding];
-            _modify_time = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 9)encoding:NSUTF8StringEncoding];
-            _nDate       = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 10)encoding:NSUTF8StringEncoding];
-            if ([_modify_time length] == 19)
-                _simple_create_time = [_create_time substringWithRange:NSMakeRange(0, 10)];
-            else
-                _simple_create_time = _create_time;
-            //NSLog(@"_id = %i\n_input = %@ \n_description = %@ \n_category = %@\n_nMoney = %i\n _nTime = %i\n _begin       = %@\n_duration = %i\n_create_time = %@\n_modify_time = %@\n===================\n", _id, _input, _description, _category, _nMoney, _nTime, _begin, _duration, _create_time, _modify_time);
-            
-            
-            NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
-            [mutableDictionary setObject:[NSNumber numberWithInteger:_id]  forKey:@"id"];
-            [mutableDictionary setObject:_input forKey:@"input"];
-            [mutableDictionary setObject:_description forKey:@"description"];
-            [mutableDictionary setObject:_category forKey:@"category"];
-            [mutableDictionary setObject:[NSNumber numberWithInteger:_nMoney]  forKey:@"nMoney"];
-            [mutableDictionary setObject:[NSNumber numberWithInteger:_nTime]  forKey:@"nTime"];
-            [mutableDictionary setObject:_nDate forKey:@"nDate"];
-            [mutableDictionary setObject:_begin forKey:@"begin"];
-            [mutableDictionary setObject:[NSNumber numberWithInteger:_duration]  forKey:@"duration"];
-            [mutableDictionary setObject:_create_time forKey:@"create_time"];
-            [mutableDictionary setObject:_modify_time forKey:@"modify_time"];
-            [mutableDictionary setObject:_simple_create_time forKey:@"simple_create_time"];
-            
-            
-            if([format isEqualToString: @"json"]) {
-                ////////////////////////////
-                // Transform mutableDictionary to json NSString
-                ////////////////////////////
-                NSError *error;
-                NSData *jsonData;
-                NSString *jsonStr;
-                
-                if ([NSJSONSerialization isValidJSONObject:mutableDictionary]) {
-                    // NSMutableDictionary convert to JSON Data
-                    jsonData = [NSJSONSerialization dataWithJSONObject:mutableDictionary options:NSJSONWritingPrettyPrinted error:&error];
-                    // JSON Data convert to NSString
-                    jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-                    //NSLog(@"NSMutableDictionary to JSON String: %@", jsonStr);
-                }
-                
-                // put josnString to NSMutableArray
-                [mutableArray addObject:jsonStr];
-            } else {
-                [mutableArray addObject: mutableDictionary];
-            }
+    
+    
+    FMResultSet *s = [db executeQuery:query];
+    while([s next]) {
+        _id          = [s intForColumnIndex:0];
+        _input       = [s stringForColumnIndex:1];
+        _description = [s stringForColumnIndex:2];
+        _category    = [s stringForColumnIndex:3];
+        _nMoney      = [s intForColumnIndex:4];
+        _nTime       = [s intForColumnIndex:5];
+        _begin       = [s stringForColumnIndex:6];
+        _duration    = [s intForColumnIndex:7];
+        _create_time = [s stringForColumnIndex:8];
+        _modify_time = [s stringForColumnIndex:9];
+        _nDate       = [s stringForColumnIndex:10];
+        if ([_modify_time length] == 19) {
+            _simple_create_time = [_create_time substringWithRange:NSMakeRange(0, 10)];
         }
-        sqlite3_finalize(statement);
+        else {
+            _simple_create_time = _create_time;
+        }
+        //NSLog(@"_id = %i\n_input = %@ \n_description = %@ \n_category = %@\n_nMoney = %i\n _nTime = %i\n _begin       = %@\n_duration = %i\n_create_time = %@\n_modify_time = %@\n===================\n", _id, _input, _description, _category, _nMoney, _nTime, _begin, _duration, _create_time, _modify_time);
+        
+        
+        NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:_id]  forKey:@"id"];
+        [mutableDictionary setObject:_input forKey:@"input"];
+        [mutableDictionary setObject:_description forKey:@"description"];
+        [mutableDictionary setObject:_category forKey:@"category"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:_nMoney]  forKey:@"nMoney"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:_nTime]  forKey:@"nTime"];
+        [mutableDictionary setObject:_nDate forKey:@"nDate"];
+        [mutableDictionary setObject:_begin forKey:@"begin"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:_duration]  forKey:@"duration"];
+        [mutableDictionary setObject:_create_time forKey:@"create_time"];
+        [mutableDictionary setObject:_modify_time forKey:@"modify_time"];
+        [mutableDictionary setObject:_simple_create_time forKey:@"simple_create_time"];
+        
+        
+        if([format isEqualToString: @"json"]) {
+            ////////////////////////////
+            // Transform mutableDictionary to json NSString
+            ////////////////////////////
+            NSError *error;
+            NSData *jsonData;
+            NSString *jsonStr;
+            
+            if ([NSJSONSerialization isValidJSONObject:mutableDictionary]) {
+                // NSMutableDictionary convert to JSON Data
+                jsonData = [NSJSONSerialization dataWithJSONObject:mutableDictionary options:NSJSONWritingPrettyPrinted error:&error];
+                // JSON Data convert to NSString
+                jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                //NSLog(@"NSMutableDictionary to JSON String: %@", jsonStr);
+            }
+            
+            // put josnString to NSMutableArray
+            [mutableArray addObject:jsonStr];
+        } else {
+            [mutableArray addObject: mutableDictionary];
+        }
     }
-    sqlite3_close(database);
+    [db close];
+    
     return mutableArray;
 }  // end of selectDBwithDate()
 
 
 - (NSString*) selectTag: (NSString *) description {
-    sqlite3 *database;
-    sqlite3_stmt *statement;
     NSString *category = @"-1";
     
-    if (sqlite3_open([self.databaseFilePath UTF8String], &database) != SQLITE_OK) {
-        NSLog(@"Sqlite3 DataBase Open Failed.");
-        NSLog(@"Abort Line Number: %i", __LINE__);
+    FMDatabase *db = [FMDatabase databaseWithPath:_dbPath];
+    if (![db open]) {
         return category;
     }
     
@@ -282,27 +267,24 @@
     NSString *query = @"select category from voice_record where description = ";
     query = [query stringByAppendingFormat:@"'%@' order by id desc ", description];
     NSLog(@"%@", query);
-    if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
-        if (sqlite3_step(statement) == SQLITE_ROW) {
-            category       = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 0)encoding:NSUTF8StringEncoding];
-        }
-        sqlite3_finalize(statement);
+    
+    FMResultSet *s = [db executeQuery:query];
+    while([s next]) {
+        category       = [s stringForColumnIndex:0];
     }
-    sqlite3_close(database);
+    [db close];
+    
     return category;
 }  // end of selectTag()
 
 
 
 - (NSMutableArray *)getReportData:(NSString *)type {
-    sqlite3 *database;
-    sqlite3_stmt *statement;
     NSString *data = [[NSString alloc] init];
     NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
     
-    if (sqlite3_open([self.databaseFilePath UTF8String], &database) != SQLITE_OK) {
-        NSLog(@"Sqlite3 DataBase Open Failed.");
-        NSLog(@"Abort Line Number: %i", __LINE__);
+    FMDatabase *db = [FMDatabase databaseWithPath:_dbPath];
+    if (![db open]) {
         return mutableArray;
     }
     
@@ -352,33 +334,28 @@
     NSString *formatMoney;
     
     int _nMoney, _nTime;
-    if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
-        while (sqlite3_step(statement) == SQLITE_ROW) {
-            _nMoney   = sqlite3_column_int(statement, 0);
-            _nTime    = sqlite3_column_int(statement, 1);
-            //NSLog(@"_type = %@\n_nMoney = %i\n _nTime = %i\n===================\n", type, _nMoney, _nTime);
+    FMResultSet *s = [db executeQuery:query];
+    while([s next]) {
+        _nMoney   = [s intForColumnIndex:0];
+        _nTime    = [s intForColumnIndex:1];
+        //NSLog(@"_type = %@\n_nMoney = %i\n _nTime = %i\n===================\n", type, _nMoney, _nTime);
 
-            
-            formatMoney = [numberFormatter stringFromNumber:[NSNumber numberWithInt: _nMoney]];
-            
-            data = [NSString stringWithFormat:@"%6i元 %6i分钟", _nMoney, _nTime];
-            [mutableArray addObject: data];
-        }
-        sqlite3_finalize(statement);
+        
+        formatMoney = [numberFormatter stringFromNumber:[NSNumber numberWithInt: _nMoney]];
+        
+        data = [NSString stringWithFormat:@"%6i元 %6i分钟", _nMoney, _nTime];
+        [mutableArray addObject: data];
     }
-    sqlite3_close(database);
+    [db close];
+    
     return mutableArray;
-
 }
 
 -(NSMutableArray*)getReportDataWithType: (NSString *) type {
-    sqlite3 *database;
-    sqlite3_stmt *statement;
-    NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
+    NSMutableArray *mutableArray = [NSMutableArray array];
     
-    if (sqlite3_open([self.databaseFilePath UTF8String], &database) != SQLITE_OK) {
-        NSLog(@"Sqlite3 DataBase Open Failed.");
-        NSLog(@"Abort Line Number: %i", __LINE__);
+    FMDatabase *db = [FMDatabase databaseWithPath:_dbPath];
+    if (![db open]) {
         return mutableArray;
     }
     
@@ -393,28 +370,27 @@
     [numberFormatter setPositiveFormat:@"###,##0"];
     //NSString *formatMoney;
     
-    if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
-        while (sqlite3_step(statement) == SQLITE_ROW) {
-            _category = [[NSString alloc] initWithCString:(char *)sqlite3_column_text(statement, 0)encoding:NSUTF8StringEncoding];
-            _nMoney   = sqlite3_column_int(statement, 1);
-            _nTime    = sqlite3_column_int(statement, 2);
-            _nCount   = sqlite3_column_int(statement, 3);
+    FMResultSet *s = [db executeQuery:query];
+    while([s next]) {
+        _category = [s stringForColumnIndex:0];
+        _nMoney   = [s intForColumnIndex:1];
+        _nTime    = [s intForColumnIndex:2];
+        _nCount   = [s intForColumnIndex:3];
 
-            
-            //formatMoney = [numberFormatter stringFromNumber:[NSNumber numberWithInt: _nMoney]];
-            
-            NSString *str = _category;
-            if(_category.length == 0) {
-                str = @"日志";
-                str = [str stringByAppendingFormat:@": %6i笔", _nCount];
-            } else {
-                str = [str stringByAppendingFormat:@": %6i元 %6i分钟", _nMoney, _nTime];
-            }
-            [mutableArray addObject: str];
+        //formatMoney = [numberFormatter stringFromNumber:[NSNumber numberWithInt: _nMoney]];
+        
+        NSString *str = _category;
+        if(_category.length == 0) {
+            str = @"日志";
+            str = [str stringByAppendingFormat:@": %6i笔", _nCount];
         }
-        sqlite3_finalize(statement);
+        else {
+            str = [str stringByAppendingFormat:@": %6i元 %6i分钟", _nMoney, _nTime];
+        }
+        [mutableArray addObject: str];
     }
-    sqlite3_close(database);
+    [db close];
+
     return mutableArray;
 }  // end of reportWithType()
 
