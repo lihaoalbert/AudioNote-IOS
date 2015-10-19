@@ -351,7 +351,7 @@
     return mutableArray;
 }
 
--(NSMutableArray*)getReportDataWithType: (NSString *) type {
+- (NSMutableArray *)getReportDataWithType:(NSString *) type {
     NSMutableArray *mutableArray = [NSMutableArray array];
     
     FMDatabase *db = [FMDatabase databaseWithPath:_dbPath];
@@ -393,6 +393,42 @@
 
     return mutableArray;
 }  // end of reportWithType()
+
+
+- (NSMutableArray *)exportReport {
+    
+    NSMutableArray *mutableArray = [NSMutableArray array];
+    
+    FMDatabase *db = [FMDatabase databaseWithPath:_dbPath];
+    if (![db open]) {
+        return mutableArray;
+    }
+    
+    NSString *query = @"select count(id) from voice_record;";
+    FMResultSet *s = [db executeQuery:query];
+    while([s next]) {
+        [mutableArray addObject:[NSNumber numberWithInt:[s intForColumnIndex:0]]];
+    }
+    
+    query = @"select min(create_time) from voice_record;";
+    s = [db executeQuery:query];
+    while([s next]) {
+        [mutableArray addObject:[s stringForColumnIndex:0]];
+    }
+    
+    query = @"select max(create_time) from voice_record;";
+    s = [db executeQuery:query];
+    while([s next]) {
+        [mutableArray addObject:[s stringForColumnIndex:0]];
+    }
+    
+    [db close];
+    return mutableArray;
+}
+
+- (NSString *)dbSize {
+    return [FileUtils humanFileSize:[FileUtils fileSize:_dbPath]];
+}
 
 
 @end

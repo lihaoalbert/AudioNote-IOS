@@ -23,6 +23,7 @@
 typedef NS_ENUM(NSInteger, SettingsIndex) {
     SettingsAppInfo = 0,
     SettingsFileInfo = 1,
-    SettingsUpgrade = 2
+    SettingsExport = 2,
+    SettingsUpgrade = 3
 };
 #endif

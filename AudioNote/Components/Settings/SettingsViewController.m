@@ -12,6 +12,7 @@
 #import "const.h"
 #import "DetailViewController.h"
 #import "UpgradeViewController.h"
+#import "ExportViewController.h"
 
 @interface SettingsViewController() <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *listView;
@@ -35,6 +36,7 @@
     _dataList = @[
                   @[@"应用信息", [[Version alloc] init].current],
                   @[@"本地文件", [FileUtils humanFileSize:fileSize2]],
+                  @[@"数据导出", @""],
                   @[@"版本更新", @""]
                   ];
     
@@ -76,6 +78,13 @@
             DetailViewController *detailVC = [[DetailViewController alloc] init];
             detailVC.indexPath = indexPath.row;
             [self.navigationController pushViewController:detailVC animated:YES];
+            
+            break;
+        }
+        case SettingsExport: {
+         
+            ExportViewController *exportVC = [[ExportViewController alloc] init];
+            [self.navigationController pushViewController:exportVC animated:YES];
             
             break;
         }

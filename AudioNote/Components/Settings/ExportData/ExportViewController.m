@@ -24,6 +24,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    DatabaseUtils *dbUtils = [[DatabaseUtils alloc] init];
+    NSMutableArray *dataList = [dbUtils exportReport];
+    
+    _labelNum.text = [NSString stringWithFormat:@"笔数: %@", dataList[0]];
+    _labelBegin.text = [NSString stringWithFormat:@"开始时间: %@", dataList[1]];
+    _labelEnd.text = [NSString stringWithFormat:@"截止时间: %@", dataList[2]];
+    _labelSize.text = [NSString stringWithFormat:@"数据大小: %@", [dbUtils dbSize]];
 }
 
 - (void)didReceiveMemoryWarning {
