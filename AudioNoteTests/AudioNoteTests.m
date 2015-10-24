@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <Foundation/Foundation.h>
-#import "Version+Pgyer.h"
+#import "FileUtils.h"
+#import "const.h"
 
 @interface AudioNoteTests : XCTestCase
 
@@ -31,11 +32,11 @@
     // This is an example of a functional test case.
     XCTAssertNotNil(@1);
     
-    [[[Version alloc] init] checkUpdate:^{
-        NSLog(@"upgrade!");
-    }FailBloc:^{
-        NSLog(@"no upgrade!");
-    }];
+    NSString *weixinerInfoConfigPath = [FileUtils dirPath:CONFIG_DIRNAME FileName:WEIXINER_CONFIG_FILENAME];
+    NSDictionary *weixinerInfo = [FileUtils readConfigFile:weixinerInfoConfigPath];
+    NSURL *url = [[NSURL alloc] initWithString:weixinerInfo[@"weixiner_info"][@"headimgurl"]];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    XCTAssertNotNil(data);
             
 }
 

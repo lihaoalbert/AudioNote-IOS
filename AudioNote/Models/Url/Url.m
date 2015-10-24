@@ -14,13 +14,13 @@
 - (Url *)init {
     if(self = [super init]) {
         _base          = BASE_URL;
-        _login         = [self concate:LOGIN_URL_PATH];
-        _slides        = [self concate:CONTENT_FILE_URL_PATH];
-        _categories    = [self concate:CONTENT_URL_PATH];
-        _slideDownload = [self concate:CONTENT_DOWNLOAD_URL_PATH];
-        _slideList     = [self concate:OFFLINE_URL_PATH];
-        _notifications = [self concate:NOTIFICATION_URL_PATH];
-        _actionLog     = [self concate:ACTION_LOGGER_URL_PATH];
+        _postDevice    = [self concate:@"device"];
+        _bindWeixin    = [self concate:@"weixiner/%@/bind/%@/device"];
+        _unbindWeixin  = [self concate:@"weixiner/%@/unbind/%@/device"];
+        _postData      = [self concate:@"weixiner/%@/device/%@/data"];
+        _devices       = [self concate:@"weixiner/%@/devices"];
+        _dataList      = [self concate:@"weixiner/%@/data_list"];
+        _weixinInfo    = [self concate:@"weixiner/%@/info"];
     }
     return self;
 }
@@ -30,7 +30,7 @@
 #pragma mark - asisstant methods
 - (NSString *)concate:(NSString *)path {
     NSString *splitStr  = ([path hasPrefix:@"/"] ? @"" : @"/");
-    NSString *urlString = [NSString stringWithFormat:@"%@/%@/%@%@", BASE_URL, BASE_PATH, splitStr, path];
+    NSString *urlString = [NSString stringWithFormat:@"%@/%@%@%@", BASE_URL, BASE_PATH, splitStr, path];
     return  [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 @end

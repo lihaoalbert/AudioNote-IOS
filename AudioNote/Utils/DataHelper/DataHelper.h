@@ -17,14 +17,16 @@
  *  处理数据: ApiHelper + CacheHelper
  */
 @interface DataHelper : NSObject
-+ (NSString *) generateUID;
 
 + (NSMutableArray*) getDataListWith:(DatabaseUtils*)databaseUtils
                               Limit: (NSInteger)limit
                              Offset: (NSInteger)offset;
 
-+ (HttpResponse *)httpPostDevice:(NSMutableDictionary *)params;
-+ (HttpResponse *)httpPostDeviceData:(NSMutableDictionary *)params;
++ (NSMutableDictionary *)postDevice;
+
++ (NSMutableDictionary *)bindWeixin:(NSString *)weixinerUID;
+
++ (NSMutableDictionary *)getWeixinInfo:(NSString *)weixinerUID;
 @end
 
 #endif

@@ -14,11 +14,55 @@
 
 #define myNSLog
 
-- (id) init {
+- (id)init {
     if(self = [super init]) {
         _dbPath = [FileUtils dirPath:DB_DIRNAME FileName:DB_FILENAME];
     }
+    
     return self;
+}
+
+- (void)oldDataInsertIntoNew {
+    NSArray *paths               = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *databaseFilePath   = [documentsDirectory stringByAppendingPathComponent:kDatabaseName];
+    
+    if([FileUtils checkFileExist:databaseFilePath isDir:NO]) {
+        FMDatabase *db = [FMDatabase databaseWithPath:databaseFilePath];
+        NSString *insertSQL;
+        NSMutableArray *insertArray = [NSMutableArray array];
+        if ([db open]) {
+            NSString *query = @"select input,description,category,nMoney,nTime,begin,duration,create_time,modify_time,nDate from voice_record order by id asc;";
+            FMResultSet *result = [db executeQuery:query];
+            NSString *input, *desc, *category, *begin, *create_time, *modify_time, *date;
+            NSInteger money, time, duration;
+            while([result next]) {
+                input = [result stringForColumnIndex:0];
+                desc = [result stringForColumnIndex:1];
+                category = [result stringForColumnIndex:2];
+                money  = [result intForColumnIndex:3];
+                time = [result intForColumnIndex:4];
+                begin = [result stringForColumnIndex:5];
+                duration = [result intForColumnIndex:6];
+                create_time = [result stringForColumnIndex:7];
+                modify_time = [result stringForColumnIndex:8];
+                date = [result stringForColumnIndex:9];
+                
+                insertSQL = [NSString stringWithFormat: @"Insert into voice_record(input,description,category,nMoney,nTime,nDate,begin,duration,create_time,modify_time) VALUES('%@','%@','%@',%ld,%ld,'%@','%@',%li,'%@','%@');", input, desc, category, (long)money, (long)time, date, begin, duration,  create_time, modify_time];
+                [insertArray addObject:insertSQL];
+            }
+            [db close];
+        }
+        
+        insertSQL = [insertArray componentsJoinedByString:@"\n"];
+        [self executeSQL:insertSQL];
+        
+        NSString *cachePath = [FileUtils dirPath:CACHE_DIRNAME FileName:kDatabaseName];
+        [FileUtils move:databaseFilePath to:cachePath];
+    }
+    else {
+        NSLog(@"not exist old version!");
+    }
 }
 
 // basic table setup
@@ -49,7 +93,9 @@
         // begin       - 开始录音时间
         // duration    - 录音持续时间
         //
-    [databaseUtils executeSQL: table_voice_record];
+    [databaseUtils executeSQL:table_voice_record];
+    
+    [databaseUtils oldDataInsertIntoNew];
 }
 
 /**
@@ -62,7 +108,7 @@
  *  @return 返回搜索到数据行的ID,执行失败返回该代码行
  */
 - (NSInteger)executeSQL:(NSString *)sql {
-    FMDatabase *db = [FMDatabase databaseWithPath:self.dbPath];
+    FMDatabase *db = [FMDatabase databaseWithPath:_dbPath];
     if ([db open]) {
         BOOL isExecuteSuccessfully = [db executeStatements:sql];
         if(!isExecuteSuccessfully) {
@@ -167,10 +213,10 @@
 }  // end of selectFrom: To: Order: Format:()
 
 
-- (NSMutableArray*) selectLimit: (NSInteger) limit
-                         Offset: (NSInteger) offset
-                          Order: (NSString *) column
-                         Format: (NSString *) format{
+- (NSMutableArray*) selectLimit: (NSInteger)limit
+                         Offset: (NSInteger)offset
+                          Order: (NSString *)column
+                         Format: (NSString *)format{
     NSMutableArray *mutableArray = [NSMutableArray array];
     
     FMDatabase *db = [FMDatabase databaseWithPath:_dbPath];
@@ -406,20 +452,29 @@
     
     NSString *query = @"select count(id) from voice_record;";
     FMResultSet *s = [db executeQuery:query];
-    while([s next]) {
+    if([s stringForColumnIndex:0]) {
         [mutableArray addObject:[NSNumber numberWithInt:[s intForColumnIndex:0]]];
+    }
+    else {
+        [mutableArray addObject:@"没有记录"];
     }
     
     query = @"select min(create_time) from voice_record;";
     s = [db executeQuery:query];
-    while([s next]) {
+    if([s stringForColumnIndex:0]) {
         [mutableArray addObject:[s stringForColumnIndex:0]];
+    }
+    else {
+        [mutableArray addObject:@"没有记录"];
     }
     
     query = @"select max(create_time) from voice_record;";
     s = [db executeQuery:query];
-    while([s next]) {
+    if([s stringForColumnIndex:0]) {
         [mutableArray addObject:[s stringForColumnIndex:0]];
+    }
+    else {
+        [mutableArray addObject:@"没有记录"];
     }
     
     [db close];

@@ -412,10 +412,9 @@
             data = [data stringByAppendingString:@"}"];
             NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"data": @{@"input": self.iFlyRecognizerResult.copy, @"szRemain": t_szRemain, @"szType": t_szType, @"nMoney": t_nMoney, @"nTime":t_nTime}}];
 
-            if(self.isNetWorkConnected) {
-                HttpResponse *httpResponse = [DataHelper httpPostDeviceData:params];
-                
-            }
+//            if(self.isNetWorkConnected) {
+//                HttpResponse *httpResponse = [DataHelper httpPostDeviceData:params];
+//            }
             // 功能 3.1 END
             
             

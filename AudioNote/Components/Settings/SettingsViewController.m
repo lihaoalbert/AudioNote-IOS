@@ -36,7 +36,7 @@
     _dataList = @[
                   @[@"应用信息", [[Version alloc] init].current],
                   @[@"本地文件", [FileUtils humanFileSize:fileSize2]],
-                  @[@"数据导出", @""],
+                  @[@"数据管理", @""],
                   @[@"版本更新", @""]
                   ];
     

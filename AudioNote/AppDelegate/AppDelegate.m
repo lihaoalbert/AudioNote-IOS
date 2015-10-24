@@ -45,11 +45,6 @@
     // setup database
     [DatabaseUtils setUP];
     
-    // config device
-    if([HttpUtils isNetworkAvailable]) {
-        [DataHelper generateUID];
-    }
-    
     ViewControllerFirst *firstController   = [[ViewControllerFirst alloc] init];
     firstController.title                  = @"对今天满意吗？";
     ViewControllerSecond *secondController = [[ViewControllerSecond alloc] init];

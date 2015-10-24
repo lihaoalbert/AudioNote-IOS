@@ -32,6 +32,7 @@ PODS:
   - Reachability (3.2)
   - SBJson (4.0.2)
   - SCLAlertView-Objective-C (0.7.7)
+  - SSZipArchive (0.3.3)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5.4)
@@ -43,6 +44,7 @@ DEPENDENCIES:
   - Reachability (~> 3.2)
   - SBJson (~> 4.0.2)
   - SCLAlertView-Objective-C (~> 0.7.4)
+  - SSZipArchive (~> 0.3.2)
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
@@ -54,5 +56,6 @@ SPEC CHECKSUMS:
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SBJson: c18691cc18375b14664ff0fec841f8c4faef1934
   SCLAlertView-Objective-C: 062808b4664add2d38d44b7867267985a02267ad
+  SSZipArchive: 2cf2a6d3ac9f03252b7d96f93728b9b983be9afb
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0

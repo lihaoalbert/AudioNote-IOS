@@ -138,6 +138,16 @@
     return removed;
 }
 
++ (BOOL)move:(NSString *)source to:(NSString *)target {
+    NSError *error;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL moved = [fileManager moveItemAtPath:source toPath:target error:&error];
+    if(error)
+        NSLog(@"<# move %@ => %@ failed for %@", source, target, [error localizedDescription]);
+    
+    return moved;
+}
+
 
 /**
  *  专用函数;读取文档描述文件内容；{FILE_DIRNAME,FAVORITE_DIRNAME}/fileID/desc.json(.swp)

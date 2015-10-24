@@ -80,6 +80,8 @@
 		C452583A1A77EF0F00102BBE /* icon-50@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C45258381A77EF0F00102BBE /* icon-50@2x.png */; };
 		C452583B1A77EF0F00102BBE /* icon-50.png in Resources */ = {isa = PBXBuildFile; fileRef = C45258391A77EF0F00102BBE /* icon-50.png */; };
 		C452583D1A77F15100102BBE /* icon-29@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C452583C1A77F15100102BBE /* icon-29@3x.png */; };
+		C467D6C11BDB6F6300C7D46E /* Url+Param.m in Sources */ = {isa = PBXBuildFile; fileRef = C467D6BE1BDB6F6300C7D46E /* Url+Param.m */; settings = {ASSET_TAGS = (); }; };
+		C467D6C21BDB6F6300C7D46E /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = C467D6C01BDB6F6300C7D46E /* Url.m */; settings = {ASSET_TAGS = (); }; };
 		C4A663431BCDEC5A0002F3C3 /* ViewControllerChart.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A663421BCDEC5A0002F3C3 /* ViewControllerChart.m */; settings = {ASSET_TAGS = (); }; };
 		C4A663461BCDEDA00002F3C3 /* DatabaseUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A663441BCDEDA00002F3C3 /* DatabaseUtils.m */; settings = {ASSET_TAGS = (); }; };
 		C4A6634A1BCDEE060002F3C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A663491BCDEE060002F3C3 /* AppDelegate.m */; settings = {ASSET_TAGS = (); }; };
@@ -221,6 +223,10 @@
 		C45258381A77EF0F00102BBE /* icon-50@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-50@2x.png"; path = "Images/icon-50@2x.png"; sourceTree = "<group>"; };
 		C45258391A77EF0F00102BBE /* icon-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-50.png"; path = "Images/icon-50.png"; sourceTree = "<group>"; };
 		C452583C1A77F15100102BBE /* icon-29@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-29@3x.png"; path = "Images/icon-29@3x.png"; sourceTree = "<group>"; };
+		C467D6BD1BDB6F6300C7D46E /* Url+Param.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Url+Param.h"; sourceTree = "<group>"; };
+		C467D6BE1BDB6F6300C7D46E /* Url+Param.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Url+Param.m"; sourceTree = "<group>"; };
+		C467D6BF1BDB6F6300C7D46E /* Url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Url.h; sourceTree = "<group>"; };
+		C467D6C01BDB6F6300C7D46E /* Url.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Url.m; sourceTree = "<group>"; };
 		C4A663411BCDEC5A0002F3C3 /* ViewControllerChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewControllerChart.h; sourceTree = "<group>"; };
 		C4A663421BCDEC5A0002F3C3 /* ViewControllerChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewControllerChart.m; sourceTree = "<group>"; };
 		C4A663441BCDEDA00002F3C3 /* DatabaseUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseUtils.m; sourceTree = "<group>"; };
@@ -477,6 +483,7 @@
 		C44984021BB2EBD100BEA3F8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				C467D6BC1BDB6F6300C7D46E /* Url */,
 				C4A90D061BCFAA3700B1FB3B /* Version */,
 				C44984061BB2EBD100BEA3F8 /* BaseModel */,
 				C44984091BB2EBD100BEA3F8 /* HttpResponse */,
@@ -609,6 +616,17 @@
 				93C4312CB0B90BD662BBC17B /* libPods.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C467D6BC1BDB6F6300C7D46E /* Url */ = {
+			isa = PBXGroup;
+			children = (
+				C467D6BD1BDB6F6300C7D46E /* Url+Param.h */,
+				C467D6BE1BDB6F6300C7D46E /* Url+Param.m */,
+				C467D6BF1BDB6F6300C7D46E /* Url.h */,
+				C467D6C01BDB6F6300C7D46E /* Url.m */,
+			);
+			path = Url;
 			sourceTree = "<group>";
 		};
 		C4A663401BCDEC5A0002F3C3 /* ChartView */ = {
@@ -763,6 +781,7 @@
 				C44C1E981A32FA7500BDE49B /* Frameworks */,
 				C44C1E991A32FA7500BDE49B /* Resources */,
 				25954E3A36CA6A370F0190CA /* Copy Pods Resources */,
+				EB71DDEB507A5F14AEE2EF0A /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -936,6 +955,21 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		EB71DDEB507A5F14AEE2EF0A /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -952,6 +986,7 @@
 				C4A663431BCDEC5A0002F3C3 /* ViewControllerChart.m in Sources */,
 				C4A663671BCDEF6D0002F3C3 /* PopupView.m in Sources */,
 				C44984341BB2F81300BEA3F8 /* DataHelper.m in Sources */,
+				C467D6C11BDB6F6300C7D46E /* Url+Param.m in Sources */,
 				C44983F71BB2EAA800BEA3F8 /* HttpUtils.m in Sources */,
 				C4A663681BCDEF6D0002F3C3 /* ContainerTopBar.m in Sources */,
 				C4A663661BCDEF6D0002F3C3 /* PullRefreshTableViewController.m in Sources */,
@@ -961,6 +996,7 @@
 				C44983E01BB2539200BEA3F8 /* ViewControllerThird.m in Sources */,
 				C4A90D0D1BCFAA3700B1FB3B /* Version+Pgyer.m in Sources */,
 				C44983DC1BB2539200BEA3F8 /* ViewControllerFirst.m in Sources */,
+				C467D6C21BDB6F6300C7D46E /* Url.m in Sources */,
 				C44983FA1BB2EAA800BEA3F8 /* FileUtils.m in Sources */,
 				C44984011BB2EB6600BEA3F8 /* ExtendNSLogFunctionality.m in Sources */,
 				C449841E1BB2EBD100BEA3F8 /* HttpResponse.m in Sources */,

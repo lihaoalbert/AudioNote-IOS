@@ -29,25 +29,6 @@
 
 // TODO 下面函数已抽出放在DateUtils中， 原引用自ViewUtils的写法需要修改
 
-/**
- *  通用函数: 字符串转日期。
- *
- *  @param str    日期字符串
- *  @param format 日期字符串的日期格式
- *
- *  @return 日期字符串对应的日期
- */
-+ (NSDate *) strToDate: (NSString *)str Format:(NSString*) format;
-
-/**
- *  通用函数: 日期转成字符串
- *
- *  @param date   待转换的日期
- *  @param format 转换字符串的格式
- *
- *  @return 指定格式的日期字符串
- */
-+ (NSString *) dateToStr: (NSDate *)date Format:(NSString*) format;
 
 + (UIView *)loadNibClass:(Class)cls;
 
@@ -74,6 +55,7 @@
  *  @param text 提示文字
  */
 + (void)showPopupView:(UIView *)view Info:(NSString*)text;
++ (void)showPopupView:(UIView *)view Info:(NSString*)text while:(void(^)(void))executeBlock;
 
 
 + (void) myCellTime: (MyTableViewCell *) myCell;
