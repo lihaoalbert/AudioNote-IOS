@@ -16,5 +16,5 @@
 + (NSString *)bindWeixin:(NSString *)weixinerUID deviceUID:(NSString *)deviceUID;
 + (NSString *)postData:(NSString *)deviceUID;
 + (NSString *)weixinInfo:(NSString *)weixinerUID;
-+ (NSString *)gesturePassword:(NSString *)deviceUID password:(NSString *)password 
++ (NSString *)gesturePassword:(NSString *)deviceUID password:(NSString *)password;
 @end

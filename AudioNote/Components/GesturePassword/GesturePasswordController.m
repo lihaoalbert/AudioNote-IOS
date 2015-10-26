@@ -133,7 +133,16 @@
 
 #pragma mark - 忘记手势密码
 - (void)forget {
-    [ViewUtils showPopupView:self.view Info:@"请在微信公众号中回复:\"忘记手势密码\""];
+//    [ViewUtils showPopupView:self.view Info:@"请在微信公众号中回复:\"忘记手势密码\""];
+    
+    NSString *deviceConfigPath = [FileUtils dirPath:CONFIG_DIRNAME FileName:DEVICE_CONFIG_FILENAME];
+    NSDictionary *deviceConfig = [FileUtils readConfigFile:deviceConfigPath];
+    NSString *deviceUID = deviceConfig[@"device_uid"];
+    NSString *message = [NSString stringWithFormat:@"忘记手势密码@%@", deviceUID];;
+    [ViewUtils simpleAlertView:self Title:@"微信公众号中回复" Message:message ButtonTitle:@"拷贝"];
+    
+    [[UIPasteboard generalPasteboard] setPersistent:YES];
+    [[UIPasteboard generalPasteboard] setValue:message forPasteboardType:[UIPasteboardTypeListString objectAtIndex:0]];
 }
 
 - (void)cancel {
