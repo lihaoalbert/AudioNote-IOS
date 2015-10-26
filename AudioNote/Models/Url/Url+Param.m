@@ -22,12 +22,12 @@
     return [NSString stringWithFormat:urlString, weixinerUID, deviceUID];
 }
 
-+ (NSString *)postData:(NSString *)weixinerUID deviceUID:(NSString *)deviceUID data:(NSDictionary *)data {
++ (NSString *)postData:(NSString *)deviceUID{
     
     NSString *urlString  = [[Url alloc] init].postData;
-    urlString = [NSString stringWithFormat:urlString, weixinerUID, deviceUID];
+    urlString = [NSString stringWithFormat:urlString, deviceUID];
     
-    return [Url UrlConcate:urlString Param:data];
+    return urlString;
 }
 
 + (NSString *)weixinInfo:(NSString *)weixinerUID {
@@ -37,6 +37,12 @@
     return urlString;
 }
 
++ (NSString *)gesturePassword:(NSString *)deviceUID password:(NSString *)password {
+    NSString *urlString = [[Url alloc] init].gesturePassword;
+    urlString = [NSString stringWithFormat:urlString, deviceUID, password];
+    
+    return urlString;
+}
 
 #pragma mark - GET# assistant methods
 + (NSString *)UrlConcate:(NSString *)url Param:(NSDictionary *)params {

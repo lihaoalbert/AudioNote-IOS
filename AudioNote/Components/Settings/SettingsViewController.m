@@ -8,11 +8,10 @@
 
 #import "SettingsViewController.h"
 #import "Version.h"
-#import "FileUtils.h"
 #import "const.h"
 #import "DetailViewController.h"
 #import "UpgradeViewController.h"
-#import "ExportViewController.h"
+#import "NormalSettingsController.h"
 
 @interface SettingsViewController() <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *listView;
@@ -30,12 +29,10 @@
     self.navigationItem.title = @"设置";
     
     
-    long long fileSize = [[FileUtils appDocutmentSize] longLongValue];
-    NSString *fileSize2 = [NSString stringWithFormat:@"%lli", fileSize];
     
     _dataList = @[
+                  @[@"微信公众号", @"胜因"],
                   @[@"应用信息", [[Version alloc] init].current],
-                  @[@"本地文件", [FileUtils humanFileSize:fileSize2]],
                   @[@"数据管理", @""],
                   @[@"版本更新", @""]
                   ];
@@ -64,7 +61,7 @@
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    if(indexPath.row != SettingsFileInfo) {
+    if(indexPath.row != SettingsWeixin) {
         cell.accessoryType  = UITableViewCellAccessoryDisclosureIndicator;
     }
     
@@ -83,8 +80,8 @@
         }
         case SettingsExport: {
          
-            ExportViewController *exportVC = [[ExportViewController alloc] init];
-            [self.navigationController pushViewController:exportVC animated:YES];
+            NormalSettingsController *normalSettingsVC = [[NormalSettingsController alloc] init];
+            [self.navigationController pushViewController:normalSettingsVC animated:YES];
             
             break;
         }

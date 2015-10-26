@@ -50,7 +50,7 @@
     hud.margin                    = 10.f;
     hud.removeFromSuperViewOnHide = YES;
     
-    [hud hide:YES afterDelay:1];
+    [hud hide:YES afterDelay:1.5];
 }
 
 + (void)showPopupView:(UIView *)view Info:(NSString*)text while:(void(^)(void))executeBlock {
@@ -203,4 +203,24 @@
     [numberFormatter setPositiveFormat:@"###,##0"];
     return [numberFormatter stringFromNumber:[NSNumber numberWithInt: num]];
 }
+
++ (NSString *)humanTimeInterval:(NSInteger)interval {
+    NSString *humanSize = [NSString string];
+    
+    @try {
+        NSInteger index = 0;
+        NSArray *tokens = [NSArray arrayWithObjects:@"分钟",@"小时",@"天",nil];
+        NSArray *intervals = [NSArray arrayWithObjects:@60, @60, @24, nil];
+        
+        while (interval > [intervals[index] integerValue]) {
+            interval = interval / [intervals[index] integerValue];
+        }
+        humanSize = [NSString stringWithFormat:@"%li%@",(long)interval, tokens[index]];
+    } @catch(NSException *e) {
+        humanSize = [NSString stringWithFormat:@"%li%@",(long)interval, @"秒"];
+    }
+    
+    return humanSize;
+}
+
 @end

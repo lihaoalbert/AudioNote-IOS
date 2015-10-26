@@ -67,6 +67,7 @@
 + (NSDictionary *)dealWithHour:(NSString *)nTime;
 
 + (NSString *)moneyformat:(int)num;
++ (NSString *)humanTimeInterval:(NSInteger)interval;
 
 @end
 

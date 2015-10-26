@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ExportViewController : UIViewController
+@interface NormalSettingsController : UIViewController
 
 @end

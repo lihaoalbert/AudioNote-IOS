@@ -42,7 +42,7 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="actionUpgrade:" destination="-1" eventType="touchUpInside" id="B74-gG-Bc0"/>
+                        <action selector="actionOpenURL:" destination="-1" eventType="touchUpInside" id="1PZ-j8-28d"/>
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wja-g9-Xe9">
@@ -79,6 +79,9 @@
                         <color key="titleColor" red="0.074509803920000006" green="0.70980392160000005" blue="0.69411764710000001" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="actionUpgrade:" destination="-1" eventType="touchUpInside" id="AUy-hE-oPT"/>
+                    </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="当前版本: 加载中..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cH7-RA-KC9">
                     <rect key="frame" x="50" y="80" width="500" height="30"/>

@@ -14,6 +14,7 @@
 @interface Url (Param)
 
 + (NSString *)bindWeixin:(NSString *)weixinerUID deviceUID:(NSString *)deviceUID;
-+ (NSString *)postData:(NSString *)weixinerUID deviceUID:(NSString *)deviceUID data:(NSDictionary *)data;
++ (NSString *)postData:(NSString *)deviceUID;
 + (NSString *)weixinInfo:(NSString *)weixinerUID;
++ (NSString *)gesturePassword:(NSString *)deviceUID password:(NSString *)password 
 @end

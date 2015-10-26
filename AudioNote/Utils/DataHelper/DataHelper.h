@@ -27,6 +27,9 @@
 + (NSMutableDictionary *)bindWeixin:(NSString *)weixinerUID;
 
 + (NSMutableDictionary *)getWeixinInfo:(NSString *)weixinerUID;
+
++ (void)postData;
++ (void)postGesturePassword;
 @end
 
 #endif

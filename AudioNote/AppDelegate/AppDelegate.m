@@ -12,13 +12,17 @@
 //  2. app屏幕是允许横屏，在此设置
 
 #import "AppDelegate.h"
+
+#import "DatabaseUtils.h"
+#import "FileUtils.h"
+#import "const.h"
+
 #import "ViewControllerContainer.h"
 #import "ViewControllerFirst.h"
 #import "ViewControllerSecond.h"
 #import "ViewControllerThird.h"
-#import "DatabaseUtils.h"
-#import "HttpUtils.h"
-#import "DataHelper.h"
+
+#import "GesturePasswordController.h"
 
 //#import "ViewControllerChart.h"
 #define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
@@ -37,36 +41,41 @@
     // Override point for customization after application launch.
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    ViewControllerContainer *containerController = [[ViewControllerContainer alloc] init];
-    self.window.rootViewController         = containerController;
-    self.window.backgroundColor            = [UIColor whiteColor];
     
+    NSString *settingsConfigPath = [FileUtils dirPath:CONFIG_DIRNAME FileName:SETTINGS_CONFIG_FILENAME];
+    NSDictionary *settingsInfo = [FileUtils readConfigFile:settingsConfigPath];
     
-    // setup database
-    [DatabaseUtils setUP];
-    
-    ViewControllerFirst *firstController   = [[ViewControllerFirst alloc] init];
-    firstController.title                  = @"对今天满意吗？";
-    ViewControllerSecond *secondController = [[ViewControllerSecond alloc] init];
-    secondController.title                 = @"认真生活每一天";
-    ViewControllerThird *thirdController   = [[ViewControllerThird alloc] init];
-    thirdController.title                  = @"还没有做报表";
-    //ViewControllerChart *chartController   = [[ViewControllerChart alloc] init];
-    //chartController.title                  = @"图表";
-    containerController.viewControllers    = [NSMutableArray arrayWithObjects:firstController, secondController, thirdController,nil];
-    
-    //for (UIViewController *viewController in containerController.viewControllers) {
-    //    [viewController.view setContentHuggingPriority:ScreenWidth forAxis:UILayoutConstraintAxisHorizontal];
-    //}
+    if(settingsInfo && [settingsInfo[@"use_gesture_password"] isEqualToNumber:@1]) {
+        self.window.rootViewController = [[GesturePasswordController alloc] init];
+    }
+    else {
+        ViewControllerContainer *containerController = [[ViewControllerContainer alloc] init];
+        
+        
+        // setup database
+        [DatabaseUtils setUP];
+        
+        ViewControllerFirst *firstController   = [[ViewControllerFirst alloc] init];
+        firstController.title                  = @"对今天满意吗？";
+        ViewControllerSecond *secondController = [[ViewControllerSecond alloc] init];
+        secondController.title                 = @"认真生活每一天";
+        ViewControllerThird *thirdController   = [[ViewControllerThird alloc] init];
+        thirdController.title                  = @"还没有做报表";
+        //ViewControllerChart *chartController   = [[ViewControllerChart alloc] init];
+        //chartController.title                  = @"图表";
+        containerController.viewControllers    = [NSMutableArray arrayWithObjects:firstController, secondController, thirdController,nil];
+        
+        self.window.rootViewController         = containerController;
+        self.window.backgroundColor            = [UIColor whiteColor];
+    }
 
     [self.window makeKeyAndVisible];
     
-
     return YES;
 }
 
 // 禁止app横屏， 否则界面会乱掉
-- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
     return UIInterfaceOrientationMaskPortrait;
 }
 
@@ -87,6 +96,13 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
+    NSString *settingsConfigPath = [FileUtils dirPath:CONFIG_DIRNAME FileName:SETTINGS_CONFIG_FILENAME];
+    NSDictionary *settingsInfo = [FileUtils readConfigFile:settingsConfigPath];
+    
+    if(settingsInfo && [settingsInfo[@"use_gesture_password"] isEqualToNumber:@1]) {
+        self.window.rootViewController = [[GesturePasswordController alloc] init];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

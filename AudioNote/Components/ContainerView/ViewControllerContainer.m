@@ -11,6 +11,10 @@
 #import "NSMutableArray+Util.h"
 #import "ContainerTopBar.h"
 #import "DidShowCurrent.h"
+#import "FileUtils.h"
+#import "DataHelper.h"
+#import "HttpUtils.h"
+#import "const.h"
 // http://www.dreamingwish.com/frontui/article/default/uiscrollview-infinite-loop-scrolling.html
 #define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
 #define kTopBarHeight 44.0
@@ -24,8 +28,6 @@
 @property (nonatomic) CGFloat pageWidth;
 @property (nonatomic) CGFloat pageHeight;
 @property (nonatomic, assign) UIViewController<DidShowCurrent> *currentController;
-
-
 @end
 
 @implementation ViewControllerContainer
@@ -45,8 +47,42 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initUI];
+    
+    int interval = 60 * 10;
+    NSDate *now = [NSDate date];
+    NSInteger timeInterval = [now timeIntervalSince1970];
+    NSInteger nextMinuteInterval = ((timeInterval / interval) + 1) * interval;
+    NSDate *fireDate = [NSDate dateWithTimeIntervalSince1970:nextMinuteInterval];
+    NSTimer *timer = [[NSTimer alloc] initWithFireDate:fireDate
+                                              interval:interval
+                                                target:self
+                                              selector:@selector(actionPushDataToServer)
+                                              userInfo:nil
+                                               repeats:YES];
+    
+    NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
+    [currentRunLoop addTimer:timer forMode:NSDefaultRunLoopMode];
 }
 
+- (void)actionPushDataToServer {
+    NSLog(@"actionPushDataToServer - %@", [NSDate date]);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if(![HttpUtils isNetworkAvailable]) {
+            return;
+        }
+        
+        NSString *settingsConfigPath = [FileUtils dirPath:CONFIG_DIRNAME FileName:SETTINGS_CONFIG_FILENAME];
+        NSDictionary *settingsInfo = [FileUtils readConfigFile:settingsConfigPath];
+        if(settingsInfo && [settingsInfo[@"auto_push_data_to_server"] isEqualToNumber:@1]) {
+            [DataHelper postData];
+        }
+        
+        if(settingsInfo && [settingsInfo[@"gesture_password_is_synced"] isEqualToNumber:@0]) {
+            [DataHelper postGesturePassword];
+        }
+    });
+}
 - (void)initUI {
     if (IOS7) {
         self.edgesForExtendedLayout = UIRectEdgeNone;

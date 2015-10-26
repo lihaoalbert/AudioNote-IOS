@@ -41,6 +41,8 @@
 - (NSMutableArray *)exportReport;
 - (NSString *)dbSize;
 
+- (void)updateSyncDataList:(NSMutableArray *)ids;
+- (NSMutableArray *)unsyncDataList;
 @end
 
 #endif

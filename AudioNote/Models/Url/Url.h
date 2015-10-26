@@ -19,4 +19,5 @@
 @property (nonatomic, strong) NSString *devices;
 @property (nonatomic, strong) NSString *dataList;
 @property (nonatomic, strong) NSString *weixinInfo;
+@property (nonatomic, strong) NSString *gesturePassword;
 @end

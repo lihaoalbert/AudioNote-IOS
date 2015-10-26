@@ -109,4 +109,52 @@
     return response.data;
 }
 
++ (void)postData {
+    DatabaseUtils *databaseUtils = [[DatabaseUtils alloc] init];
+    NSMutableArray *dataList = [databaseUtils unsyncDataList];
+    NSMutableArray *ids = [NSMutableArray array];
+    NSString *ID;
+    
+    NSString *deviceConfigPath = [FileUtils dirPath:CONFIG_DIRNAME FileName:DEVICE_CONFIG_FILENAME];
+    NSDictionary *deviceInfo = [FileUtils readConfigFile:deviceConfigPath];
+    NSString *deviceUID = deviceInfo[@"device_uid"];
+    NSString *urlString = [Url postData:deviceUID];
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    HttpResponse *response;
+    for(NSMutableDictionary *dict in dataList) {
+        ID = [NSString stringWithFormat:@"%@",dict[@"id"]];
+        [dict removeObjectForKey:@"id"];
+        
+        
+        params = [NSMutableDictionary dictionaryWithDictionary:@{@"data": dict}];
+        response = [HttpUtils httpPost:urlString Params:params];
+        if(response && [response.data[@"code"] isEqualToNumber:@1]) {
+            [ids addObject:ID];
+        }
+    }
+    
+    [databaseUtils updateSyncDataList:ids];
+}
+
++ (void)postGesturePassword {
+    NSString *deviceConfigPath = [FileUtils dirPath:CONFIG_DIRNAME FileName:DEVICE_CONFIG_FILENAME];
+    NSDictionary *deviceConfig = [FileUtils readConfigFile:deviceConfigPath];
+    NSString *deviceUID = deviceConfig[@"device_uid"];
+    
+    NSString *gesturePasswordConfigPath = [FileUtils dirPath:CONFIG_DIRNAME FileName:GESTURE_PASSWORD_CONFIG_FILENAME];
+    NSDictionary *gesturePasswordConfig = [FileUtils readConfigFile:gesturePasswordConfigPath];
+    NSString *gesturePassword = gesturePasswordConfig[@"gesture_password"];
+    
+    NSString *urlString = [Url gesturePassword:deviceUID password:gesturePassword];
+    HttpResponse *response = [HttpUtils httpPost:urlString Params:[NSMutableDictionary dictionary]];
+    if(response && [response.data[@"code"] isEqualToNumber:@1]) {
+        NSString *settingsConfigPath = [FileUtils dirPath:CONFIG_DIRNAME FileName:SETTINGS_CONFIG_FILENAME];
+        NSDictionary *settingsInfo = [FileUtils readConfigFile:settingsConfigPath];
+        NSMutableDictionary *settingsInfoEditor = [NSMutableDictionary dictionaryWithDictionary:settingsInfo];
+        settingsInfoEditor[@"gesture_password_is_synced"] = @1;
+        [FileUtils writeJSON:settingsInfoEditor Into:settingsConfigPath];
+    }
+}
+
 @end

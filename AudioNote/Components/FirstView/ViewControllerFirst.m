@@ -186,12 +186,6 @@
     // 开始录音按钮设置与启动
     [self.voiceBtn addTarget:self action:@selector(startVoiceRecord) forControlEvents:UIControlEventTouchDown];
     [self.voiceBtn addTarget:self action:@selector(stopVoiceRecord) forControlEvents:UIControlEventTouchUpInside];
-    
-//    CGFloat b_width = self.view.bounds.size.width;
-//    CGFloat b_height = self.view.bounds.size.height;
-//    NSLog(@"view width: %f, height: %f", b_width, b_height);
-//    NSLog(@"screen width: %f, height: %f", ScreenWidth, ScreenHeight);
-//    self.voiceBtn.frame = CGRectMake(b_width/8, b_height/2, b_width*3/4, b_height/2);
 
     self.gBackground = [UIColor blackColor];
     self.gTextcolor  = [UIColor whiteColor];
@@ -477,6 +471,13 @@
 #pragma mark - <UIAlertView>
 
 - (void) handleTableViewCellLongPress:(UILongPressGestureRecognizer *)gesture{
+    
+    SettingsViewController *settingsVC = [[SettingsViewController alloc] init];
+    UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:settingsVC];
+    [self.view.window.rootViewController presentViewController:navVC animated:YES completion:nil];
+    return;
+    
+    
     if (gesture.state != UIGestureRecognizerStateBegan) {
         return;
     }

@@ -27,14 +27,18 @@
 #define CACHE_DIRNAME    @"cache"
 #define CONFIG_DIRNAME    @"config"
 
+#define PUSH_DATA_TO_SERVER_INTERVAL 60*10
+
 #define DEVICE_CONFIG_FILENAME @"device.json"
 #define WEIXINER_CONFIG_FILENAME @"weixiner.json"
 #define WEIXIN_BIND_DEVICE_FILENAME @"weixin_bind_device.json"
 #define WEIXIN_UNBIND_DEVICE_FILENAME @"weixin_unbind_device.json"
+#define SETTINGS_CONFIG_FILENAME @"settings.json"
+#define GESTURE_PASSWORD_CONFIG_FILENAME @"gesture_password.json"
 
 typedef NS_ENUM(NSInteger, SettingsIndex) {
-    SettingsAppInfo = 0,
-    SettingsFileInfo = 1,
+    SettingsWeixin = 0,
+    SettingsAppInfo = 1,
     SettingsExport = 2,
     SettingsUpgrade = 3
 };

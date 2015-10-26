@@ -72,8 +72,15 @@
 
 #pragma mark - controls action
 - (IBAction)actionUpgrade:(id)sender {
-    NSURL *url = [NSURL URLWithString:PYGER_PUBLIC_URL];
+    NSString *pgyer = [NSString stringWithFormat:@"itms-services://?action=download-manifest&url=https%%3A%%2F%%2Fwww.pgyer.com%%2Fapiv1%%2Fapp%%2Fplist%%3FaId%%3D%@%%26_api_key%%3D%@", PGYER_APP_ID, PGYER_APP_KEY];
+    NSLog(@"%@", pgyer);
+    NSURL *url = [NSURL URLWithString:pgyer];
     NSLog(@"url: %@", url);
+    [[UIApplication sharedApplication] openURL:url];
+}
+
+- (IBAction)actionOpenURL:(UIButton *)sender {
+    NSURL *url = [NSURL URLWithString:PYGER_PUBLIC_URL];
     [[UIApplication sharedApplication] openURL:url];
 }
 

@@ -299,7 +299,7 @@
 }  // end of selectDBwithDate()
 
 
-- (NSString*) selectTag: (NSString *) description {
+- (NSString*)selectTag: (NSString *) description {
     NSString *category = @"-1";
     
     FMDatabase *db = [FMDatabase databaseWithPath:_dbPath];
@@ -452,29 +452,37 @@
     
     NSString *query = @"select count(id) from voice_record;";
     FMResultSet *s = [db executeQuery:query];
-    if([s stringForColumnIndex:0]) {
-        [mutableArray addObject:[NSNumber numberWithInt:[s intForColumnIndex:0]]];
-    }
-    else {
-        [mutableArray addObject:@"没有记录"];
+    
+    while([s next]) {
+        if([s stringForColumnIndex:0]) {
+            [mutableArray addObject:[NSNumber numberWithInt:[s intForColumnIndex:0]]];
+        }
+        else {
+            [mutableArray addObject:@"0"];
+        }
     }
     
     query = @"select min(create_time) from voice_record;";
     s = [db executeQuery:query];
-    if([s stringForColumnIndex:0]) {
-        [mutableArray addObject:[s stringForColumnIndex:0]];
-    }
-    else {
-        [mutableArray addObject:@"没有记录"];
+    while([s next]) {
+        if([s stringForColumnIndex:0]) {
+            [mutableArray addObject:[s stringForColumnIndex:0]];
+        }
+        else {
+            [mutableArray addObject:@"00-00-00 00:00:00"];
+        }
     }
     
     query = @"select max(create_time) from voice_record;";
     s = [db executeQuery:query];
-    if([s stringForColumnIndex:0]) {
-        [mutableArray addObject:[s stringForColumnIndex:0]];
-    }
-    else {
-        [mutableArray addObject:@"没有记录"];
+    
+    while([s next]) {
+        if([s stringForColumnIndex:0]) {
+            [mutableArray addObject:[s stringForColumnIndex:0]];
+        }
+        else {
+            [mutableArray addObject:@"00-00-00 00:00:00"];
+        }
     }
     
     [db close];
@@ -483,6 +491,58 @@
 
 - (NSString *)dbSize {
     return [FileUtils humanFileSize:[FileUtils fileSize:_dbPath]];
+}
+
+- (NSMutableArray *)unsyncDataList {
+    NSMutableArray *mutableArray = [NSMutableArray array];
+    
+    ////////////////////////////////
+    // Select Data into NSData
+    ////////////////////////////////
+    NSString *query = @"select id, input,description,category,nMoney,nTime,begin,duration,create_time,modify_time from voice_record where is_sync = 0;";
+
+    int _id, _nMoney, _nTime, _duration;
+    NSString *_input, *_description, *_category;
+    NSString *_begin, *_create_time, *_modify_time;
+    
+    FMDatabase *db = [FMDatabase databaseWithPath:_dbPath];
+    if (![db open]) {
+        return mutableArray;
+    }
+    FMResultSet *s = [db executeQuery:query];
+    while([s next]) {
+        _id          = [s intForColumnIndex:0];
+        _input       = [s stringForColumnIndex:1];
+        _description = [s stringForColumnIndex:2];
+        _category    = [s stringForColumnIndex:3];
+        _nMoney      = [s intForColumnIndex:4];
+        _nTime       = [s intForColumnIndex:5];
+        _begin       = [s stringForColumnIndex:6];
+        _duration    = [s intForColumnIndex:7];
+        _create_time = [s stringForColumnIndex:8];
+        _modify_time = [s stringForColumnIndex:9];
+
+        
+        
+        NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
+        [mutableDictionary setObject:[NSNumber numberWithInt:_id] forKey:@"id"];
+        [mutableDictionary setObject:_input forKey:@"input"];
+        [mutableDictionary setObject:_description forKey:@"szRemain"];
+        [mutableDictionary setObject:_category forKey:@"szType"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:_nMoney]  forKey:@"nMoney"];
+        [mutableDictionary setObject:[NSNumber numberWithInteger:_nTime]  forKey:@"nTime"];
+
+        [mutableArray addObject:mutableDictionary];
+    }
+    [db close];
+    
+    return mutableArray;
+}
+
+- (void)updateSyncDataList:(NSMutableArray *)ids {
+    NSString *updateSQL = [NSString stringWithFormat:@"update voice_record set is_sync = 1 where id in (%@);", [ids componentsJoinedByString:@","]];
+    
+    [self executeSQL:updateSQL];
 }
 
 

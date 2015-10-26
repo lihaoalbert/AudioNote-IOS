@@ -15,12 +15,13 @@
     if(self = [super init]) {
         _base          = BASE_URL;
         _postDevice    = [self concate:@"device"];
+        _postData      = [self concate:@"device/%@/data"];
         _bindWeixin    = [self concate:@"weixiner/%@/bind/%@/device"];
         _unbindWeixin  = [self concate:@"weixiner/%@/unbind/%@/device"];
-        _postData      = [self concate:@"weixiner/%@/device/%@/data"];
         _devices       = [self concate:@"weixiner/%@/devices"];
         _dataList      = [self concate:@"weixiner/%@/data_list"];
         _weixinInfo    = [self concate:@"weixiner/%@/info"];
+        _gesturePassword    = [self concate:@"device/%@/gesture_password/%@"];
     }
     return self;
 }
